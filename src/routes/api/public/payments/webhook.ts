@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { createClient } from "@supabase/supabase-js";
 import { type StripeEnv, verifyWebhook } from "@/lib/stripe.server";
+import { sendTemplateEmail } from "@/lib/email-templates/send-email";
 
 let _supabase: any = null;
 function getSupabase(): any {
@@ -83,10 +84,25 @@ async function markCanceled(subscription: any, env: StripeEnv) {
     .eq("environment", env);
 }
 
+async function sendWelcomeIfNew(subscription: any) {
+  const email = emailFrom(subscription);
+  if (!email) return;
+  try {
+    await sendTemplateEmail("welcome", email.trim().toLowerCase(), {
+      idempotencyKey: `welcome-${subscription.id}`,
+    });
+  } catch (err) {
+    console.error("Failed to send welcome email:", err);
+  }
+}
+
 async function handleWebhook(req: Request, env: StripeEnv) {
   const event = await verifyWebhook(req, env);
   switch (event.type) {
     case "customer.subscription.created":
+      await upsertFromSubscription(event.data.object, env);
+      await sendWelcomeIfNew(event.data.object);
+      break;
     case "customer.subscription.updated":
       await upsertFromSubscription(event.data.object, env);
       break;
