@@ -1,18 +1,21 @@
-## Diagnosis (unconfirmed)
+## Diagnosis
 
-Annual checkout works but Weekly's Continue fails. Same `createCheckoutSession` server fn is used for both — the only difference is the priceId (`even_me_weekly` vs `even_me_annual`). The most likely cause is that `even_me_weekly` doesn't exist in Stripe as a `lookup_key`, so `stripe.prices.list({ lookup_keys: ["even_me_weekly"] })` returns empty and the handler throws "Price not found". Needs to be verified against Stripe before fixing.
+The "Something went wrong" screen inside the embedded Stripe iframe is Stripe's generic client-side error, thrown after `checkout.sessions.create` succeeded but the session itself is misconfigured. The most likely trigger is `automatic_tax: { enabled: true }` in `src/utils/payments.functions.ts` — Stripe Tax requires:
 
-A secondary possibility: the frontend swallows the error message from the server function and shows nothing on mobile, making the failure look silent.
+- a registered origin address on the Stripe account, and
+- a `tax_code` on every Product being sold.
+
+Neither was set up for `even_me` / `even_me_weekly` / `even_me_annual`, so Stripe fails the session at render time inside the iframe. Annual "worked" before only up to Continue; once Continue actually rendered the form, both plans hit the same wall.
 
 ## Steps
 
-1. **Verify in Stripe (test env)** which of `even_me_weekly` / `even_me_annual` currently exist as lookup keys via a quick server-fn invocation. This confirms whether the price is missing or the error is elsewhere.
-2. **If the weekly price is missing** — recreate it via `payments--create_price` on the existing `even_me` product with:
-   - `id: even_me_weekly`, `amount: 1200`, `currency: usd`, `recurring_interval: week`, `quantity_min/max: 1`.
-3. **Surface the checkout error to the user** in `src/routes/paywall.tsx`: wrap `fetchClientSecret` so a thrown error (from `createCheckoutSession` returning `{ error }`) sets the `error` state and closes the embedded checkout instead of leaving a blank iframe on mobile.
-4. Re-test both Continue buttons in preview after the deploy propagates.
+1. Remove `automatic_tax: { enabled: true }` from the session creation in `src/utils/payments.functions.ts`. Ship a working checkout first; tax automation can be re-added later with proper setup.
+2. Leave everything else (customer resolve, metadata, subscription_data) untouched.
+3. Re-test both Weekly and Annual Continue flows in preview.
 
-## Technical notes
+## Follow-up (not this turn)
 
-- `createCheckoutSession` already returns `{ error }` on failure; `paywall.tsx` throws inside `fetchClientSecret` but Stripe's `EmbeddedCheckoutProvider` shows nothing when `fetchClientSecret` rejects — hence "nothing happens" on mobile.
-- No changes needed to server fn logic itself; the earlier module-scope helper fix stays.
+If the user later wants tax handling:
+- Add `tax_code: "txcd_10103001"` (SaaS) to `even_me` via a product update.
+- Have the user set an origin address on the Stripe account.
+- Re-enable `automatic_tax`.
