@@ -1,38 +1,18 @@
-## Problems
+## Diagnosis (unconfirmed)
 
-1. **Paywall only blocks `/checkin`.** `/foryou`, `/explore`, `/explore/$cat`, and `/tool/$key` have no gate, so a user with 0 free uses left and no subscription can still browse advice and open every tool.
-2. **`/foryou` "Give me another" is unlimited.** The free-use counter decrements once per visit, but the same visit can reshuffle forever. That's what lets someone "ask infinite advices without hitting a paywall".
-3. **Clicks on feelings in `/explore` appear to do nothing** for a non-subscribed, out-of-free-uses user — related to (1): the destination should send them somewhere (paywall), not silently render an empty-ish list.
+Annual checkout works but Weekly's Continue fails. Same `createCheckoutSession` server fn is used for both — the only difference is the priceId (`even_me_weekly` vs `even_me_annual`). The most likely cause is that `even_me_weekly` doesn't exist in Stripe as a `lookup_key`, so `stripe.prices.list({ lookup_keys: ["even_me_weekly"] })` returns empty and the handler throws "Price not found". Needs to be verified against Stripe before fixing.
 
-## Fix
+A secondary possibility: the frontend swallows the error message from the server function and shows nothing on mobile, making the failure look silent.
 
-### 1. Central access gate (`src/lib/evenme.ts`)
-Already exposes `hasAccess()` (subscribed OR `freeUsesLeft() > 0`). Keep as-is. Add a small `useAccessGuard()` hook (new file `src/hooks/useAccessGuard.ts`) that:
-- On mount, reads `hasAccess()`; if false, `navigate({ to: "/paywall" })` and returns `false`.
-- Otherwise returns `true`.
+## Steps
 
-### 2. Gate every content route
-Apply `useAccessGuard()` at the top of these components and render `null` when it returns false:
-- `src/routes/foryou.tsx` — replace the ad-hoc email/consume `useEffect` with: guard → require email (redirect to `/checkin`) → consume one free use for non-subscribers.
-- `src/routes/explore.tsx`
-- `src/routes/explore.$cat.tsx`
-- `src/routes/tool.$key.tsx`
+1. **Verify in Stripe (test env)** which of `even_me_weekly` / `even_me_annual` currently exist as lookup keys via a quick server-fn invocation. This confirms whether the price is missing or the error is elsewhere.
+2. **If the weekly price is missing** — recreate it via `payments--create_price` on the existing `even_me` product with:
+   - `id: even_me_weekly`, `amount: 1200`, `currency: usd`, `recurring_interval: week`, `quantity_min/max: 1`.
+3. **Surface the checkout error to the user** in `src/routes/paywall.tsx`: wrap `fetchClientSecret` so a thrown error (from `createCheckoutSession` returning `{ error }`) sets the `error` state and closes the embedded checkout instead of leaving a blank iframe on mobile.
+4. Re-test both Continue buttons in preview after the deploy propagates.
 
-This makes "click a feeling on Explore" resolve to a real destination (paywall) once the free tip is used, instead of appearing to do nothing.
+## Technical notes
 
-### 3. Make "Give me another" respect the paywall (`src/routes/foryou.tsx`)
-Change so 1 free use = 1 tip shown, not 1 visit:
-- Consume a free use on **every** shuffle for non-subscribers, including the initial render (guarded so it decrements exactly once per rendered tip).
-- After consuming, if `hasAccess()` is now false, disable / hide the "Give me another" button and show a small "Your free tip is used — subscribe to keep going" note with a Continue → `/paywall` button.
-- Subscribers: unchanged, unlimited reshuffles.
-
-### 4. Also gate tool-launch inside `/foryou`
-When user clicks the tool CTA on the personalized card and they have no access, route to `/paywall` instead of opening the tool.
-
-## Out of scope
-- No changes to Stripe products, webhook, welcome email, DB, or content library.
-- No changes to onboarding, check-in flow, or `/paywall` UI.
-- Subscribed users keep full unlimited access everywhere.
-
-## Verification
-After changes, in a fresh browser: complete check-in once → see 1 tip on `/foryou` → "Give me another" is disabled → clicking any Explore feeling or Tool routes to `/paywall`. With `evenme:subscribed=true` in localStorage, everything stays open.
+- `createCheckoutSession` already returns `{ error }` on failure; `paywall.tsx` throws inside `fetchClientSecret` but Stripe's `EmbeddedCheckoutProvider` shows nothing when `fetchClientSecret` rejects — hence "nothing happens" on mobile.
+- No changes needed to server fn logic itself; the earlier module-scope helper fix stays.
