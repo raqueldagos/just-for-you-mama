@@ -13,6 +13,7 @@ import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as ResourcesRouteImport } from './routes/resources'
 import { Route as PaywallRouteImport } from './routes/paywall'
 import { Route as HistoryRouteImport } from './routes/history'
+import { Route as CheckoutReturnRouteImport } from './routes/checkout-return'
 import { Route as CheckinRouteImport } from './routes/checkin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ResetTileRouteImport } from './routes/reset.$tile'
@@ -37,6 +38,11 @@ const PaywallRoute = PaywallRouteImport.update({
 const HistoryRoute = HistoryRouteImport.update({
   id: '/history',
   path: '/history',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CheckoutReturnRoute = CheckoutReturnRouteImport.update({
+  id: '/checkout-return',
+  path: '/checkout-return',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CheckinRoute = CheckinRouteImport.update({
@@ -69,6 +75,7 @@ const ApiPublicPaymentsWebhookRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/checkin': typeof CheckinRoute
+  '/checkout-return': typeof CheckoutReturnRoute
   '/history': typeof HistoryRoute
   '/paywall': typeof PaywallRoute
   '/resources': typeof ResourcesRoute
@@ -80,6 +87,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/checkin': typeof CheckinRoute
+  '/checkout-return': typeof CheckoutReturnRoute
   '/history': typeof HistoryRoute
   '/paywall': typeof PaywallRoute
   '/resources': typeof ResourcesRoute
@@ -92,6 +100,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/checkin': typeof CheckinRoute
+  '/checkout-return': typeof CheckoutReturnRoute
   '/history': typeof HistoryRoute
   '/paywall': typeof PaywallRoute
   '/resources': typeof ResourcesRoute
@@ -105,6 +114,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/checkin'
+    | '/checkout-return'
     | '/history'
     | '/paywall'
     | '/resources'
@@ -116,6 +126,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/checkin'
+    | '/checkout-return'
     | '/history'
     | '/paywall'
     | '/resources'
@@ -127,6 +138,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/checkin'
+    | '/checkout-return'
     | '/history'
     | '/paywall'
     | '/resources'
@@ -139,6 +151,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CheckinRoute: typeof CheckinRoute
+  CheckoutReturnRoute: typeof CheckoutReturnRoute
   HistoryRoute: typeof HistoryRoute
   PaywallRoute: typeof PaywallRoute
   ResourcesRoute: typeof ResourcesRoute
@@ -176,6 +189,13 @@ declare module '@tanstack/react-router' {
       path: '/history'
       fullPath: '/history'
       preLoaderRoute: typeof HistoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/checkout-return': {
+      id: '/checkout-return'
+      path: '/checkout-return'
+      fullPath: '/checkout-return'
+      preLoaderRoute: typeof CheckoutReturnRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/checkin': {
@@ -219,6 +239,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CheckinRoute: CheckinRoute,
+  CheckoutReturnRoute: CheckoutReturnRoute,
   HistoryRoute: HistoryRoute,
   PaywallRoute: PaywallRoute,
   ResourcesRoute: ResourcesRoute,
