@@ -28,7 +28,7 @@ function Settings() {
   const [periodEnd, setPeriodEnd] = useState<string | null>(null);
   const [cancelAtEnd, setCancelAtEnd] = useState(false);
   const [priceId, setPriceId] = useState<string | null>(null);
-  const [daysLeft, setDaysLeft] = useState(3);
+  const [usesLeft, setUsesLeft] = useState(1);
   const [saved, setSaved] = useState(false);
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
