@@ -4,7 +4,7 @@ import {
   KEYS,
   store,
   hasAccess,
-  trialDaysLeft,
+  freeUsesLeft,
   setSubscribed,
   isSubscribed,
   addMoodCheckin,
@@ -34,29 +34,31 @@ function Checkin() {
   const navigate = useNavigate();
   const [name, setName] = useState<string | null>(null);
   const [access, setAccess] = useState(true);
-  const [daysLeft, setDaysLeft] = useState(3);
-  const [step, setStep] = useState<0 | 1 | 2>(0);
+  const [usesLeft, setUsesLeft] = useState(1);
+  const [step, setStep] = useState<0 | 1 | 2 | 3>(0);
   const [mood, setMood] = useState<Mood | null>(null);
   const [energy, setEnergy] = useState<Energy | null>(null);
   const [note, setNote] = useState("");
+  const [email, setEmail] = useState<string>(() => store.get(KEYS.email) ?? "");
+  const [emailError, setEmailError] = useState<string | null>(null);
 
   useEffect(() => {
     setName(store.get(KEYS.name));
-    setDaysLeft(trialDaysLeft());
-    const email = store.get(KEYS.email);
+    setUsesLeft(freeUsesLeft());
+    const savedEmail = store.get(KEYS.email);
     let cancelled = false;
     (async () => {
-      if (email) {
+      if (savedEmail) {
         try {
           const res = await checkSubscription({
-            data: { email, environment: getStripeEnvironment() },
+            data: { email: savedEmail, environment: getStripeEnvironment() },
           });
           if (cancelled) return;
           setSubscribed(res.active);
         } catch {}
       }
       if (cancelled) return;
-      const ok = isSubscribed() || trialDaysLeft() > 0;
+      const ok = isSubscribed() || freeUsesLeft() > 0;
       setAccess(ok);
       if (!ok) navigate({ to: "/paywall" });
     })();
@@ -66,7 +68,9 @@ function Checkin() {
     };
   }, [navigate]);
 
-  const finish = (m: Mood, e: Energy, n: string) => {
+  const finish = (m: Mood, e: Energy, n: string, mail: string) => {
+    const clean = mail.trim().toLowerCase();
+    store.set(KEYS.email, clean);
     addMoodCheckin(m, e, n || undefined);
     navigate({
       to: "/foryou",
@@ -74,7 +78,20 @@ function Checkin() {
     });
   };
 
+  const submitFinal = () => {
+    if (!mood || !energy) return;
+    const clean = email.trim();
+    if (!clean || !clean.includes("@") || clean.length < 5) {
+      setEmailError("Please enter a valid email so we can remember you.");
+      return;
+    }
+    setEmailError(null);
+    finish(mood, energy, note, clean);
+  };
+
   if (!access) return null;
+
+
 
   return (
     <div className="min-h-screen px-6 py-10">
@@ -88,6 +105,7 @@ function Checkin() {
               {step === 0 && "How are you, right now?"}
               {step === 1 && "How much do you have in the tank?"}
               {step === 2 && "One word for today?"}
+              {step === 3 && "Where should we send it?"}
             </h1>
           </div>
           <Link
@@ -101,7 +119,7 @@ function Checkin() {
 
         {/* step dots */}
         <div className="mb-8 flex gap-2">
-          {[0, 1, 2].map((n) => (
+          {[0, 1, 2, 3].map((n) => (
             <div
               key={n}
               className={`h-1.5 w-8 rounded-full transition-colors ${
@@ -110,6 +128,7 @@ function Checkin() {
             />
           ))}
         </div>
+
 
         {step === 0 && (
           <div className="animate-fade-in grid grid-cols-2 sm:grid-cols-3 gap-3">
@@ -174,16 +193,54 @@ function Checkin() {
             />
             <p className="text-xs text-muted-foreground">Optional. One word is plenty.</p>
             <button
-              onClick={() => mood && energy && finish(mood, energy, note)}
+              onClick={() => {
+                if (!mood || !energy) return;
+                const saved = store.get(KEYS.email);
+                if (saved) finish(mood, energy, note, saved);
+                else setStep(3);
+              }}
               className="w-full rounded-2xl bg-primary py-4 text-primary-foreground text-lg font-medium hover:opacity-90 transition"
             >
               Show me something for right now
             </button>
             <button
-              onClick={() => mood && energy && finish(mood, energy, "")}
+              onClick={() => {
+                if (!mood || !energy) return;
+                const saved = store.get(KEYS.email);
+                if (saved) finish(mood, energy, "", saved);
+                else {
+                  setNote("");
+                  setStep(3);
+                }
+              }}
               className="w-full rounded-2xl bg-transparent py-2 text-sm text-muted-foreground hover:text-foreground"
             >
               Skip the word
+            </button>
+          </div>
+        )}
+
+        {step === 3 && (
+          <div className="animate-fade-in space-y-4">
+            <p className="text-muted-foreground">
+              Your email — so we can remember you and send your welcome note. No spam.
+            </p>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="you@example.com"
+              className="w-full rounded-2xl border border-border bg-card px-5 py-4 text-lg outline-none focus:ring-2 focus:ring-ring"
+              autoFocus
+            />
+            {emailError && (
+              <p className="text-sm text-destructive">{emailError}</p>
+            )}
+            <button
+              onClick={submitFinal}
+              className="w-full rounded-2xl bg-primary py-4 text-primary-foreground text-lg font-medium hover:opacity-90 transition"
+            >
+              Show me something for right now
             </button>
           </div>
         )}
@@ -197,11 +254,12 @@ function Checkin() {
           </Link>
         </div>
 
-        {daysLeft > 0 && daysLeft <= 7 && (
+        {!isSubscribed() && usesLeft > 0 && (
           <p className="mt-4 text-right text-xs text-muted-foreground">
-            {daysLeft} free day{daysLeft === 1 ? "" : "s"} left
+            {usesLeft} free tip left
           </p>
         )}
+
 
         <div className="mt-8 text-center">
           <Link to="/resources" className="text-xs text-muted-foreground underline">

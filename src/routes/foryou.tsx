@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { z } from "zod";
 import {
   MOOD_META,
@@ -9,6 +9,7 @@ import {
   type Energy,
 } from "@/lib/foryou";
 import { ToolRenderer, TOOL_META, toolForItemCta, type ToolKey } from "@/components/tools";
+import { KEYS, store, isSubscribed, consumeFreeUse } from "@/lib/evenme";
 
 const searchSchema = z.object({
   mood: z.string(),
@@ -38,6 +39,20 @@ function ForYou() {
   const [seen, setSeen] = useState<string[]>([]);
   const [openTool, setOpenTool] = useState<ToolKey | null>(null);
 
+  // Guard: require an email; consume the free use once per visit.
+  useEffect(() => {
+    const savedEmail = store.get(KEYS.email);
+    if (!savedEmail) {
+      navigate({ to: "/checkin" });
+      return;
+    }
+    if (!isSubscribed()) {
+      consumeFreeUse();
+    }
+    // Only run on mount for this visit.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const picked = useMemo(() => pickForYou(m, e, { seed, exclude: seen }), [m, e, seed, seen]);
 
   const another = () => {
@@ -48,6 +63,7 @@ function ForYou() {
     ].slice(-40));
     setSeed(Math.floor(Math.random() * 1e9));
   };
+
 
   if (openTool) {
     const t = TOOL_META[openTool];

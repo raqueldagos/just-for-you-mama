@@ -144,11 +144,12 @@ function Onboarding() {
               onClick={finish}
               className="w-full rounded-2xl bg-primary py-4 text-primary-foreground text-lg font-medium hover:opacity-90 transition"
             >
-              Start my 3 free days
+              Start with 1 free tip
             </button>
             <p className="text-xs text-center text-muted-foreground">
-              No card required to start.
+              No card required to start. Then $12/week or $79/year.
             </p>
+
           </div>
         )}
 

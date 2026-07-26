@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { KEYS, store, trialDaysLeft, setSubscribed } from "@/lib/evenme";
+import { KEYS, store, freeUsesLeft, setSubscribed } from "@/lib/evenme";
 import {
   checkSubscription,
   cancelSubscription,
@@ -28,7 +28,7 @@ function Settings() {
   const [periodEnd, setPeriodEnd] = useState<string | null>(null);
   const [cancelAtEnd, setCancelAtEnd] = useState(false);
   const [priceId, setPriceId] = useState<string | null>(null);
-  const [daysLeft, setDaysLeft] = useState(3);
+  const [usesLeft, setUsesLeft] = useState(1);
   const [saved, setSaved] = useState(false);
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
@@ -51,7 +51,7 @@ function Settings() {
     setReminder(store.get(KEYS.reminder) ?? "19:00");
     setName(store.get(KEYS.name) ?? "");
     setEmail(store.get(KEYS.email) ?? "");
-    setDaysLeft(trialDaysLeft());
+    setUsesLeft(freeUsesLeft());
     const e = store.get(KEYS.email);
     if (e) refresh(e);
   }, []);
@@ -195,10 +195,11 @@ function Settings() {
             ) : (
               <>
                 <p className="text-foreground">
-                  {daysLeft > 0
-                    ? `You have ${daysLeft} free day${daysLeft === 1 ? "" : "s"} left.`
-                    : "Your free trial has ended."}
+                  {usesLeft > 0
+                    ? "You have 1 free tip left."
+                    : "Your free tip is used."}
                 </p>
+
                 <Link
                   to="/paywall"
                   className="mt-4 inline-block rounded-2xl bg-primary px-5 py-3 text-primary-foreground font-medium hover:opacity-90 transition"

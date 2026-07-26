@@ -91,7 +91,9 @@ const K = {
   checkins: "evenme:checkins",
   trialStart: "evenme:trialStart",
   subscribed: "evenme:subscribed",
+  freeUsesLeft: "evenme:freeUsesLeft",
 } as const;
+
 
 const isBrowser = () => typeof window !== "undefined";
 
@@ -182,17 +184,33 @@ export function ensureTrialStart(): string {
     t = new Date().toISOString();
     store.set(K.trialStart, t);
   }
+  // Initialize the free-use counter on first run.
+  if (store.get(K.freeUsesLeft) === null) {
+    store.set(K.freeUsesLeft, "1");
+  }
   return t;
 }
 
-export const TRIAL_DAYS = 3;
+// Free trial is now 1 tip/tool total (not day-based).
+export const FREE_USES = 1;
+export const TRIAL_DAYS = FREE_USES; // legacy alias
 
+export function freeUsesLeft(): number {
+  const raw = store.get(K.freeUsesLeft);
+  if (raw === null) return FREE_USES;
+  const n = parseInt(raw, 10);
+  return Number.isFinite(n) && n > 0 ? n : 0;
+}
+
+export function consumeFreeUse(): number {
+  const left = Math.max(0, freeUsesLeft() - 1);
+  store.set(K.freeUsesLeft, String(left));
+  return left;
+}
+
+// Legacy shim — some callers still import trialDaysLeft.
 export function trialDaysLeft(): number {
-  const t = store.get(K.trialStart);
-  if (!t) return TRIAL_DAYS;
-  const started = new Date(t).getTime();
-  const days = Math.floor((Date.now() - started) / (1000 * 60 * 60 * 24));
-  return Math.max(0, TRIAL_DAYS - days);
+  return freeUsesLeft();
 }
 
 export function isSubscribed(): boolean {
@@ -204,8 +222,9 @@ export function setSubscribed(active: boolean) {
 }
 
 export function hasAccess(): boolean {
-  return isSubscribed() || trialDaysLeft() > 0;
+  return isSubscribed() || freeUsesLeft() > 0;
 }
+
 
 
 export function pickMeToo(tile: TileKey): string {

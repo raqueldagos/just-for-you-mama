@@ -93,8 +93,9 @@ function Paywall() {
           Keep showing up for you.
         </h1>
         <p className="mt-2 text-muted-foreground">
-          Your free days are done. Pick what works.
+          Your free tip is used. Pick what works.
         </p>
+
 
         <div className="mt-6">
           <label className="block text-sm text-muted-foreground mb-2">
