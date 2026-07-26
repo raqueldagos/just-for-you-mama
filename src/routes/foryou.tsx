@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { z } from "zod";
 import {
   MOOD_META,
@@ -9,7 +9,7 @@ import {
   type Energy,
 } from "@/lib/foryou";
 import { ToolRenderer, TOOL_META, toolForItemCta, type ToolKey } from "@/components/tools";
-import { KEYS, store, isSubscribed, consumeFreeUse } from "@/lib/evenme";
+import { KEYS, store, isSubscribed, consumeFreeUse, hasAccess, freeUsesLeft } from "@/lib/evenme";
 
 const searchSchema = z.object({
   mood: z.string(),
@@ -38,24 +38,39 @@ function ForYou() {
   const [seed, setSeed] = useState(() => Math.floor(Math.random() * 1e9));
   const [seen, setSeen] = useState<string[]>([]);
   const [openTool, setOpenTool] = useState<ToolKey | null>(null);
+  const [locked, setLocked] = useState(false);
+  const consumedForSeed = useRef<number | null>(null);
 
-  // Guard: require an email; consume the free use once per visit.
+  // Access + email gate on mount.
   useEffect(() => {
     const savedEmail = store.get(KEYS.email);
     if (!savedEmail) {
       navigate({ to: "/checkin" });
       return;
     }
-    if (!isSubscribed()) {
-      consumeFreeUse();
+    if (!hasAccess()) {
+      navigate({ to: "/paywall" });
+      return;
     }
-    // Only run on mount for this visit.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Consume one free use per rendered tip (per seed) for non-subscribers.
+  useEffect(() => {
+    if (isSubscribed()) return;
+    if (consumedForSeed.current === seed) return;
+    consumedForSeed.current = seed;
+    consumeFreeUse();
+    if (freeUsesLeft() <= 0) setLocked(true);
+  }, [seed]);
 
   const picked = useMemo(() => pickForYou(m, e, { seed, exclude: seen }), [m, e, seed, seen]);
 
   const another = () => {
+    if (!isSubscribed() && !hasAccess()) {
+      navigate({ to: "/paywall" });
+      return;
+    }
     setSeen((s) => [
       ...s,
       ...picked.cards.map((c) => c.id),
@@ -64,6 +79,13 @@ function ForYou() {
     setSeed(Math.floor(Math.random() * 1e9));
   };
 
+  const openToolGuarded = (k: ToolKey) => {
+    if (!isSubscribed() && !hasAccess()) {
+      navigate({ to: "/paywall" });
+      return;
+    }
+    setOpenTool(k);
+  };
 
   if (openTool) {
     const t = TOOL_META[openTool];
@@ -106,20 +128,40 @@ function ForYou() {
           {picked.toolAction && (
             <ToolCard
               item={picked.toolAction}
-              onOpen={(key) => setOpenTool(key)}
+              onOpen={openToolGuarded}
             />
           )}
         </div>
 
         <div className="mt-8 flex flex-col gap-3">
+          {locked && !isSubscribed() ? (
+            <div className="rounded-2xl border border-primary/30 bg-primary/5 p-5 text-center">
+              <p className="text-sm text-foreground">
+                Your free tip is used. Subscribe to keep going.
+              </p>
+              <button
+                onClick={() => navigate({ to: "/paywall" })}
+                className="mt-3 w-full rounded-2xl bg-primary py-3 text-primary-foreground font-medium hover:opacity-90 transition"
+              >
+                Continue
+              </button>
+            </div>
+          ) : (
+            <button
+              onClick={another}
+              className="w-full rounded-2xl bg-primary py-4 text-primary-foreground text-lg font-medium hover:opacity-90 transition"
+            >
+              Give me another
+            </button>
+          )}
           <button
-            onClick={another}
-            className="w-full rounded-2xl bg-primary py-4 text-primary-foreground text-lg font-medium hover:opacity-90 transition"
-          >
-            Give me another
-          </button>
-          <button
-            onClick={() => navigate({ to: "/explore" })}
+            onClick={() => {
+              if (!isSubscribed() && !hasAccess()) {
+                navigate({ to: "/paywall" });
+                return;
+              }
+              navigate({ to: "/explore" });
+            }}
             className="w-full rounded-2xl border border-border py-3 text-foreground hover:bg-muted transition"
           >
             Explore more tools & advice
@@ -139,6 +181,7 @@ function ForYou() {
     </div>
   );
 }
+
 
 function ContentCard({ item, index }: { item: Item; index: number }) {
   const styleByKind: Record<string, string> = {

@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ToolRenderer, TOOL_META, type ToolKey } from "@/components/tools";
+import { useAccessGuard } from "@/hooks/useAccessGuard";
 
 const KEYS: ToolKey[] = [
   "breath-60", "breath-90", "timer-2", "timer-5", "timer-10",
@@ -17,8 +18,10 @@ export const Route = createFileRoute("/tool/$key")({
 });
 
 function ToolPage() {
+  const ok = useAccessGuard();
   const { key } = Route.useParams();
   const k = key as ToolKey;
+  if (!ok) return null;
   if (!KEYS.includes(k)) {
     return (
       <div className="min-h-screen p-6">
