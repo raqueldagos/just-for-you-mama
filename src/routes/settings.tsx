@@ -99,16 +99,17 @@ function Settings() {
             Subscription
           </h2>
           <div className="mt-4 rounded-3xl bg-card border border-border p-6">
-            {subbed ? (
+            {subActive ? (
               <>
                 <p className="text-foreground font-medium">You're subscribed. Thank you.</p>
-                <button
-                  onClick={cancelSub}
-                  className="mt-4 text-sm text-muted-foreground underline hover:text-foreground"
-                >
-                  Cancel subscription
-                </button>
+                {cancelText && (
+                  <p className="mt-2 text-sm text-muted-foreground">{cancelText}</p>
+                )}
+                <p className="mt-2 text-xs text-muted-foreground">
+                  Status: {subStatus}
+                </p>
               </>
+
             ) : (
               <>
                 <p className="text-foreground">
