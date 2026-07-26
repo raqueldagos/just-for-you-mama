@@ -3,7 +3,7 @@ import { CATEGORIES } from "@/lib/foryou";
 import { TOOL_META, type ToolKey } from "@/components/tools";
 import { useAccessGuard } from "@/hooks/useAccessGuard";
 
-export const Route = createFileRoute("/explore")({
+export const Route = createFileRoute("/explore/")({
   head: () => ({
     meta: [
       { title: "Explore — Even Me" },
