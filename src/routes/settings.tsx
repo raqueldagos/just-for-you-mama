@@ -195,10 +195,11 @@ function Settings() {
             ) : (
               <>
                 <p className="text-foreground">
-                  {daysLeft > 0
-                    ? `You have ${daysLeft} free day${daysLeft === 1 ? "" : "s"} left.`
-                    : "Your free trial has ended."}
+                  {usesLeft > 0
+                    ? "You have 1 free tip left."
+                    : "Your free tip is used."}
                 </p>
+
                 <Link
                   to="/paywall"
                   className="mt-4 inline-block rounded-2xl bg-primary px-5 py-3 text-primary-foreground font-medium hover:opacity-90 transition"
