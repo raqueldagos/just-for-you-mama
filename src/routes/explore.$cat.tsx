@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { CATEGORIES, ITEMS, type Item } from "@/lib/foryou";
+import { useAccessGuard } from "@/hooks/useAccessGuard";
 
 export const Route = createFileRoute("/explore/$cat")({
   head: ({ params }) => ({
@@ -12,8 +13,10 @@ export const Route = createFileRoute("/explore/$cat")({
 });
 
 function ExploreCat() {
+  const ok = useAccessGuard();
   const { cat } = Route.useParams();
   const category = CATEGORIES.find((c) => c.key === cat);
+  if (!ok) return null;
 
   if (!category) {
     return (

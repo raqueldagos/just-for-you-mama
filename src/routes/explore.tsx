@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { CATEGORIES } from "@/lib/foryou";
 import { TOOL_META, type ToolKey } from "@/components/tools";
+import { useAccessGuard } from "@/hooks/useAccessGuard";
 
 export const Route = createFileRoute("/explore")({
   head: () => ({
@@ -18,6 +19,8 @@ const TOOL_LIST: ToolKey[] = [
 ];
 
 function Explore() {
+  const ok = useAccessGuard();
+  if (!ok) return null;
   return (
     <div className="min-h-screen px-6 py-10">
       <div className="mx-auto max-w-2xl">
