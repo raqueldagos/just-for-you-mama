@@ -52,7 +52,7 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
       const session = await stripe.checkout.sessions.create({
         line_items: [{ price: stripePrice.id, quantity: 1 }],
         mode: "subscription",
-        ui_mode: "embedded",
+        ui_mode: "embedded_page",
         return_url: data.returnUrl,
         customer: customerId,
         automatic_tax: { enabled: true },
