@@ -73,7 +73,7 @@ const mk = (kind: ItemKind, text: string, moods: Mood[], cta?: string): Item => 
 export const ITEMS: Item[] = [
   // ---------- AFFIRMATIONS ----------
   mk("affirmation", "You're allowed to be tired and still be a good parent.", ["tired", "guilty", "low", "overwhelmed"]),
-  mk("affirmation", "Rest is not a reward. It's maintenance.", ["tired", "overwhelmed", "empty" as unknown as Mood].filter(Boolean) as Mood[]),
+  mk("affirmation", "Rest is not a reward. It's maintenance.", ["tired", "overwhelmed", "low"]),
   mk("affirmation", "You did not fail today. You survived a hard one.", ["low", "guilty", "overwhelmed", "tired"]),
   mk("affirmation", "Being patient took work today. That counts.", ["tired", "guilty", "angry", "neutral"]),
   mk("affirmation", "You are more than the worst moment of your day.", ["guilty", "angry", "low"]),

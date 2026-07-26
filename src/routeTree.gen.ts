@@ -13,11 +13,15 @@ import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as ResourcesRouteImport } from './routes/resources'
 import { Route as PaywallRouteImport } from './routes/paywall'
 import { Route as HistoryRouteImport } from './routes/history'
+import { Route as ForyouRouteImport } from './routes/foryou'
+import { Route as ExploreRouteImport } from './routes/explore'
 import { Route as CheckoutReturnRouteImport } from './routes/checkout-return'
 import { Route as CheckinRouteImport } from './routes/checkin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ToolKeyRouteImport } from './routes/tool.$key'
 import { Route as ResetTileRouteImport } from './routes/reset.$tile'
 import { Route as MetooTileRouteImport } from './routes/metoo.$tile'
+import { Route as ExploreCatRouteImport } from './routes/explore.$cat'
 import { Route as LovableEmailTransactionalPreviewRouteImport } from './routes/lovable/email/transactional/preview'
 import { Route as ApiPublicPaymentsWebhookRouteImport } from './routes/api/public/payments/webhook'
 
@@ -41,6 +45,16 @@ const HistoryRoute = HistoryRouteImport.update({
   path: '/history',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ForyouRoute = ForyouRouteImport.update({
+  id: '/foryou',
+  path: '/foryou',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ExploreRoute = ExploreRouteImport.update({
+  id: '/explore',
+  path: '/explore',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CheckoutReturnRoute = CheckoutReturnRouteImport.update({
   id: '/checkout-return',
   path: '/checkout-return',
@@ -56,6 +70,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ToolKeyRoute = ToolKeyRouteImport.update({
+  id: '/tool/$key',
+  path: '/tool/$key',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ResetTileRoute = ResetTileRouteImport.update({
   id: '/reset/$tile',
   path: '/reset/$tile',
@@ -65,6 +84,11 @@ const MetooTileRoute = MetooTileRouteImport.update({
   id: '/metoo/$tile',
   path: '/metoo/$tile',
   getParentRoute: () => rootRouteImport,
+} as any)
+const ExploreCatRoute = ExploreCatRouteImport.update({
+  id: '/$cat',
+  path: '/$cat',
+  getParentRoute: () => ExploreRoute,
 } as any)
 const LovableEmailTransactionalPreviewRoute =
   LovableEmailTransactionalPreviewRouteImport.update({
@@ -83,12 +107,16 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/checkin': typeof CheckinRoute
   '/checkout-return': typeof CheckoutReturnRoute
+  '/explore': typeof ExploreRouteWithChildren
+  '/foryou': typeof ForyouRoute
   '/history': typeof HistoryRoute
   '/paywall': typeof PaywallRoute
   '/resources': typeof ResourcesRoute
   '/settings': typeof SettingsRoute
+  '/explore/$cat': typeof ExploreCatRoute
   '/metoo/$tile': typeof MetooTileRoute
   '/reset/$tile': typeof ResetTileRoute
+  '/tool/$key': typeof ToolKeyRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
 }
@@ -96,12 +124,16 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/checkin': typeof CheckinRoute
   '/checkout-return': typeof CheckoutReturnRoute
+  '/explore': typeof ExploreRouteWithChildren
+  '/foryou': typeof ForyouRoute
   '/history': typeof HistoryRoute
   '/paywall': typeof PaywallRoute
   '/resources': typeof ResourcesRoute
   '/settings': typeof SettingsRoute
+  '/explore/$cat': typeof ExploreCatRoute
   '/metoo/$tile': typeof MetooTileRoute
   '/reset/$tile': typeof ResetTileRoute
+  '/tool/$key': typeof ToolKeyRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
 }
@@ -110,12 +142,16 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/checkin': typeof CheckinRoute
   '/checkout-return': typeof CheckoutReturnRoute
+  '/explore': typeof ExploreRouteWithChildren
+  '/foryou': typeof ForyouRoute
   '/history': typeof HistoryRoute
   '/paywall': typeof PaywallRoute
   '/resources': typeof ResourcesRoute
   '/settings': typeof SettingsRoute
+  '/explore/$cat': typeof ExploreCatRoute
   '/metoo/$tile': typeof MetooTileRoute
   '/reset/$tile': typeof ResetTileRoute
+  '/tool/$key': typeof ToolKeyRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
 }
@@ -125,12 +161,16 @@ export interface FileRouteTypes {
     | '/'
     | '/checkin'
     | '/checkout-return'
+    | '/explore'
+    | '/foryou'
     | '/history'
     | '/paywall'
     | '/resources'
     | '/settings'
+    | '/explore/$cat'
     | '/metoo/$tile'
     | '/reset/$tile'
+    | '/tool/$key'
     | '/api/public/payments/webhook'
     | '/lovable/email/transactional/preview'
   fileRoutesByTo: FileRoutesByTo
@@ -138,12 +178,16 @@ export interface FileRouteTypes {
     | '/'
     | '/checkin'
     | '/checkout-return'
+    | '/explore'
+    | '/foryou'
     | '/history'
     | '/paywall'
     | '/resources'
     | '/settings'
+    | '/explore/$cat'
     | '/metoo/$tile'
     | '/reset/$tile'
+    | '/tool/$key'
     | '/api/public/payments/webhook'
     | '/lovable/email/transactional/preview'
   id:
@@ -151,12 +195,16 @@ export interface FileRouteTypes {
     | '/'
     | '/checkin'
     | '/checkout-return'
+    | '/explore'
+    | '/foryou'
     | '/history'
     | '/paywall'
     | '/resources'
     | '/settings'
+    | '/explore/$cat'
     | '/metoo/$tile'
     | '/reset/$tile'
+    | '/tool/$key'
     | '/api/public/payments/webhook'
     | '/lovable/email/transactional/preview'
   fileRoutesById: FileRoutesById
@@ -165,12 +213,15 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CheckinRoute: typeof CheckinRoute
   CheckoutReturnRoute: typeof CheckoutReturnRoute
+  ExploreRoute: typeof ExploreRouteWithChildren
+  ForyouRoute: typeof ForyouRoute
   HistoryRoute: typeof HistoryRoute
   PaywallRoute: typeof PaywallRoute
   ResourcesRoute: typeof ResourcesRoute
   SettingsRoute: typeof SettingsRoute
   MetooTileRoute: typeof MetooTileRoute
   ResetTileRoute: typeof ResetTileRoute
+  ToolKeyRoute: typeof ToolKeyRoute
   ApiPublicPaymentsWebhookRoute: typeof ApiPublicPaymentsWebhookRoute
   LovableEmailTransactionalPreviewRoute: typeof LovableEmailTransactionalPreviewRoute
 }
@@ -205,6 +256,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof HistoryRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/foryou': {
+      id: '/foryou'
+      path: '/foryou'
+      fullPath: '/foryou'
+      preLoaderRoute: typeof ForyouRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/explore': {
+      id: '/explore'
+      path: '/explore'
+      fullPath: '/explore'
+      preLoaderRoute: typeof ExploreRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/checkout-return': {
       id: '/checkout-return'
       path: '/checkout-return'
@@ -226,6 +291,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/tool/$key': {
+      id: '/tool/$key'
+      path: '/tool/$key'
+      fullPath: '/tool/$key'
+      preLoaderRoute: typeof ToolKeyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/reset/$tile': {
       id: '/reset/$tile'
       path: '/reset/$tile'
@@ -239,6 +311,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/metoo/$tile'
       preLoaderRoute: typeof MetooTileRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/explore/$cat': {
+      id: '/explore/$cat'
+      path: '/$cat'
+      fullPath: '/explore/$cat'
+      preLoaderRoute: typeof ExploreCatRouteImport
+      parentRoute: typeof ExploreRoute
     }
     '/lovable/email/transactional/preview': {
       id: '/lovable/email/transactional/preview'
@@ -257,19 +336,43 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface ExploreRouteChildren {
+  ExploreCatRoute: typeof ExploreCatRoute
+}
+
+const ExploreRouteChildren: ExploreRouteChildren = {
+  ExploreCatRoute: ExploreCatRoute,
+}
+
+const ExploreRouteWithChildren =
+  ExploreRoute._addFileChildren(ExploreRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CheckinRoute: CheckinRoute,
   CheckoutReturnRoute: CheckoutReturnRoute,
+  ExploreRoute: ExploreRouteWithChildren,
+  ForyouRoute: ForyouRoute,
   HistoryRoute: HistoryRoute,
   PaywallRoute: PaywallRoute,
   ResourcesRoute: ResourcesRoute,
   SettingsRoute: SettingsRoute,
   MetooTileRoute: MetooTileRoute,
   ResetTileRoute: ResetTileRoute,
+  ToolKeyRoute: ToolKeyRoute,
   ApiPublicPaymentsWebhookRoute: ApiPublicPaymentsWebhookRoute,
   LovableEmailTransactionalPreviewRoute: LovableEmailTransactionalPreviewRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
