@@ -86,9 +86,9 @@ const MetooTileRoute = MetooTileRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const ExploreCatRoute = ExploreCatRouteImport.update({
-  id: '/$cat',
-  path: '/$cat',
-  getParentRoute: () => ExploreRoute,
+  id: '/explore/$cat',
+  path: '/explore/$cat',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const LovableEmailTransactionalPreviewRoute =
   LovableEmailTransactionalPreviewRouteImport.update({
@@ -218,6 +218,7 @@ export interface RootRouteChildren {
   PaywallRoute: typeof PaywallRoute
   ResourcesRoute: typeof ResourcesRoute
   SettingsRoute: typeof SettingsRoute
+  ExploreCatRoute: typeof ExploreCatRoute
   MetooTileRoute: typeof MetooTileRoute
   ResetTileRoute: typeof ResetTileRoute
   ToolKeyRoute: typeof ToolKeyRoute
@@ -314,10 +315,10 @@ declare module '@tanstack/react-router' {
     }
     '/explore/$cat': {
       id: '/explore/$cat'
-      path: '/$cat'
+      path: '/explore/$cat'
       fullPath: '/explore/$cat'
       preLoaderRoute: typeof ExploreCatRouteImport
-      parentRoute: typeof ExploreRoute
+      parentRoute: typeof rootRouteImport
     }
     '/lovable/email/transactional/preview': {
       id: '/lovable/email/transactional/preview'
@@ -345,6 +346,7 @@ const rootRouteChildren: RootRouteChildren = {
   PaywallRoute: PaywallRoute,
   ResourcesRoute: ResourcesRoute,
   SettingsRoute: SettingsRoute,
+  ExploreCatRoute: ExploreCatRoute,
   MetooTileRoute: MetooTileRoute,
   ResetTileRoute: ResetTileRoute,
   ToolKeyRoute: ToolKeyRoute,
@@ -355,13 +357,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
