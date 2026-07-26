@@ -91,7 +91,9 @@ const K = {
   checkins: "evenme:checkins",
   trialStart: "evenme:trialStart",
   subscribed: "evenme:subscribed",
+  freeUsesLeft: "evenme:freeUsesLeft",
 } as const;
+
 
 const isBrowser = () => typeof window !== "undefined";
 
