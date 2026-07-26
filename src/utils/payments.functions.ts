@@ -9,18 +9,6 @@ type CheckoutSessionResult =
   | { clientSecret: string }
   | { error: string };
 
-async function resolveOrCreateCustomer(
-  stripe: ReturnType<typeof createStripeClient>,
-  email: string,
-): Promise<string> {
-  const existing = await stripe.customers.list({ email, limit: 1 });
-  if (existing.data.length) return existing.data[0].id;
-  const created = await stripe.customers.create({
-    email,
-    metadata: { email },
-  });
-  return created.id;
-}
 
 export const createCheckoutSession = createServerFn({ method: "POST" })
   .inputValidator(
