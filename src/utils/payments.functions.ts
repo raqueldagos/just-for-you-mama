@@ -124,3 +124,129 @@ export const checkSubscription = createServerFn({ method: "POST" })
       priceId: (row.price_id as string) ?? null,
     };
   });
+
+type MutationResult = { ok: true } | { error: string };
+
+// Cancel at period end — user keeps access until current_period_end.
+export const cancelSubscription = createServerFn({ method: "POST" })
+  .inputValidator((data: { email: string; environment: StripeEnv }) => {
+    if (!data.email || !data.email.includes("@"))
+      throw new Error("A valid email is required");
+    return data;
+  })
+  .handler(async ({ data }): Promise<MutationResult> => {
+    try {
+      const { supabaseAdmin } = await import(
+        "@/integrations/supabase/client.server"
+      );
+      const email = data.email.trim().toLowerCase();
+      const { data: rows } = await supabaseAdmin
+        .from("subscriptions")
+        .select("stripe_subscription_id, status")
+        .ilike("email", email)
+        .eq("environment", data.environment)
+        .order("created_at", { ascending: false })
+        .limit(1);
+      const row = rows?.[0];
+      if (!row?.stripe_subscription_id)
+        return { error: "No subscription found" };
+
+      const stripe = createStripeClient(data.environment);
+      await stripe.subscriptions.update(
+        row.stripe_subscription_id as string,
+        { cancel_at_period_end: true },
+      );
+      return { ok: true };
+    } catch (error) {
+      return { error: getStripeErrorMessage(error) };
+    }
+  });
+
+// Resume a subscription that was scheduled to cancel.
+export const resumeSubscription = createServerFn({ method: "POST" })
+  .inputValidator((data: { email: string; environment: StripeEnv }) => {
+    if (!data.email || !data.email.includes("@"))
+      throw new Error("A valid email is required");
+    return data;
+  })
+  .handler(async ({ data }): Promise<MutationResult> => {
+    try {
+      const { supabaseAdmin } = await import(
+        "@/integrations/supabase/client.server"
+      );
+      const email = data.email.trim().toLowerCase();
+      const { data: rows } = await supabaseAdmin
+        .from("subscriptions")
+        .select("stripe_subscription_id")
+        .ilike("email", email)
+        .eq("environment", data.environment)
+        .order("created_at", { ascending: false })
+        .limit(1);
+      const row = rows?.[0];
+      if (!row?.stripe_subscription_id)
+        return { error: "No subscription found" };
+      const stripe = createStripeClient(data.environment);
+      await stripe.subscriptions.update(
+        row.stripe_subscription_id as string,
+        { cancel_at_period_end: false },
+      );
+      return { ok: true };
+    } catch (error) {
+      return { error: getStripeErrorMessage(error) };
+    }
+  });
+
+// Swap the subscription's price immediately, prorated.
+export const changePlan = createServerFn({ method: "POST" })
+  .inputValidator(
+    (data: { email: string; newPriceId: string; environment: StripeEnv }) => {
+      if (!/^[a-zA-Z0-9_-]+$/.test(data.newPriceId))
+        throw new Error("Invalid priceId");
+      if (!data.email || !data.email.includes("@"))
+        throw new Error("A valid email is required");
+      return data;
+    },
+  )
+  .handler(async ({ data }): Promise<MutationResult> => {
+    try {
+      const { supabaseAdmin } = await import(
+        "@/integrations/supabase/client.server"
+      );
+      const email = data.email.trim().toLowerCase();
+      const { data: rows } = await supabaseAdmin
+        .from("subscriptions")
+        .select("stripe_subscription_id")
+        .ilike("email", email)
+        .eq("environment", data.environment)
+        .order("created_at", { ascending: false })
+        .limit(1);
+      const row = rows?.[0];
+      if (!row?.stripe_subscription_id)
+        return { error: "No subscription found" };
+
+      const stripe = createStripeClient(data.environment);
+      const prices = await stripe.prices.list({
+        lookup_keys: [data.newPriceId],
+      });
+      if (!prices.data.length) return { error: "Price not found" };
+      const newPrice = prices.data[0];
+
+      const sub = await stripe.subscriptions.retrieve(
+        row.stripe_subscription_id as string,
+      );
+      const itemId = sub.items.data[0]?.id;
+      if (!itemId) return { error: "Subscription has no items" };
+
+      await stripe.subscriptions.update(
+        row.stripe_subscription_id as string,
+        {
+          items: [{ id: itemId, price: newPrice.id }],
+          proration_behavior: "create_prorations",
+          cancel_at_period_end: false,
+        },
+      );
+      return { ok: true };
+    } catch (error) {
+      return { error: getStripeErrorMessage(error) };
+    }
+  });
