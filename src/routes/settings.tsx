@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { KEYS, store, trialDaysLeft, setSubscribed } from "@/lib/evenme";
+import { KEYS, store, freeUsesLeft, setSubscribed } from "@/lib/evenme";
 import {
   checkSubscription,
   cancelSubscription,
