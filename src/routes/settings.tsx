@@ -51,7 +51,7 @@ function Settings() {
     setReminder(store.get(KEYS.reminder) ?? "19:00");
     setName(store.get(KEYS.name) ?? "");
     setEmail(store.get(KEYS.email) ?? "");
-    setDaysLeft(trialDaysLeft());
+    setUsesLeft(freeUsesLeft());
     const e = store.get(KEYS.email);
     if (e) refresh(e);
   }, []);
