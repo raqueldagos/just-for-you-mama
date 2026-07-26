@@ -1,14 +1,15 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import {
-  TILES,
   KEYS,
   store,
   hasAccess,
   trialDaysLeft,
   setSubscribed,
   isSubscribed,
+  addMoodCheckin,
 } from "@/lib/evenme";
+import { MOOD_META, ENERGY_META, type Mood, type Energy } from "@/lib/foryou";
 import { checkSubscription } from "@/utils/payments.functions";
 import { getStripeEnvironment } from "@/lib/stripe";
 
@@ -16,23 +17,32 @@ export const Route = createFileRoute("/checkin")({
   head: () => ({
     meta: [
       { title: "Today's check-in — Even Me" },
-      { name: "description", content: "What was today's hard?" },
+      { name: "description", content: "A 90-second check-in, for you." },
     ],
   }),
   component: Checkin,
 });
+
+const MOODS: Mood[] = [
+  "tired", "overwhelmed", "anxious", "low",
+  "neutral", "content", "energized", "grateful",
+  "angry", "lonely", "guilty", "numb",
+];
+const ENERGIES: Energy[] = ["empty", "low", "steady", "bright"];
 
 function Checkin() {
   const navigate = useNavigate();
   const [name, setName] = useState<string | null>(null);
   const [access, setAccess] = useState(true);
   const [daysLeft, setDaysLeft] = useState(3);
+  const [step, setStep] = useState<0 | 1 | 2>(0);
+  const [mood, setMood] = useState<Mood | null>(null);
+  const [energy, setEnergy] = useState<Energy | null>(null);
+  const [note, setNote] = useState("");
 
   useEffect(() => {
     setName(store.get(KEYS.name));
     setDaysLeft(trialDaysLeft());
-
-    // Refresh subscription state from server on load.
     const email = store.get(KEYS.email);
     let cancelled = false;
     (async () => {
@@ -43,23 +53,28 @@ function Checkin() {
           });
           if (cancelled) return;
           setSubscribed(res.active);
-        } catch {
-          // stay with cached state
-        }
+        } catch {}
       }
       if (cancelled) return;
       const ok = isSubscribed() || trialDaysLeft() > 0;
       setAccess(ok);
       if (!ok) navigate({ to: "/paywall" });
     })();
-
-    // Also do a synchronous first pass so we don't flash the grid.
     setAccess(hasAccess());
     return () => {
       cancelled = true;
     };
   }, [navigate]);
 
+  const finish = (m: Mood, e: Energy, n: string) => {
+    addMoodCheckin(m, e, n || undefined);
+    navigate({
+      to: "/foryou",
+      search: { mood: m, energy: e, note: n || undefined },
+    });
+  };
+
+  if (!access) return null;
 
   return (
     <div className="min-h-screen px-6 py-10">
@@ -70,7 +85,9 @@ function Checkin() {
               {name ? `Hi ${name}.` : "Hi."}
             </p>
             <h1 className="mt-1 text-3xl font-serif text-foreground">
-              What was today's hard?
+              {step === 0 && "How are you, right now?"}
+              {step === 1 && "How much do you have in the tank?"}
+              {step === 2 && "One word for today?"}
             </h1>
           </div>
           <Link
@@ -82,29 +99,114 @@ function Checkin() {
           </Link>
         </header>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {TILES.map((t) => (
-            <button
-              key={t.key}
-              onClick={() => navigate({ to: "/reset/$tile", params: { tile: t.key } })}
-              className="group rounded-3xl bg-card p-6 text-left shadow-sm border border-border hover:border-primary hover:shadow-md transition min-h-32 flex items-end"
-            >
-              <span className="text-xl font-medium text-card-foreground leading-snug group-hover:text-primary transition">
-                {t.label}
-              </span>
-            </button>
+        {/* step dots */}
+        <div className="mb-8 flex gap-2">
+          {[0, 1, 2].map((n) => (
+            <div
+              key={n}
+              className={`h-1.5 w-8 rounded-full transition-colors ${
+                n <= step ? "bg-primary" : "bg-muted"
+              }`}
+            />
           ))}
         </div>
+
+        {step === 0 && (
+          <div className="animate-fade-in grid grid-cols-2 sm:grid-cols-3 gap-3">
+            {MOODS.map((m) => {
+              const meta = MOOD_META[m];
+              const active = mood === m;
+              return (
+                <button
+                  key={m}
+                  onClick={() => {
+                    setMood(m);
+                    setTimeout(() => setStep(1), 120);
+                  }}
+                  className={`rounded-2xl border p-4 text-left transition min-h-24 ${
+                    active
+                      ? "border-primary bg-primary/5"
+                      : "border-border bg-card hover:border-primary/60 hover:shadow-sm"
+                  }`}
+                >
+                  <div className="text-2xl">{meta.emoji}</div>
+                  <div className="mt-1 font-medium text-card-foreground">{meta.label}</div>
+                  <div className="text-xs text-muted-foreground">{meta.blurb}</div>
+                </button>
+              );
+            })}
+          </div>
+        )}
+
+        {step === 1 && (
+          <div className="animate-fade-in space-y-3">
+            {ENERGIES.map((e) => {
+              const meta = ENERGY_META[e];
+              return (
+                <button
+                  key={e}
+                  onClick={() => {
+                    setEnergy(e);
+                    setTimeout(() => setStep(2), 120);
+                  }}
+                  className={`w-full rounded-2xl border bg-card p-5 text-left transition ${
+                    energy === e
+                      ? "border-primary bg-primary/5"
+                      : "border-border hover:border-primary/60"
+                  }`}
+                >
+                  <div className="font-medium text-card-foreground">{meta.label}</div>
+                  <div className="text-sm text-muted-foreground">{meta.blurb}</div>
+                </button>
+              );
+            })}
+          </div>
+        )}
+
+        {step === 2 && (
+          <div className="animate-fade-in space-y-4">
+            <input
+              value={note}
+              onChange={(e) => setNote(e.target.value.slice(0, 24))}
+              placeholder="foggy, tender, wired, okay…"
+              className="w-full rounded-2xl border border-border bg-card px-5 py-4 text-lg outline-none focus:ring-2 focus:ring-ring"
+              autoFocus
+            />
+            <p className="text-xs text-muted-foreground">Optional. One word is plenty.</p>
+            <button
+              onClick={() => mood && energy && finish(mood, energy, note)}
+              className="w-full rounded-2xl bg-primary py-4 text-primary-foreground text-lg font-medium hover:opacity-90 transition"
+            >
+              Show me something for right now
+            </button>
+            <button
+              onClick={() => mood && energy && finish(mood, energy, "")}
+              className="w-full rounded-2xl bg-transparent py-2 text-sm text-muted-foreground hover:text-foreground"
+            >
+              Skip the word
+            </button>
+          </div>
+        )}
 
         <div className="mt-10 flex items-center justify-between text-sm">
           <Link to="/history" className="text-muted-foreground hover:text-foreground">
             Your streak →
           </Link>
-          {daysLeft > 0 && daysLeft <= 7 && (
-            <span className="text-muted-foreground">
-              {daysLeft} free day{daysLeft === 1 ? "" : "s"} left
-            </span>
-          )}
+          <Link to="/explore" className="text-muted-foreground hover:text-foreground">
+            Explore tools & advice →
+          </Link>
+        </div>
+
+        {daysLeft > 0 && daysLeft <= 7 && (
+          <p className="mt-4 text-right text-xs text-muted-foreground">
+            {daysLeft} free day{daysLeft === 1 ? "" : "s"} left
+          </p>
+        )}
+
+        <div className="mt-8 text-center">
+          <Link to="/resources" className="text-xs text-muted-foreground underline">
+            If you're in crisis, tap here.
+          </Link>
         </div>
       </div>
     </div>
