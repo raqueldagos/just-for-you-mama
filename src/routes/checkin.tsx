@@ -105,6 +105,7 @@ function Checkin() {
               {step === 0 && "How are you, right now?"}
               {step === 1 && "How much do you have in the tank?"}
               {step === 2 && "One word for today?"}
+              {step === 3 && "Where should we send it?"}
             </h1>
           </div>
           <Link
@@ -118,7 +119,7 @@ function Checkin() {
 
         {/* step dots */}
         <div className="mb-8 flex gap-2">
-          {[0, 1, 2].map((n) => (
+          {[0, 1, 2, 3].map((n) => (
             <div
               key={n}
               className={`h-1.5 w-8 rounded-full transition-colors ${
@@ -127,6 +128,7 @@ function Checkin() {
             />
           ))}
         </div>
+
 
         {step === 0 && (
           <div className="animate-fade-in grid grid-cols-2 sm:grid-cols-3 gap-3">
