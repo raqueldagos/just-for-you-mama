@@ -14,10 +14,10 @@ import { Route as ResourcesRouteImport } from './routes/resources'
 import { Route as PaywallRouteImport } from './routes/paywall'
 import { Route as HistoryRouteImport } from './routes/history'
 import { Route as ForyouRouteImport } from './routes/foryou'
-import { Route as ExploreRouteImport } from './routes/explore'
 import { Route as CheckoutReturnRouteImport } from './routes/checkout-return'
 import { Route as CheckinRouteImport } from './routes/checkin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ExploreIndexRouteImport } from './routes/explore.index'
 import { Route as ToolKeyRouteImport } from './routes/tool.$key'
 import { Route as ResetTileRouteImport } from './routes/reset.$tile'
 import { Route as MetooTileRouteImport } from './routes/metoo.$tile'
@@ -50,11 +50,6 @@ const ForyouRoute = ForyouRouteImport.update({
   path: '/foryou',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ExploreRoute = ExploreRouteImport.update({
-  id: '/explore',
-  path: '/explore',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const CheckoutReturnRoute = CheckoutReturnRouteImport.update({
   id: '/checkout-return',
   path: '/checkout-return',
@@ -68,6 +63,11 @@ const CheckinRoute = CheckinRouteImport.update({
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ExploreIndexRoute = ExploreIndexRouteImport.update({
+  id: '/explore/',
+  path: '/explore/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ToolKeyRoute = ToolKeyRouteImport.update({
@@ -86,9 +86,9 @@ const MetooTileRoute = MetooTileRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const ExploreCatRoute = ExploreCatRouteImport.update({
-  id: '/$cat',
-  path: '/$cat',
-  getParentRoute: () => ExploreRoute,
+  id: '/explore/$cat',
+  path: '/explore/$cat',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const LovableEmailTransactionalPreviewRoute =
   LovableEmailTransactionalPreviewRouteImport.update({
@@ -107,7 +107,6 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/checkin': typeof CheckinRoute
   '/checkout-return': typeof CheckoutReturnRoute
-  '/explore': typeof ExploreRouteWithChildren
   '/foryou': typeof ForyouRoute
   '/history': typeof HistoryRoute
   '/paywall': typeof PaywallRoute
@@ -117,6 +116,7 @@ export interface FileRoutesByFullPath {
   '/metoo/$tile': typeof MetooTileRoute
   '/reset/$tile': typeof ResetTileRoute
   '/tool/$key': typeof ToolKeyRoute
+  '/explore/': typeof ExploreIndexRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
 }
@@ -124,7 +124,6 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/checkin': typeof CheckinRoute
   '/checkout-return': typeof CheckoutReturnRoute
-  '/explore': typeof ExploreRouteWithChildren
   '/foryou': typeof ForyouRoute
   '/history': typeof HistoryRoute
   '/paywall': typeof PaywallRoute
@@ -134,6 +133,7 @@ export interface FileRoutesByTo {
   '/metoo/$tile': typeof MetooTileRoute
   '/reset/$tile': typeof ResetTileRoute
   '/tool/$key': typeof ToolKeyRoute
+  '/explore': typeof ExploreIndexRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
 }
@@ -142,7 +142,6 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/checkin': typeof CheckinRoute
   '/checkout-return': typeof CheckoutReturnRoute
-  '/explore': typeof ExploreRouteWithChildren
   '/foryou': typeof ForyouRoute
   '/history': typeof HistoryRoute
   '/paywall': typeof PaywallRoute
@@ -152,6 +151,7 @@ export interface FileRoutesById {
   '/metoo/$tile': typeof MetooTileRoute
   '/reset/$tile': typeof ResetTileRoute
   '/tool/$key': typeof ToolKeyRoute
+  '/explore/': typeof ExploreIndexRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
 }
@@ -161,7 +161,6 @@ export interface FileRouteTypes {
     | '/'
     | '/checkin'
     | '/checkout-return'
-    | '/explore'
     | '/foryou'
     | '/history'
     | '/paywall'
@@ -171,6 +170,7 @@ export interface FileRouteTypes {
     | '/metoo/$tile'
     | '/reset/$tile'
     | '/tool/$key'
+    | '/explore/'
     | '/api/public/payments/webhook'
     | '/lovable/email/transactional/preview'
   fileRoutesByTo: FileRoutesByTo
@@ -178,7 +178,6 @@ export interface FileRouteTypes {
     | '/'
     | '/checkin'
     | '/checkout-return'
-    | '/explore'
     | '/foryou'
     | '/history'
     | '/paywall'
@@ -188,6 +187,7 @@ export interface FileRouteTypes {
     | '/metoo/$tile'
     | '/reset/$tile'
     | '/tool/$key'
+    | '/explore'
     | '/api/public/payments/webhook'
     | '/lovable/email/transactional/preview'
   id:
@@ -195,7 +195,6 @@ export interface FileRouteTypes {
     | '/'
     | '/checkin'
     | '/checkout-return'
-    | '/explore'
     | '/foryou'
     | '/history'
     | '/paywall'
@@ -205,6 +204,7 @@ export interface FileRouteTypes {
     | '/metoo/$tile'
     | '/reset/$tile'
     | '/tool/$key'
+    | '/explore/'
     | '/api/public/payments/webhook'
     | '/lovable/email/transactional/preview'
   fileRoutesById: FileRoutesById
@@ -213,15 +213,16 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CheckinRoute: typeof CheckinRoute
   CheckoutReturnRoute: typeof CheckoutReturnRoute
-  ExploreRoute: typeof ExploreRouteWithChildren
   ForyouRoute: typeof ForyouRoute
   HistoryRoute: typeof HistoryRoute
   PaywallRoute: typeof PaywallRoute
   ResourcesRoute: typeof ResourcesRoute
   SettingsRoute: typeof SettingsRoute
+  ExploreCatRoute: typeof ExploreCatRoute
   MetooTileRoute: typeof MetooTileRoute
   ResetTileRoute: typeof ResetTileRoute
   ToolKeyRoute: typeof ToolKeyRoute
+  ExploreIndexRoute: typeof ExploreIndexRoute
   ApiPublicPaymentsWebhookRoute: typeof ApiPublicPaymentsWebhookRoute
   LovableEmailTransactionalPreviewRoute: typeof LovableEmailTransactionalPreviewRoute
 }
@@ -263,13 +264,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ForyouRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/explore': {
-      id: '/explore'
-      path: '/explore'
-      fullPath: '/explore'
-      preLoaderRoute: typeof ExploreRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/checkout-return': {
       id: '/checkout-return'
       path: '/checkout-return'
@@ -289,6 +283,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/explore/': {
+      id: '/explore/'
+      path: '/explore'
+      fullPath: '/explore/'
+      preLoaderRoute: typeof ExploreIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/tool/$key': {
@@ -314,10 +315,10 @@ declare module '@tanstack/react-router' {
     }
     '/explore/$cat': {
       id: '/explore/$cat'
-      path: '/$cat'
+      path: '/explore/$cat'
       fullPath: '/explore/$cat'
       preLoaderRoute: typeof ExploreCatRouteImport
-      parentRoute: typeof ExploreRoute
+      parentRoute: typeof rootRouteImport
     }
     '/lovable/email/transactional/preview': {
       id: '/lovable/email/transactional/preview'
@@ -336,30 +337,20 @@ declare module '@tanstack/react-router' {
   }
 }
 
-interface ExploreRouteChildren {
-  ExploreCatRoute: typeof ExploreCatRoute
-}
-
-const ExploreRouteChildren: ExploreRouteChildren = {
-  ExploreCatRoute: ExploreCatRoute,
-}
-
-const ExploreRouteWithChildren =
-  ExploreRoute._addFileChildren(ExploreRouteChildren)
-
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CheckinRoute: CheckinRoute,
   CheckoutReturnRoute: CheckoutReturnRoute,
-  ExploreRoute: ExploreRouteWithChildren,
   ForyouRoute: ForyouRoute,
   HistoryRoute: HistoryRoute,
   PaywallRoute: PaywallRoute,
   ResourcesRoute: ResourcesRoute,
   SettingsRoute: SettingsRoute,
+  ExploreCatRoute: ExploreCatRoute,
   MetooTileRoute: MetooTileRoute,
   ResetTileRoute: ResetTileRoute,
   ToolKeyRoute: ToolKeyRoute,
+  ExploreIndexRoute: ExploreIndexRoute,
   ApiPublicPaymentsWebhookRoute: ApiPublicPaymentsWebhookRoute,
   LovableEmailTransactionalPreviewRoute: LovableEmailTransactionalPreviewRoute,
 }
