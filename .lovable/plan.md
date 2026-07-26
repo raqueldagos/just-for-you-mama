@@ -1,43 +1,38 @@
-## Goal
+## Problems
 
-1. Require the user's email before they can see any "For You" advice or open any tool — even during the free trial.
-2. Replace the 3‑day free trial with a **1 free tip/tool** trial: after the first personalized result is shown, the next check‑in routes to the paywall (unless subscribed).
+1. **Paywall only blocks `/checkin`.** `/foryou`, `/explore`, `/explore/$cat`, and `/tool/$key` have no gate, so a user with 0 free uses left and no subscription can still browse advice and open every tool.
+2. **`/foryou` "Give me another" is unlimited.** The free-use counter decrements once per visit, but the same visit can reshuffle forever. That's what lets someone "ask infinite advices without hitting a paywall".
+3. **Clicks on feelings in `/explore` appear to do nothing** for a non-subscribed, out-of-free-uses user — related to (1): the destination should send them somewhere (paywall), not silently render an empty-ish list.
 
-Nothing else changes — same warm branding, check‑in flow, crisis link, and content library.
+## Fix
 
-## Changes
+### 1. Central access gate (`src/lib/evenme.ts`)
+Already exposes `hasAccess()` (subscribed OR `freeUsesLeft() > 0`). Keep as-is. Add a small `useAccessGuard()` hook (new file `src/hooks/useAccessGuard.ts`) that:
+- On mount, reads `hasAccess()`; if false, `navigate({ to: "/paywall" })` and returns `false`.
+- Otherwise returns `true`.
 
-### 1. Email gate before results (`src/routes/checkin.tsx`)
-- Add an email field to the check‑in flow as a new final step **before** navigating to `/foryou`. If `evenme:email` is already stored, skip this step automatically.
-- Simple validation: trimmed, contains `@`, saved to `store.set(KEYS.email, …)`.
-- Copy: "Your email — so we can remember you and send your welcome note." Keep tone warm, minimal.
-- Only after email is captured does it call `addMoodCheckin(...)` + navigate to `/foryou`.
-- Also guard `/foryou` directly (`src/routes/foryou.tsx`): if no stored email on mount, redirect back to `/checkin` (defensive — handles direct URL hits).
+### 2. Gate every content route
+Apply `useAccessGuard()` at the top of these components and render `null` when it returns false:
+- `src/routes/foryou.tsx` — replace the ad-hoc email/consume `useEffect` with: guard → require email (redirect to `/checkin`) → consume one free use for non-subscribers.
+- `src/routes/explore.tsx`
+- `src/routes/explore.$cat.tsx`
+- `src/routes/tool.$key.tsx`
 
-### 2. Trial = 1 free tip/tool (`src/lib/evenme.ts`)
-- Remove day‑based trial. Replace with a "free uses remaining" counter:
-  - New key `evenme:freeUsesLeft` (default `1`).
-  - New helpers: `freeUsesLeft()`, `consumeFreeUse()`, and update `hasAccess()` → `isSubscribed() || freeUsesLeft() > 0`.
-  - Keep `TRIAL_DAYS`/`trialDaysLeft` exports as thin shims (return based on `freeUsesLeft`) so existing imports keep compiling, or update call sites — see below.
-- Update call sites:
-  - `src/routes/checkin.tsx`: replace `trialDaysLeft()` UI ("N free days left") with "1 free tip left" / hide when 0. Access check uses `hasAccess()`.
-  - `src/routes/foryou.tsx`: on first successful render of a picked result, call `consumeFreeUse()` (guarded so it decrements once per visit, not per "Give me another"). After consumption, if user is not subscribed and returns to `/checkin`, they'll be routed to `/paywall`.
-  - `src/routes/index.tsx` onboarding: change "3 free days" copy to "1 free tip, then $12/week or $79/year".
-  - `src/routes/settings.tsx`: adjust any "days left" copy to reflect the new model.
-- Server subscription check (`checkSubscription`) is unchanged — subscribers still bypass the gate.
+This makes "click a feeling on Explore" resolve to a real destination (paywall) once the free tip is used, instead of appearing to do nothing.
 
-### 3. Paywall alignment (`src/routes/paywall.tsx`)
-- Email input already exists there; no logic change needed. Update the sub‑headline copy from "Your free days are done." to "Your free tip is used. Pick what works." for consistency.
+### 3. Make "Give me another" respect the paywall (`src/routes/foryou.tsx`)
+Change so 1 free use = 1 tip shown, not 1 visit:
+- Consume a free use on **every** shuffle for non-subscribers, including the initial render (guarded so it decrements exactly once per rendered tip).
+- After consuming, if `hasAccess()` is now false, disable / hide the "Give me another" button and show a small "Your free tip is used — subscribe to keep going" note with a Continue → `/paywall` button.
+- Subscribers: unchanged, unlimited reshuffles.
 
-## Flow after changes
-
-```text
-Onboarding → Check‑in (mood → energy → word → email*) → /foryou (tip + tool)
-                                                       └─ consumes the 1 free use
-Next visit to /checkin (not subscribed) → /paywall
-```
-*email step skipped if already saved.
+### 4. Also gate tool-launch inside `/foryou`
+When user clicks the tool CTA on the personalized card and they have no access, route to `/paywall` instead of opening the tool.
 
 ## Out of scope
-- No changes to Stripe products, webhook, welcome email, or DB schema.
-- No changes to the content library or tool components.
+- No changes to Stripe products, webhook, welcome email, DB, or content library.
+- No changes to onboarding, check-in flow, or `/paywall` UI.
+- Subscribed users keep full unlimited access everywhere.
+
+## Verification
+After changes, in a fresh browser: complete check-in once → see 1 tip on `/foryou` → "Give me another" is disabled → clicking any Explore feeling or Tool routes to `/paywall`. With `evenme:subscribed=true` in localStorage, everything stays open.
