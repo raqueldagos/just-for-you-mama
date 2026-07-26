@@ -33,18 +33,25 @@ function Paywall() {
   const fetchClientSecret = useCallback(async (): Promise<string> => {
     const cleanEmail = email.trim().toLowerCase();
     store.set(KEYS.email, cleanEmail);
-    const result = await createCheckoutSession({
-      data: {
-        priceId,
-        email: cleanEmail,
-        returnUrl: `${window.location.origin}/checkout-return?session_id={CHECKOUT_SESSION_ID}`,
-        environment: getStripeEnvironment(),
-      },
-    });
-    if ("error" in result) throw new Error(result.error);
-    if (!result.clientSecret)
-      throw new Error("Payments did not return a client secret");
-    return result.clientSecret;
+    try {
+      const result = await createCheckoutSession({
+        data: {
+          priceId,
+          email: cleanEmail,
+          returnUrl: `${window.location.origin}/checkout-return?session_id={CHECKOUT_SESSION_ID}`,
+          environment: getStripeEnvironment(),
+        },
+      });
+      if ("error" in result) throw new Error(result.error);
+      if (!result.clientSecret)
+        throw new Error("Payments did not return a client secret");
+      return result.clientSecret;
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "Couldn't start checkout. Please try again.";
+      setError(msg);
+      setCheckoutOpen(false);
+      throw err;
+    }
   }, [email, priceId]);
 
   const start = () => {
