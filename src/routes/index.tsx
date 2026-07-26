@@ -144,7 +144,7 @@ function Onboarding() {
               onClick={finish}
               className="w-full rounded-2xl bg-primary py-4 text-primary-foreground text-lg font-medium hover:opacity-90 transition"
             >
-              Start my 7 free days
+              Start my 3 free days
             </button>
             <p className="text-xs text-center text-muted-foreground">
               No card required to start.
@@ -161,3 +161,4 @@ function Onboarding() {
     </div>
   );
 }
+

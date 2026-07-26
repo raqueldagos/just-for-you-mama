@@ -1,6 +1,16 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { TILES, KEYS, store, hasAccess, trialDaysLeft } from "@/lib/evenme";
+import {
+  TILES,
+  KEYS,
+  store,
+  hasAccess,
+  trialDaysLeft,
+  setSubscribed,
+  isSubscribed,
+} from "@/lib/evenme";
+import { checkSubscription } from "@/utils/payments.functions";
+import { getStripeEnvironment } from "@/lib/stripe";
 
 export const Route = createFileRoute("/checkin")({
   head: () => ({
@@ -16,17 +26,40 @@ function Checkin() {
   const navigate = useNavigate();
   const [name, setName] = useState<string | null>(null);
   const [access, setAccess] = useState(true);
-  const [daysLeft, setDaysLeft] = useState(7);
+  const [daysLeft, setDaysLeft] = useState(3);
 
   useEffect(() => {
     setName(store.get(KEYS.name));
-    setAccess(hasAccess());
     setDaysLeft(trialDaysLeft());
-  }, []);
 
-  useEffect(() => {
-    if (!access) navigate({ to: "/paywall" });
-  }, [access, navigate]);
+    // Refresh subscription state from server on load.
+    const email = store.get(KEYS.email);
+    let cancelled = false;
+    (async () => {
+      if (email) {
+        try {
+          const res = await checkSubscription({
+            data: { email, environment: getStripeEnvironment() },
+          });
+          if (cancelled) return;
+          setSubscribed(res.active);
+        } catch {
+          // stay with cached state
+        }
+      }
+      if (cancelled) return;
+      const ok = isSubscribed() || trialDaysLeft() > 0;
+      setAccess(ok);
+      if (!ok) navigate({ to: "/paywall" });
+    })();
+
+    // Also do a synchronous first pass so we don't flash the grid.
+    setAccess(hasAccess());
+    return () => {
+      cancelled = true;
+    };
+  }, [navigate]);
+
 
   return (
     <div className="min-h-screen px-6 py-10">

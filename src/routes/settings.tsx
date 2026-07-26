@@ -1,6 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { KEYS, store, isSubscribed, trialDaysLeft } from "@/lib/evenme";
+import { KEYS, store, trialDaysLeft, setSubscribed } from "@/lib/evenme";
+import { checkSubscription } from "@/utils/payments.functions";
+import { getStripeEnvironment } from "@/lib/stripe";
 
 export const Route = createFileRoute("/settings")({
   head: () => ({
@@ -15,28 +17,46 @@ export const Route = createFileRoute("/settings")({
 function Settings() {
   const [reminder, setReminder] = useState("19:00");
   const [name, setName] = useState("");
-  const [subbed, setSubbed] = useState(false);
-  const [daysLeft, setDaysLeft] = useState(7);
+  const [email, setEmail] = useState("");
+  const [subStatus, setSubStatus] = useState<string | null>(null);
+  const [subActive, setSubActive] = useState(false);
+  const [periodEnd, setPeriodEnd] = useState<string | null>(null);
+  const [daysLeft, setDaysLeft] = useState(3);
   const [saved, setSaved] = useState(false);
 
   useEffect(() => {
     setReminder(store.get(KEYS.reminder) ?? "19:00");
     setName(store.get(KEYS.name) ?? "");
-    setSubbed(isSubscribed());
+    setEmail(store.get(KEYS.email) ?? "");
     setDaysLeft(trialDaysLeft());
+    const e = store.get(KEYS.email);
+    if (e) {
+      checkSubscription({
+        data: { email: e, environment: getStripeEnvironment() },
+      })
+        .then((res) => {
+          setSubActive(res.active);
+          setSubStatus(res.status);
+          setPeriodEnd(res.currentPeriodEnd);
+          setSubscribed(res.active);
+        })
+        .catch(() => {});
+    }
   }, []);
 
   const save = () => {
     store.set(KEYS.reminder, reminder);
     store.set(KEYS.name, name);
+    if (email) store.set(KEYS.email, email.trim().toLowerCase());
     setSaved(true);
     setTimeout(() => setSaved(false), 2000);
   };
 
-  const cancelSub = () => {
-    store.set(KEYS.subscribed, "false");
-    setSubbed(false);
-  };
+
+  const cancelText = subActive && periodEnd
+    ? `Active until ${new Date(periodEnd).toLocaleDateString()}. Manage or cancel via the email receipt from your last payment.`
+    : null;
+
 
   return (
     <div className="min-h-screen px-6 py-10">
@@ -79,16 +99,17 @@ function Settings() {
             Subscription
           </h2>
           <div className="mt-4 rounded-3xl bg-card border border-border p-6">
-            {subbed ? (
+            {subActive ? (
               <>
                 <p className="text-foreground font-medium">You're subscribed. Thank you.</p>
-                <button
-                  onClick={cancelSub}
-                  className="mt-4 text-sm text-muted-foreground underline hover:text-foreground"
-                >
-                  Cancel subscription
-                </button>
+                {cancelText && (
+                  <p className="mt-2 text-sm text-muted-foreground">{cancelText}</p>
+                )}
+                <p className="mt-2 text-xs text-muted-foreground">
+                  Status: {subStatus}
+                </p>
               </>
+
             ) : (
               <>
                 <p className="text-foreground">

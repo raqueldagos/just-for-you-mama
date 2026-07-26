@@ -164,21 +164,28 @@ export function ensureTrialStart(): string {
   return t;
 }
 
+export const TRIAL_DAYS = 3;
+
 export function trialDaysLeft(): number {
   const t = store.get(K.trialStart);
-  if (!t) return 7;
+  if (!t) return TRIAL_DAYS;
   const started = new Date(t).getTime();
   const days = Math.floor((Date.now() - started) / (1000 * 60 * 60 * 24));
-  return Math.max(0, 7 - days);
+  return Math.max(0, TRIAL_DAYS - days);
 }
 
 export function isSubscribed(): boolean {
   return store.get(K.subscribed) === "true";
 }
 
+export function setSubscribed(active: boolean) {
+  store.set(K.subscribed, active ? "true" : "false");
+}
+
 export function hasAccess(): boolean {
   return isSubscribed() || trialDaysLeft() > 0;
 }
+
 
 export function pickMeToo(tile: TileKey): string {
   const arr = CONTENT[tile].me_too;

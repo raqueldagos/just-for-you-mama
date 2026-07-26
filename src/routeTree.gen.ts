@@ -13,10 +13,12 @@ import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as ResourcesRouteImport } from './routes/resources'
 import { Route as PaywallRouteImport } from './routes/paywall'
 import { Route as HistoryRouteImport } from './routes/history'
+import { Route as CheckoutReturnRouteImport } from './routes/checkout-return'
 import { Route as CheckinRouteImport } from './routes/checkin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ResetTileRouteImport } from './routes/reset.$tile'
 import { Route as MetooTileRouteImport } from './routes/metoo.$tile'
+import { Route as ApiPublicPaymentsWebhookRouteImport } from './routes/api/public/payments/webhook'
 
 const SettingsRoute = SettingsRouteImport.update({
   id: '/settings',
@@ -36,6 +38,11 @@ const PaywallRoute = PaywallRouteImport.update({
 const HistoryRoute = HistoryRouteImport.update({
   id: '/history',
   path: '/history',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CheckoutReturnRoute = CheckoutReturnRouteImport.update({
+  id: '/checkout-return',
+  path: '/checkout-return',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CheckinRoute = CheckinRouteImport.update({
@@ -58,80 +65,100 @@ const MetooTileRoute = MetooTileRouteImport.update({
   path: '/metoo/$tile',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicPaymentsWebhookRoute =
+  ApiPublicPaymentsWebhookRouteImport.update({
+    id: '/api/public/payments/webhook',
+    path: '/api/public/payments/webhook',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/checkin': typeof CheckinRoute
+  '/checkout-return': typeof CheckoutReturnRoute
   '/history': typeof HistoryRoute
   '/paywall': typeof PaywallRoute
   '/resources': typeof ResourcesRoute
   '/settings': typeof SettingsRoute
   '/metoo/$tile': typeof MetooTileRoute
   '/reset/$tile': typeof ResetTileRoute
+  '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/checkin': typeof CheckinRoute
+  '/checkout-return': typeof CheckoutReturnRoute
   '/history': typeof HistoryRoute
   '/paywall': typeof PaywallRoute
   '/resources': typeof ResourcesRoute
   '/settings': typeof SettingsRoute
   '/metoo/$tile': typeof MetooTileRoute
   '/reset/$tile': typeof ResetTileRoute
+  '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/checkin': typeof CheckinRoute
+  '/checkout-return': typeof CheckoutReturnRoute
   '/history': typeof HistoryRoute
   '/paywall': typeof PaywallRoute
   '/resources': typeof ResourcesRoute
   '/settings': typeof SettingsRoute
   '/metoo/$tile': typeof MetooTileRoute
   '/reset/$tile': typeof ResetTileRoute
+  '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/checkin'
+    | '/checkout-return'
     | '/history'
     | '/paywall'
     | '/resources'
     | '/settings'
     | '/metoo/$tile'
     | '/reset/$tile'
+    | '/api/public/payments/webhook'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/checkin'
+    | '/checkout-return'
     | '/history'
     | '/paywall'
     | '/resources'
     | '/settings'
     | '/metoo/$tile'
     | '/reset/$tile'
+    | '/api/public/payments/webhook'
   id:
     | '__root__'
     | '/'
     | '/checkin'
+    | '/checkout-return'
     | '/history'
     | '/paywall'
     | '/resources'
     | '/settings'
     | '/metoo/$tile'
     | '/reset/$tile'
+    | '/api/public/payments/webhook'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CheckinRoute: typeof CheckinRoute
+  CheckoutReturnRoute: typeof CheckoutReturnRoute
   HistoryRoute: typeof HistoryRoute
   PaywallRoute: typeof PaywallRoute
   ResourcesRoute: typeof ResourcesRoute
   SettingsRoute: typeof SettingsRoute
   MetooTileRoute: typeof MetooTileRoute
   ResetTileRoute: typeof ResetTileRoute
+  ApiPublicPaymentsWebhookRoute: typeof ApiPublicPaymentsWebhookRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -164,6 +191,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof HistoryRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/checkout-return': {
+      id: '/checkout-return'
+      path: '/checkout-return'
+      fullPath: '/checkout-return'
+      preLoaderRoute: typeof CheckoutReturnRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/checkin': {
       id: '/checkin'
       path: '/checkin'
@@ -192,18 +226,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MetooTileRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/payments/webhook': {
+      id: '/api/public/payments/webhook'
+      path: '/api/public/payments/webhook'
+      fullPath: '/api/public/payments/webhook'
+      preLoaderRoute: typeof ApiPublicPaymentsWebhookRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CheckinRoute: CheckinRoute,
+  CheckoutReturnRoute: CheckoutReturnRoute,
   HistoryRoute: HistoryRoute,
   PaywallRoute: PaywallRoute,
   ResourcesRoute: ResourcesRoute,
   SettingsRoute: SettingsRoute,
   MetooTileRoute: MetooTileRoute,
   ResetTileRoute: ResetTileRoute,
+  ApiPublicPaymentsWebhookRoute: ApiPublicPaymentsWebhookRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
