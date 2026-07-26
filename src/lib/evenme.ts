@@ -134,13 +134,34 @@ export function addCheckin(tile: TileKey) {
   store.set(K.checkins, JSON.stringify(filtered));
 }
 
+const MOOD_CHECKINS_KEY = "evenme:moodCheckins";
+export type MoodCheckin = { date: string; mood: string; energy?: string; note?: string };
+export function getMoodCheckins(): MoodCheckin[] {
+  try {
+    const raw = store.get(MOOD_CHECKINS_KEY);
+    return raw ? (JSON.parse(raw) as MoodCheckin[]) : [];
+  } catch {
+    return [];
+  }
+}
+export function addMoodCheckin(mood: string, energy?: string, note?: string) {
+  const list = getMoodCheckins();
+  const today = todayISO();
+  const filtered = list.filter((c) => c.date !== today);
+  filtered.push({ date: today, mood, energy, note });
+  store.set(MOOD_CHECKINS_KEY, JSON.stringify(filtered));
+}
+
 export function streakCount(): number {
-  const list = getCheckins();
-  if (!list.length) return 0;
-  const dates = new Set(list.map((c) => c.date));
+  const tiles = getCheckins();
+  const moods = getMoodCheckins();
+  const dates = new Set<string>([
+    ...tiles.map((c) => c.date),
+    ...moods.map((c) => c.date),
+  ]);
+  if (!dates.size) return 0;
   let count = 0;
   const d = new Date();
-  // count backward from today
   while (dates.has(fmt(d))) {
     count++;
     d.setDate(d.getDate() - 1);
