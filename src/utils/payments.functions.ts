@@ -9,18 +9,6 @@ type CheckoutSessionResult =
   | { clientSecret: string }
   | { error: string };
 
-async function resolveOrCreateCustomer(
-  stripe: ReturnType<typeof createStripeClient>,
-  email: string,
-): Promise<string> {
-  const existing = await stripe.customers.list({ email, limit: 1 });
-  if (existing.data.length) return existing.data[0].id;
-  const created = await stripe.customers.create({
-    email,
-    metadata: { email },
-  });
-  return created.id;
-}
 
 export const createCheckoutSession = createServerFn({ method: "POST" })
   .inputValidator(
@@ -47,7 +35,10 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
       const stripePrice = prices.data[0];
 
       const email = data.email.trim().toLowerCase();
-      const customerId = await resolveOrCreateCustomer(stripe, email);
+      const existing = await stripe.customers.list({ email, limit: 1 });
+      const customerId = existing.data.length
+        ? existing.data[0].id
+        : (await stripe.customers.create({ email, metadata: { email } })).id;
 
       const session = await stripe.checkout.sessions.create({
         line_items: [{ price: stripePrice.id, quantity: 1 }],
