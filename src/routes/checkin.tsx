@@ -4,7 +4,7 @@ import {
   KEYS,
   store,
   hasAccess,
-  trialDaysLeft,
+  freeUsesLeft,
   setSubscribed,
   isSubscribed,
   addMoodCheckin,
@@ -34,29 +34,31 @@ function Checkin() {
   const navigate = useNavigate();
   const [name, setName] = useState<string | null>(null);
   const [access, setAccess] = useState(true);
-  const [daysLeft, setDaysLeft] = useState(3);
-  const [step, setStep] = useState<0 | 1 | 2>(0);
+  const [usesLeft, setUsesLeft] = useState(1);
+  const [step, setStep] = useState<0 | 1 | 2 | 3>(0);
   const [mood, setMood] = useState<Mood | null>(null);
   const [energy, setEnergy] = useState<Energy | null>(null);
   const [note, setNote] = useState("");
+  const [email, setEmail] = useState<string>(() => store.get(KEYS.email) ?? "");
+  const [emailError, setEmailError] = useState<string | null>(null);
 
   useEffect(() => {
     setName(store.get(KEYS.name));
-    setDaysLeft(trialDaysLeft());
-    const email = store.get(KEYS.email);
+    setUsesLeft(freeUsesLeft());
+    const savedEmail = store.get(KEYS.email);
     let cancelled = false;
     (async () => {
-      if (email) {
+      if (savedEmail) {
         try {
           const res = await checkSubscription({
-            data: { email, environment: getStripeEnvironment() },
+            data: { email: savedEmail, environment: getStripeEnvironment() },
           });
           if (cancelled) return;
           setSubscribed(res.active);
         } catch {}
       }
       if (cancelled) return;
-      const ok = isSubscribed() || trialDaysLeft() > 0;
+      const ok = isSubscribed() || freeUsesLeft() > 0;
       setAccess(ok);
       if (!ok) navigate({ to: "/paywall" });
     })();
@@ -66,7 +68,9 @@ function Checkin() {
     };
   }, [navigate]);
 
-  const finish = (m: Mood, e: Energy, n: string) => {
+  const finish = (m: Mood, e: Energy, n: string, mail: string) => {
+    const clean = mail.trim().toLowerCase();
+    store.set(KEYS.email, clean);
     addMoodCheckin(m, e, n || undefined);
     navigate({
       to: "/foryou",
@@ -74,7 +78,20 @@ function Checkin() {
     });
   };
 
+  const submitFinal = () => {
+    if (!mood || !energy) return;
+    const clean = email.trim();
+    if (!clean || !clean.includes("@") || clean.length < 5) {
+      setEmailError("Please enter a valid email so we can remember you.");
+      return;
+    }
+    setEmailError(null);
+    finish(mood, energy, note, clean);
+  };
+
   if (!access) return null;
+
+
 
   return (
     <div className="min-h-screen px-6 py-10">
