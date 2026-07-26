@@ -73,12 +73,15 @@ function Onboarding() {
 
         {step === 1 && (
           <div className="space-y-6">
-            <h1 className="text-3xl font-serif leading-tight text-foreground">
+            <div className="flex justify-center">
+              <img src="/favicon.svg" alt="Even Me" className="h-20 w-20 rounded-2xl" />
+            </div>
+            <h1 className="text-3xl font-serif leading-tight text-foreground text-center">
               You're not here to log your kid.
               <br />
               <span className="text-primary">You're here for you.</span>
             </h1>
-            <p className="text-muted-foreground">
+            <p className="text-muted-foreground text-center">
               90 seconds a day. No charts, no scores, no clinical stuff. Just a moment
               to notice how <em>you</em> are.
             </p>
