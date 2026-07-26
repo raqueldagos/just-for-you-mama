@@ -9,38 +9,168 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as ResourcesRouteImport } from './routes/resources'
+import { Route as PaywallRouteImport } from './routes/paywall'
+import { Route as HistoryRouteImport } from './routes/history'
+import { Route as CheckinRouteImport } from './routes/checkin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ResetTileRouteImport } from './routes/reset.$tile'
+import { Route as MetooTileRouteImport } from './routes/metoo.$tile'
 
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResourcesRoute = ResourcesRouteImport.update({
+  id: '/resources',
+  path: '/resources',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PaywallRoute = PaywallRouteImport.update({
+  id: '/paywall',
+  path: '/paywall',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HistoryRoute = HistoryRouteImport.update({
+  id: '/history',
+  path: '/history',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CheckinRoute = CheckinRouteImport.update({
+  id: '/checkin',
+  path: '/checkin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ResetTileRoute = ResetTileRouteImport.update({
+  id: '/reset/$tile',
+  path: '/reset/$tile',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MetooTileRoute = MetooTileRouteImport.update({
+  id: '/metoo/$tile',
+  path: '/metoo/$tile',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/checkin': typeof CheckinRoute
+  '/history': typeof HistoryRoute
+  '/paywall': typeof PaywallRoute
+  '/resources': typeof ResourcesRoute
+  '/settings': typeof SettingsRoute
+  '/metoo/$tile': typeof MetooTileRoute
+  '/reset/$tile': typeof ResetTileRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/checkin': typeof CheckinRoute
+  '/history': typeof HistoryRoute
+  '/paywall': typeof PaywallRoute
+  '/resources': typeof ResourcesRoute
+  '/settings': typeof SettingsRoute
+  '/metoo/$tile': typeof MetooTileRoute
+  '/reset/$tile': typeof ResetTileRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/checkin': typeof CheckinRoute
+  '/history': typeof HistoryRoute
+  '/paywall': typeof PaywallRoute
+  '/resources': typeof ResourcesRoute
+  '/settings': typeof SettingsRoute
+  '/metoo/$tile': typeof MetooTileRoute
+  '/reset/$tile': typeof ResetTileRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/checkin'
+    | '/history'
+    | '/paywall'
+    | '/resources'
+    | '/settings'
+    | '/metoo/$tile'
+    | '/reset/$tile'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/checkin'
+    | '/history'
+    | '/paywall'
+    | '/resources'
+    | '/settings'
+    | '/metoo/$tile'
+    | '/reset/$tile'
+  id:
+    | '__root__'
+    | '/'
+    | '/checkin'
+    | '/history'
+    | '/paywall'
+    | '/resources'
+    | '/settings'
+    | '/metoo/$tile'
+    | '/reset/$tile'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CheckinRoute: typeof CheckinRoute
+  HistoryRoute: typeof HistoryRoute
+  PaywallRoute: typeof PaywallRoute
+  ResourcesRoute: typeof ResourcesRoute
+  SettingsRoute: typeof SettingsRoute
+  MetooTileRoute: typeof MetooTileRoute
+  ResetTileRoute: typeof ResetTileRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/resources': {
+      id: '/resources'
+      path: '/resources'
+      fullPath: '/resources'
+      preLoaderRoute: typeof ResourcesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/paywall': {
+      id: '/paywall'
+      path: '/paywall'
+      fullPath: '/paywall'
+      preLoaderRoute: typeof PaywallRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/history': {
+      id: '/history'
+      path: '/history'
+      fullPath: '/history'
+      preLoaderRoute: typeof HistoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/checkin': {
+      id: '/checkin'
+      path: '/checkin'
+      fullPath: '/checkin'
+      preLoaderRoute: typeof CheckinRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,22 +178,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/reset/$tile': {
+      id: '/reset/$tile'
+      path: '/reset/$tile'
+      fullPath: '/reset/$tile'
+      preLoaderRoute: typeof ResetTileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/metoo/$tile': {
+      id: '/metoo/$tile'
+      path: '/metoo/$tile'
+      fullPath: '/metoo/$tile'
+      preLoaderRoute: typeof MetooTileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CheckinRoute: CheckinRoute,
+  HistoryRoute: HistoryRoute,
+  PaywallRoute: PaywallRoute,
+  ResourcesRoute: ResourcesRoute,
+  SettingsRoute: SettingsRoute,
+  MetooTileRoute: MetooTileRoute,
+  ResetTileRoute: ResetTileRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
