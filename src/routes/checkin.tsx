@@ -193,16 +193,54 @@ function Checkin() {
             />
             <p className="text-xs text-muted-foreground">Optional. One word is plenty.</p>
             <button
-              onClick={() => mood && energy && finish(mood, energy, note)}
+              onClick={() => {
+                if (!mood || !energy) return;
+                const saved = store.get(KEYS.email);
+                if (saved) finish(mood, energy, note, saved);
+                else setStep(3);
+              }}
               className="w-full rounded-2xl bg-primary py-4 text-primary-foreground text-lg font-medium hover:opacity-90 transition"
             >
               Show me something for right now
             </button>
             <button
-              onClick={() => mood && energy && finish(mood, energy, "")}
+              onClick={() => {
+                if (!mood || !energy) return;
+                const saved = store.get(KEYS.email);
+                if (saved) finish(mood, energy, "", saved);
+                else {
+                  setNote("");
+                  setStep(3);
+                }
+              }}
               className="w-full rounded-2xl bg-transparent py-2 text-sm text-muted-foreground hover:text-foreground"
             >
               Skip the word
+            </button>
+          </div>
+        )}
+
+        {step === 3 && (
+          <div className="animate-fade-in space-y-4">
+            <p className="text-muted-foreground">
+              Your email — so we can remember you and send your welcome note. No spam.
+            </p>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="you@example.com"
+              className="w-full rounded-2xl border border-border bg-card px-5 py-4 text-lg outline-none focus:ring-2 focus:ring-ring"
+              autoFocus
+            />
+            {emailError && (
+              <p className="text-sm text-destructive">{emailError}</p>
+            )}
+            <button
+              onClick={submitFinal}
+              className="w-full rounded-2xl bg-primary py-4 text-primary-foreground text-lg font-medium hover:opacity-90 transition"
+            >
+              Show me something for right now
             </button>
           </div>
         )}
@@ -216,11 +254,12 @@ function Checkin() {
           </Link>
         </div>
 
-        {daysLeft > 0 && daysLeft <= 7 && (
+        {!isSubscribed() && usesLeft > 0 && (
           <p className="mt-4 text-right text-xs text-muted-foreground">
-            {daysLeft} free day{daysLeft === 1 ? "" : "s"} left
+            {usesLeft} free tip left
           </p>
         )}
+
 
         <div className="mt-8 text-center">
           <Link to="/resources" className="text-xs text-muted-foreground underline">
