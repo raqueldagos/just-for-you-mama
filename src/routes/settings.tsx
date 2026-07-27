@@ -13,8 +13,21 @@ export const Route = createFileRoute("/settings")({
   head: () => ({
     meta: [
       { title: "Settings — Even Me" },
-      { name: "description", content: "Reminder time and subscription." },
+      {
+        name: "description",
+        content:
+          "Update your name, daily reminder time, email, and manage your Even Me subscription — switch plans, cancel, or resume anytime.",
+      },
+      { property: "og:title", content: "Settings — Even Me" },
+      {
+        property: "og:description",
+        content: "Update your reminder, email, and manage your Even Me subscription.",
+      },
+      { property: "og:url", content: "https://evenme.online/settings" },
+      { property: "og:type", content: "website" },
+      { name: "robots", content: "noindex" },
     ],
+    links: [{ rel: "canonical", href: "https://evenme.online/settings" }],
   }),
   component: Settings,
 });
@@ -213,7 +226,7 @@ function Settings() {
 
         <footer className="mt-16 text-center">
           <Link to="/resources" className="text-xs text-muted-foreground underline">
-            If you're in crisis, here's who to call.
+            See crisis support resources
           </Link>
         </footer>
       </div>

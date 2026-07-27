@@ -13,8 +13,20 @@ export const Route = createFileRoute("/paywall")({
   head: () => ({
     meta: [
       { title: "Keep going — Even Me" },
-      { name: "description", content: "Subscribe to keep your streak." },
+      {
+        name: "description",
+        content:
+          "Subscribe to keep showing up for you. $12 per week or $79 per year — a small daily companion for mothers of neurodivergent kids. Cancel anytime.",
+      },
+      { property: "og:title", content: "Keep going — Even Me" },
+      {
+        property: "og:description",
+        content: "Subscribe to keep your daily check-in — $12/week or $79/year. Cancel anytime.",
+      },
+      { property: "og:url", content: "https://evenme.online/paywall" },
+      { property: "og:type", content: "website" },
     ],
+    links: [{ rel: "canonical", href: "https://evenme.online/paywall" }],
   }),
   component: Paywall,
 });
