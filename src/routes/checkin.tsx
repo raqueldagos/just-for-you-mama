@@ -11,6 +11,7 @@ import {
 } from "@/lib/evenme";
 import { MOOD_META, ENERGY_META, type Mood, type Energy } from "@/lib/foryou";
 import { checkSubscription } from "@/utils/payments.functions";
+import { captureLead } from "@/utils/leads.functions";
 import { getStripeEnvironment } from "@/lib/stripe";
 
 export const Route = createFileRoute("/checkin")({
