@@ -87,8 +87,34 @@ async function markCanceled(subscription: any, env: StripeEnv) {
 async function sendWelcomeIfNew(subscription: any) {
   const email = emailFrom(subscription);
   if (!email) return;
+  const clean = email.trim().toLowerCase();
+  // Upsert this email into the leads table and mark as subscribed.
   try {
-    await sendTemplateEmail("welcome", email.trim().toLowerCase(), {
+    const { data: existing } = await getSupabase()
+      .from("leads")
+      .select("id")
+      .eq("email", clean)
+      .maybeSingle();
+    const now = new Date().toISOString();
+    if (existing) {
+      await getSupabase()
+        .from("leads")
+        .update({ subscribed: true, last_seen_at: now, updated_at: now })
+        .eq("id", existing.id);
+    } else {
+      await getSupabase().from("leads").insert({
+        email: clean,
+        subscribed: true,
+        source: "stripe",
+        first_seen_at: now,
+        last_seen_at: now,
+      });
+    }
+  } catch (err) {
+    console.error("Failed to mark lead as subscribed:", err);
+  }
+  try {
+    await sendTemplateEmail("welcome", clean, {
       idempotencyKey: `welcome-${subscription.id}`,
     });
   } catch (err) {

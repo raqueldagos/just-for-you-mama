@@ -11,6 +11,7 @@ import {
 } from "@/lib/evenme";
 import { MOOD_META, ENERGY_META, type Mood, type Energy } from "@/lib/foryou";
 import { checkSubscription } from "@/utils/payments.functions";
+import { captureLead } from "@/utils/leads.functions";
 import { getStripeEnvironment } from "@/lib/stripe";
 
 export const Route = createFileRoute("/checkin")({
@@ -71,6 +72,11 @@ function Checkin() {
   const finish = (m: Mood, e: Energy, n: string, mail: string) => {
     const clean = mail.trim().toLowerCase();
     store.set(KEYS.email, clean);
+    const savedName = store.get(KEYS.name);
+    // Fire-and-forget lead capture so slow/failed backend never blocks UX.
+    captureLead({ data: { email: clean, name: savedName ?? undefined } }).catch(
+      () => {},
+    );
     addMoodCheckin(m, e, n || undefined);
     navigate({
       to: "/foryou",
