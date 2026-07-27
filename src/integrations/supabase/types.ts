@@ -14,6 +14,45 @@ export type Database = {
   }
   public: {
     Tables: {
+      leads: {
+        Row: {
+          check_in_count: number
+          created_at: string
+          email: string
+          first_seen_at: string
+          id: string
+          last_seen_at: string
+          name: string | null
+          source: string
+          subscribed: boolean
+          updated_at: string
+        }
+        Insert: {
+          check_in_count?: number
+          created_at?: string
+          email: string
+          first_seen_at?: string
+          id?: string
+          last_seen_at?: string
+          name?: string | null
+          source?: string
+          subscribed?: boolean
+          updated_at?: string
+        }
+        Update: {
+          check_in_count?: number
+          created_at?: string
+          email?: string
+          first_seen_at?: string
+          id?: string
+          last_seen_at?: string
+          name?: string | null
+          source?: string
+          subscribed?: boolean
+          updated_at?: string
+        }
+        Relationships: []
+      }
       subscriptions: {
         Row: {
           cancel_at_period_end: boolean | null
