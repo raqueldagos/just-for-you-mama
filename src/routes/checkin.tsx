@@ -18,8 +18,20 @@ export const Route = createFileRoute("/checkin")({
   head: () => ({
     meta: [
       { title: "Today's check-in — Even Me" },
-      { name: "description", content: "A 90-second check-in, for you." },
+      {
+        name: "description",
+        content:
+          "A gentle 90-second daily check-in for mothers of neurodivergent kids. Pick a mood, an energy level, and get something small for you.",
+      },
+      { property: "og:title", content: "Today's check-in — Even Me" },
+      {
+        property: "og:description",
+        content: "A gentle 90-second daily check-in — for you, not your child.",
+      },
+      { property: "og:url", content: "https://evenme.online/checkin" },
+      { property: "og:type", content: "website" },
     ],
+    links: [{ rel: "canonical", href: "https://evenme.online/checkin" }],
   }),
   component: Checkin,
 });
@@ -269,7 +281,7 @@ function Checkin() {
 
         <div className="mt-8 text-center">
           <Link to="/resources" className="text-xs text-muted-foreground underline">
-            If you're in crisis, tap here.
+            See crisis support resources
           </Link>
         </div>
       </div>

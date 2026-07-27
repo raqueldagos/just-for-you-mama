@@ -9,14 +9,18 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "A gentle daily check-in for mothers of neurodivergent kids. Not about your child. About you.",
+          "A gentle 90-second daily check-in for mothers of neurodivergent kids. Not about your child — about you. Warm, non-clinical, no tracking of your kid.",
       },
-      { property: "og:title", content: "Even Me" },
+      { property: "og:title", content: "Even Me — A 90-second check-in, for you" },
       {
         property: "og:description",
-        content: "A 90-second daily emotional check-in — for the mother, not the child.",
+        content:
+          "A 90-second daily emotional check-in for mothers of neurodivergent kids — for the mother, not the child.",
       },
+      { property: "og:url", content: "https://evenme.online/" },
+      { property: "og:type", content: "website" },
     ],
+    links: [{ rel: "canonical", href: "https://evenme.online/" }],
   }),
   component: Onboarding,
 });
@@ -158,7 +162,7 @@ function Onboarding() {
 
         <div className="mt-10 text-center">
           <Link to="/resources" className="text-xs text-muted-foreground underline">
-            If you're in crisis, tap here.
+            See crisis support resources
           </Link>
         </div>
       </div>

@@ -6,8 +6,20 @@ export const Route = createFileRoute("/history")({
   head: () => ({
     meta: [
       { title: "Your streak — Even Me" },
-      { name: "description", content: "Days you showed up for you." },
+      {
+        name: "description",
+        content:
+          "A quiet count of the days you showed up for you. Just dates and moods — no notes, no exports, no data about your kid.",
+      },
+      { property: "og:title", content: "Your streak — Even Me" },
+      {
+        property: "og:description",
+        content: "A quiet count of the days you showed up for you.",
+      },
+      { property: "og:url", content: "https://evenme.online/history" },
+      { property: "og:type", content: "website" },
     ],
+    links: [{ rel: "canonical", href: "https://evenme.online/history" }],
   }),
   component: History,
 });
@@ -42,13 +54,14 @@ function History() {
   }
 
   return (
-    <div className="min-h-screen px-6 py-10">
+    <main className="min-h-screen px-6 py-10">
       <div className="mx-auto max-w-xl">
         <Link to="/checkin" className="text-sm text-muted-foreground hover:text-foreground">
           ← Back
         </Link>
 
-        <div className="mt-6 rounded-3xl bg-card border border-border p-8 text-center">
+        <h1 className="mt-6 text-3xl font-serif text-foreground">Your streak</h1>
+        <div className="mt-4 rounded-3xl bg-card border border-border p-8 text-center">
           <p className="text-6xl font-serif text-primary">{streak}</p>
           <p className="mt-2 text-muted-foreground">
             day{streak === 1 ? "" : "s"} you showed up for you
@@ -73,6 +86,6 @@ function History() {
           Just dates. No notes, no exports, no data about your kid. Ever.
         </p>
       </div>
-    </div>
+    </main>
   );
 }

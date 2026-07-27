@@ -1,0 +1,11 @@
+# Even Me
+
+> A 90-second daily emotional check-in for mothers of neurodivergent kids. For the mother, not the child.
+
+Even Me is a gentle, non-clinical daily companion. Mothers pick a mood and energy level, get a small piece of advice, affirmation, or a quick tool (breathing, grounding, journaling), and build a quiet streak of showing up for themselves.
+
+## Pages
+
+- [Home](/): What Even Me is and how to start.
+- [Explore](/explore): Small tools and warm advice, browsable by feeling.
+- [Resources](/resources): Crisis support phone lines and text services.

@@ -4,15 +4,27 @@ export const Route = createFileRoute("/resources")({
   head: () => ({
     meta: [
       { title: "If you're in crisis — Even Me" },
-      { name: "description", content: "Support lines you can call right now." },
+      {
+        name: "description",
+        content:
+          "Crisis support lines you can call or text right now: 988 Lifeline, Crisis Text Line, Postpartum Support International, and international help.",
+      },
+      { property: "og:title", content: "If you're in crisis — Even Me" },
+      {
+        property: "og:description",
+        content: "Crisis support phone and text lines you can reach right now.",
+      },
+      { property: "og:url", content: "https://evenme.online/resources" },
+      { property: "og:type", content: "website" },
     ],
+    links: [{ rel: "canonical", href: "https://evenme.online/resources" }],
   }),
   component: Resources,
 });
 
 function Resources() {
   return (
-    <div className="min-h-screen px-6 py-10">
+    <main className="min-h-screen px-6 py-10">
       <div className="mx-auto max-w-xl">
         <Link to="/checkin" className="text-sm text-muted-foreground hover:text-foreground">
           ← Back
@@ -50,6 +62,6 @@ function Resources() {
           </li>
         </ul>
       </div>
-    </div>
+    </main>
   );
 }
