@@ -72,6 +72,11 @@ function Checkin() {
   const finish = (m: Mood, e: Energy, n: string, mail: string) => {
     const clean = mail.trim().toLowerCase();
     store.set(KEYS.email, clean);
+    const savedName = store.get(KEYS.name);
+    // Fire-and-forget lead capture so slow/failed backend never blocks UX.
+    captureLead({ data: { email: clean, name: savedName ?? undefined } }).catch(
+      () => {},
+    );
     addMoodCheckin(m, e, n || undefined);
     navigate({
       to: "/foryou",
