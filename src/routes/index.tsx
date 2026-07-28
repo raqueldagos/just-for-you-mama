@@ -154,7 +154,7 @@ function Onboarding() {
               Start with 1 free tip
             </button>
             <p className="text-xs text-center text-muted-foreground">
-              No card required to start. Then $12/week or $79/year.
+              No card required to start. Then $4.99/week or $79/year.
             </p>
 
           </div>
