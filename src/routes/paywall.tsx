@@ -166,7 +166,7 @@ function Paywall() {
           >
             <span className="font-medium text-card-foreground">Weekly</span>
             <p className="mt-1 text-2xl font-serif text-foreground">
-              $12 / week
+              $4.99 / week
             </p>
           </button>
         </div>
