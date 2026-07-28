@@ -120,7 +120,7 @@ function Settings() {
   const otherPlan =
     priceId === "even_me_annual" ? "even_me_weekly" : "even_me_annual";
   const otherLabel =
-    priceId === "even_me_annual" ? "Switch to weekly ($12/wk)" : "Switch to annual ($79/yr)";
+    priceId === "even_me_annual" ? "Switch to weekly ($4.99/wk)" : "Switch to annual ($79/yr)";
 
   return (
     <div className="min-h-screen px-6 py-10">

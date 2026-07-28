@@ -16,12 +16,15 @@ export const Route = createFileRoute("/paywall")({
       {
         name: "description",
         content:
-          "Subscribe to keep showing up for you. $12 per week or $79 per year — a small daily companion for mothers of neurodivergent kids. Cancel anytime.",
+          "Subscribe to keep showing up for you. $4.99 per week or $79 per year — a small daily companion for mothers of neurodivergent kids. Cancel anytime.",
       },
-      { property: "og:title", content: "Keep going — Even Me" },
+      {
+        property: "og:title",
+        content: "Even Me — subscribe",
+      },
       {
         property: "og:description",
-        content: "Subscribe to keep your daily check-in — $12/week or $79/year. Cancel anytime.",
+        content: "Subscribe to keep your daily check-in — $4.99/week or $79/year. Cancel anytime.",
       },
       { property: "og:url", content: "https://evenme.online/paywall" },
       { property: "og:type", content: "website" },
@@ -163,7 +166,7 @@ function Paywall() {
           >
             <span className="font-medium text-card-foreground">Weekly</span>
             <p className="mt-1 text-2xl font-serif text-foreground">
-              $12 / week
+              $4.99 / week
             </p>
           </button>
         </div>
