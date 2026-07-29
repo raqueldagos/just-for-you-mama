@@ -215,6 +215,42 @@ function Settings() {
           </div>
         </section>
 
+        <section className="mt-10">
+          <h2 className="text-sm uppercase tracking-widest text-muted-foreground">
+            {t("Account")}
+          </h2>
+          <div className="mt-4 rounded-3xl bg-card border border-border p-6 space-y-4">
+            <div>
+              <button
+                disabled={busy || !subActive || cancelAtEnd}
+                onClick={doCancel}
+                className="w-full rounded-2xl border border-border py-3 text-sm text-muted-foreground hover:bg-muted transition disabled:opacity-50"
+              >
+                {t("Unsubscribe")}
+              </button>
+              <p className="mt-2 text-xs text-muted-foreground">
+                {subActive
+                  ? t("You'll keep access until the end of your paid period.")
+                  : t("You don't have an active subscription.")}
+              </p>
+            </div>
+            <div className="pt-2 border-t border-border">
+              <button
+                onClick={() => {
+                  signOutLocal();
+                  navigate({ to: "/" });
+                }}
+                className="mt-4 w-full rounded-2xl border border-destructive/40 py-3 text-sm text-destructive hover:bg-destructive/5 transition"
+              >
+                {t("Log out")}
+              </button>
+              <p className="mt-2 text-xs text-muted-foreground">
+                {t("This clears your name, email and check-ins saved on this device.")}
+              </p>
+            </div>
+          </div>
+        </section>
+
         <footer className="mt-16 text-center">
           <Link to="/resources" className="text-xs text-muted-foreground underline">
             {t("See crisis support resources")}
