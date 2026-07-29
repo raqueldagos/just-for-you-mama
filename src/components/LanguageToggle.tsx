@@ -42,7 +42,8 @@ export function LanguageToggle() {
       onClick={() => setLang(isPT ? "en" : "pt")}
       aria-label={nextLabel}
       title={nextLabel}
-      className="fixed right-4 top-4 z-50 flex items-center gap-2 rounded-full border border-border bg-card/90 px-3 py-1.5 shadow-sm backdrop-blur hover:bg-muted transition"
+      style={{ top: "calc(env(safe-area-inset-top, 0px) + 4.25rem)" }}
+      className="fixed right-4 z-50 flex items-center gap-2 rounded-full border border-border bg-card/90 px-3 py-2 shadow-sm backdrop-blur hover:bg-muted transition"
     >
       {isPT ? <USFlag className="h-4 w-6 rounded-sm" /> : <BRFlag className="h-4 w-6 rounded-sm" />}
       <span className="text-xs font-medium text-foreground">
