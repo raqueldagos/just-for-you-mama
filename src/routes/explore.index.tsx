@@ -1,6 +1,14 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { CATEGORIES } from "@/lib/foryou";
+import { useEffect, useState } from "react";
+import { CATEGORIES, type Energy, type Mood } from "@/lib/foryou";
 import { TOOL_META, type ToolKey } from "@/components/tools";
+import {
+  GROUP_META,
+  TOOL_MATCH,
+  recommendTools,
+  toolsByGroup,
+  type ToolGroup,
+} from "@/lib/toolmatch";
 import { useAccessGuard } from "@/hooks/useAccessGuard";
 import { useT } from "@/lib/i18n";
 
@@ -14,15 +22,20 @@ export const Route = createFileRoute("/explore/")({
   component: Explore,
 });
 
-const TOOL_LIST: ToolKey[] = [
-  "breath-60", "breath-90", "timer-2", "timer-5", "timer-10",
-  "body-scan", "grounding", "name-it", "journal", "permission", "need", "wins", "gratitude",
-];
-
 function Explore() {
   const t = useT();
   const ok = useAccessGuard();
+  const [picked, setPicked] = useState<ToolKey[]>([]);
+  const [showAll, setShowAll] = useState(false);
+
+  useEffect(() => {
+    const mood = window.localStorage.getItem("evenme:lastmood") as Mood | null;
+    const energy = window.localStorage.getItem("evenme:lastenergy") as Energy | null;
+    if (mood && energy) setPicked(recommendTools(mood, energy, 3));
+  }, []);
+
   if (!ok) return null;
+
   return (
     <div className="min-h-screen px-6 py-10">
       <div className="mx-auto max-w-2xl">
@@ -33,6 +46,19 @@ function Explore() {
         <p className="mt-1 text-muted-foreground">
           {t("Small things to reach for. No commitment.")}
         </p>
+
+        {picked.length > 0 && (
+          <>
+            <h2 className="mt-10 text-sm uppercase tracking-widest text-muted-foreground">
+              {t("Picked for how you felt today")}
+            </h2>
+            <div className="mt-3 space-y-3">
+              {picked.map((k) => (
+                <ToolReasonCard key={k} toolKey={k} />
+              ))}
+            </div>
+          </>
+        )}
 
         <h2 className="mt-10 text-sm uppercase tracking-widest text-muted-foreground">
           {t("By how you feel")}
@@ -50,24 +76,48 @@ function Explore() {
           ))}
         </div>
 
-        <h2 className="mt-10 text-sm uppercase tracking-widest text-muted-foreground">
-          {t("Tools")}
-        </h2>
-        <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-2">
-          {TOOL_LIST.map((k) => {
-            const tm = TOOL_META[k];
-            return (
-              <Link
-                key={k}
-                to="/tool/$key"
-                params={{ key: k }}
-                className="rounded-2xl border border-border bg-card p-4 hover:border-primary transition"
-              >
-                <div className="font-medium text-card-foreground">{t(tm.title)}</div>
-                <div className="text-xs text-muted-foreground">{t(tm.blurb)}</div>
-              </Link>
-            );
-          })}
+        <div className="mt-10">
+          <button
+            onClick={() => setShowAll((v) => !v)}
+            className="w-full rounded-2xl border border-border bg-card px-5 py-4 text-left transition hover:border-primary"
+          >
+            <span className="font-medium text-card-foreground">{t("All tools")}</span>
+            <span className="float-right text-muted-foreground">{showAll ? "−" : "+"}</span>
+            <p className="text-xs text-muted-foreground">
+              {t("Grouped by what they're for.")}
+            </p>
+          </button>
+
+          {showAll && (
+            <div className="mt-4 space-y-8 animate-fade-in">
+              {toolsByGroup().map(({ group, tools }) => (
+                <div key={group}>
+                  <h3 className="text-sm uppercase tracking-widest text-muted-foreground">
+                    {t(GROUP_META[group as ToolGroup].label)}
+                  </h3>
+                  <p className="text-xs text-muted-foreground">
+                    {t(GROUP_META[group as ToolGroup].blurb)}
+                  </p>
+                  <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
+                    {tools.map((k) => {
+                      const tm = TOOL_META[k];
+                      return (
+                        <Link
+                          key={k}
+                          to="/tool/$key"
+                          params={{ key: k }}
+                          className="rounded-2xl border border-border bg-card p-4 transition hover:border-primary"
+                        >
+                          <div className="font-medium text-card-foreground">{t(tm.title)}</div>
+                          <div className="text-xs text-muted-foreground">{t(tm.blurb)}</div>
+                        </Link>
+                      );
+                    })}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
         <div className="mt-10 text-center">
@@ -77,5 +127,21 @@ function Explore() {
         </div>
       </div>
     </div>
+  );
+}
+
+export function ToolReasonCard({ toolKey }: { toolKey: ToolKey }) {
+  const t = useT();
+  const tm = TOOL_META[toolKey];
+  const match = TOOL_MATCH[toolKey];
+  return (
+    <Link
+      to="/tool/$key"
+      params={{ key: toolKey }}
+      className="block rounded-2xl border border-secondary/60 bg-secondary/20 p-5 transition hover:border-primary"
+    >
+      <div className="font-medium text-foreground">{t(tm.title)}</div>
+      <p className="mt-1 text-sm text-muted-foreground leading-relaxed">{t(match.reason)}</p>
+    </Link>
   );
 }
