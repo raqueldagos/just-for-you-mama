@@ -149,6 +149,9 @@
     background-color: var(--color-background);
     color: var(--color-foreground);
     font-family: var(--font-sans);
+    /* Keep top-of-page controls (back links) clear of the iOS status bar /
+       notch and any in-app browser chrome. */
+    padding-top: calc(env(safe-area-inset-top, 0px) + 2.25rem);
   }
 
 }

@@ -213,6 +213,20 @@ export function trialDaysLeft(): number {
   return freeUsesLeft();
 }
 
+/**
+ * Emails granted unlimited free access (comped accounts).
+ * Add addresses here — matching is case-insensitive.
+ */
+export const UNLIMITED_EMAILS: string[] = [
+  // "you@example.com",
+];
+
+export function isUnlimitedUser(): boolean {
+  const email = (store.get(K.email) ?? "").trim().toLowerCase();
+  if (!email) return false;
+  return UNLIMITED_EMAILS.some((e) => e.trim().toLowerCase() === email);
+}
+
 export function isSubscribed(): boolean {
   return store.get(K.subscribed) === "true";
 }
@@ -222,7 +236,7 @@ export function setSubscribed(active: boolean) {
 }
 
 export function hasAccess(): boolean {
-  return isSubscribed() || freeUsesLeft() > 0;
+  return isUnlimitedUser() || isSubscribed() || freeUsesLeft() > 0;
 }
 
 
@@ -230,4 +244,9 @@ export function hasAccess(): boolean {
 export function pickMeToo(tile: TileKey): string {
   const arr = CONTENT[tile].me_too;
   return arr[Math.floor(Math.random() * arr.length)];
+}
+
+/** Subscribed OR comped — no free-use consumption, no paywall. */
+export function isPremium(): boolean {
+  return isSubscribed() || isUnlimitedUser();
 }
