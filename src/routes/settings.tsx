@@ -191,7 +191,7 @@ function Settings() {
                   ) : (
                     <button
                       disabled={busy}
-                      onClick={doCancel}
+                      onClick={() => setShowCancelConfirm(true)}
                       className="w-full rounded-2xl border border-border py-3 text-sm text-muted-foreground hover:bg-muted transition disabled:opacity-50"
                     >
                       {t("Cancel subscription")}
