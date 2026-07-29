@@ -1032,6 +1032,5 @@ export const DICT: Record<string, string> = {
     "Se tiver alguma dúvida sobre esta Política de Privacidade, entre em contato conosco:",
   "Email:": "E-mail:",
   "Website:": "Site:",
-  "Go home": "Voltar ao início",
 };
 
