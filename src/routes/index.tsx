@@ -1,6 +1,7 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { KEYS, store, ensureTrialStart } from "@/lib/evenme";
+import { useT } from "@/lib/i18n";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -27,6 +28,7 @@ export const Route = createFileRoute("/")({
 
 function Onboarding() {
   const navigate = useNavigate();
+  const t = useT();
   const [step, setStep] = useState(1);
   const [name, setName] = useState("");
   const [reminder, setReminder] = useState("19:00");
@@ -71,7 +73,7 @@ function Onboarding() {
             onClick={skip}
             className="text-sm text-muted-foreground hover:text-foreground"
           >
-            Skip
+            {t("Skip")}
           </button>
         </div>
 
@@ -81,19 +83,18 @@ function Onboarding() {
               <img src="/favicon.svg" alt="Even Me" className="h-20 w-20 rounded-2xl" />
             </div>
             <h1 className="text-3xl font-serif leading-tight text-foreground text-center">
-              You're not here to log your kid.
+              {t("You're not here to log your kid.")}
               <br />
-              <span className="text-primary">You're here for you.</span>
+              <span className="text-primary">{t("You're here for you.")}</span>
             </h1>
             <p className="text-muted-foreground text-center">
-              90 seconds a day. No charts, no scores, no clinical stuff. Just a moment
-              to notice how <em>you</em> are.
+              {t("90 seconds a day. No charts, no scores, no clinical stuff. Just a moment to notice how you are.")}
             </p>
             <button
               onClick={() => setStep(2)}
               className="w-full rounded-2xl bg-primary py-4 text-primary-foreground text-lg font-medium hover:opacity-90 transition"
             >
-              Okay
+              {t("Okay")}
             </button>
           </div>
         )}
@@ -101,20 +102,20 @@ function Onboarding() {
         {step === 2 && (
           <div className="space-y-6">
             <h1 className="text-2xl font-serif text-foreground">
-              What should we call you?
+              {t("What should we call you?")}
             </h1>
-            <p className="text-muted-foreground text-sm">Totally optional.</p>
+            <p className="text-muted-foreground text-sm">{t("Totally optional.")}</p>
             <input
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="First name"
+              placeholder={t("First name")}
               className="w-full rounded-2xl border border-border bg-card px-5 py-4 text-lg outline-none focus:ring-2 focus:ring-ring"
             />
             <button
               onClick={() => setStep(3)}
               className="w-full rounded-2xl bg-primary py-4 text-primary-foreground text-lg font-medium hover:opacity-90 transition"
             >
-              Continue
+              {t("Continue")}
             </button>
           </div>
         )}
@@ -122,11 +123,11 @@ function Onboarding() {
         {step === 3 && (
           <div className="space-y-6">
             <h1 className="text-2xl font-serif text-foreground">
-              One gentle nudge a day, whenever you want it.
+              {t("One gentle nudge a day, whenever you want it.")}
             </h1>
             <div>
               <label className="block text-sm text-muted-foreground mb-2">
-                Reminder time
+                {t("Reminder time")}
               </label>
               <input
                 type="time"
@@ -137,7 +138,7 @@ function Onboarding() {
             </div>
             <div>
               <label className="block text-sm text-muted-foreground mb-2">
-                Email (optional)
+                {t("Email (optional)")}
               </label>
               <input
                 type="email"
@@ -151,10 +152,10 @@ function Onboarding() {
               onClick={finish}
               className="w-full rounded-2xl bg-primary py-4 text-primary-foreground text-lg font-medium hover:opacity-90 transition"
             >
-              Start with 1 free tip
+              {t("Start with 1 free tip")}
             </button>
             <p className="text-xs text-center text-muted-foreground">
-              No card required to start. Then $4.99/week or $79/year.
+              {t("No card required to start. Then $4.99/week or $79/year.")}
             </p>
 
           </div>
@@ -162,11 +163,10 @@ function Onboarding() {
 
         <div className="mt-10 text-center">
           <Link to="/resources" className="text-xs text-muted-foreground underline">
-            See crisis support resources
+            {t("See crisis support resources")}
           </Link>
         </div>
       </div>
     </div>
   );
 }
-

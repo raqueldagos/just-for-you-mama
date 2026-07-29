@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useT } from "@/lib/i18n";
 
 export const Route = createFileRoute("/resources")({
   head: () => ({
@@ -23,34 +24,39 @@ export const Route = createFileRoute("/resources")({
 });
 
 function Resources() {
+  const t = useT();
   return (
     <main className="min-h-screen px-6 py-10">
       <div className="mx-auto max-w-xl">
         <Link to="/checkin" className="text-sm text-muted-foreground hover:text-foreground">
-          ← Back
+          {t("← Back")}
         </Link>
         <h1 className="mt-4 text-3xl font-serif text-foreground">
-          If you're in crisis
+          {t("If you're in crisis")}
         </h1>
         <p className="mt-2 text-muted-foreground">
-          This app isn't equipped for emergencies. These humans are.
+          {t("This app isn't equipped for emergencies. These humans are.")}
         </p>
 
         <ul className="mt-8 space-y-4">
           <li className="rounded-3xl bg-card border border-border p-5">
-            <p className="font-medium text-card-foreground">988 Suicide & Crisis Lifeline (US)</p>
-            <a href="tel:988" className="mt-1 block text-primary text-lg">Call or text 988</a>
+            <p className="font-medium text-card-foreground">{t("988 Suicide & Crisis Lifeline (US)")}</p>
+            <a href="tel:988" className="mt-1 block text-primary text-lg">{t("Call or text 988")}</a>
           </li>
           <li className="rounded-3xl bg-card border border-border p-5">
-            <p className="font-medium text-card-foreground">Crisis Text Line</p>
-            <a href="sms:741741" className="mt-1 block text-primary text-lg">Text HOME to 741741</a>
+            <p className="font-medium text-card-foreground">{t("Crisis Text Line")}</p>
+            <a href="sms:741741" className="mt-1 block text-primary text-lg">{t("Text HOME to 741741")}</a>
           </li>
           <li className="rounded-3xl bg-card border border-border p-5">
-            <p className="font-medium text-card-foreground">Postpartum Support International</p>
+            <p className="font-medium text-card-foreground">{t("Postpartum Support International")}</p>
             <a href="tel:18009447773" className="mt-1 block text-primary text-lg">1-800-944-4773</a>
           </li>
           <li className="rounded-3xl bg-card border border-border p-5">
-            <p className="font-medium text-card-foreground">Outside the US</p>
+            <p className="font-medium text-card-foreground">{t("CVV — Centro de Valorização da Vida (Brasil)")}</p>
+            <a href="tel:188" className="mt-1 block text-primary text-lg">{t("Call 188 — 24/7")}</a>
+          </li>
+          <li className="rounded-3xl bg-card border border-border p-5">
+            <p className="font-medium text-card-foreground">{t("Outside the US")}</p>
             <a
               href="https://findahelpline.com"
               target="_blank"

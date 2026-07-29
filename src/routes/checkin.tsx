@@ -13,6 +13,7 @@ import { MOOD_META, ENERGY_META, type Mood, type Energy } from "@/lib/foryou";
 import { checkSubscription } from "@/utils/payments.functions";
 import { captureLead } from "@/utils/leads.functions";
 import { getStripeEnvironment } from "@/lib/stripe";
+import { useT } from "@/lib/i18n";
 
 export const Route = createFileRoute("/checkin")({
   head: () => ({
@@ -45,6 +46,7 @@ const ENERGIES: Energy[] = ["empty", "low", "steady", "bright"];
 
 function Checkin() {
   const navigate = useNavigate();
+  const t = useT();
   const [name, setName] = useState<string | null>(null);
   const [access, setAccess] = useState(true);
   const [usesLeft, setUsesLeft] = useState(1);
@@ -85,7 +87,6 @@ function Checkin() {
     const clean = mail.trim().toLowerCase();
     store.set(KEYS.email, clean);
     const savedName = store.get(KEYS.name);
-    // Fire-and-forget lead capture so slow/failed backend never blocks UX.
     captureLead({ data: { email: clean, name: savedName ?? undefined } }).catch(
       () => {},
     );
@@ -100,7 +101,7 @@ function Checkin() {
     if (!mood || !energy) return;
     const clean = email.trim();
     if (!clean || !clean.includes("@") || clean.length < 5) {
-      setEmailError("Please enter a valid email so we can remember you.");
+      setEmailError(t("Please enter a valid email so we can remember you."));
       return;
     }
     setEmailError(null);
@@ -109,33 +110,30 @@ function Checkin() {
 
   if (!access) return null;
 
-
-
   return (
     <div className="min-h-screen px-6 py-10">
       <div className="mx-auto max-w-2xl">
         <header className="mb-8 flex items-start justify-between">
           <div>
             <p className="text-sm text-muted-foreground">
-              {name ? `Hi ${name}.` : "Hi."}
+              {name ? `${t("Hi.").replace(".", "")} ${name}.` : t("Hi.")}
             </p>
             <h1 className="mt-1 text-3xl font-serif text-foreground">
-              {step === 0 && "How are you, right now?"}
-              {step === 1 && "How much do you have in the tank?"}
-              {step === 2 && "One word for today?"}
-              {step === 3 && "Where should we send it?"}
+              {step === 0 && t("How are you, right now?")}
+              {step === 1 && t("How much do you have in the tank?")}
+              {step === 2 && t("One word for today?")}
+              {step === 3 && t("Where should we send it?")}
             </h1>
           </div>
           <Link
             to="/settings"
             className="rounded-full p-2 text-muted-foreground hover:bg-muted"
-            aria-label="Settings"
+            aria-label={t("Settings")}
           >
             <SettingsIcon />
           </Link>
         </header>
 
-        {/* step dots */}
         <div className="mb-8 flex gap-2">
           {[0, 1, 2, 3].map((n) => (
             <div
@@ -146,7 +144,6 @@ function Checkin() {
             />
           ))}
         </div>
-
 
         {step === 0 && (
           <div className="animate-fade-in grid grid-cols-2 sm:grid-cols-3 gap-3">
@@ -167,8 +164,8 @@ function Checkin() {
                   }`}
                 >
                   <div className="text-2xl">{meta.emoji}</div>
-                  <div className="mt-1 font-medium text-card-foreground">{meta.label}</div>
-                  <div className="text-xs text-muted-foreground">{meta.blurb}</div>
+                  <div className="mt-1 font-medium text-card-foreground">{t(meta.label)}</div>
+                  <div className="text-xs text-muted-foreground">{t(meta.blurb)}</div>
                 </button>
               );
             })}
@@ -192,8 +189,8 @@ function Checkin() {
                       : "border-border hover:border-primary/60"
                   }`}
                 >
-                  <div className="font-medium text-card-foreground">{meta.label}</div>
-                  <div className="text-sm text-muted-foreground">{meta.blurb}</div>
+                  <div className="font-medium text-card-foreground">{t(meta.label)}</div>
+                  <div className="text-sm text-muted-foreground">{t(meta.blurb)}</div>
                 </button>
               );
             })}
@@ -205,11 +202,11 @@ function Checkin() {
             <input
               value={note}
               onChange={(e) => setNote(e.target.value.slice(0, 24))}
-              placeholder="foggy, tender, wired, okay…"
+              placeholder={t("foggy, tender, wired, okay…")}
               className="w-full rounded-2xl border border-border bg-card px-5 py-4 text-lg outline-none focus:ring-2 focus:ring-ring"
               autoFocus
             />
-            <p className="text-xs text-muted-foreground">Optional. One word is plenty.</p>
+            <p className="text-xs text-muted-foreground">{t("Optional. One word is plenty.")}</p>
             <button
               onClick={() => {
                 if (!mood || !energy) return;
@@ -219,7 +216,7 @@ function Checkin() {
               }}
               className="w-full rounded-2xl bg-primary py-4 text-primary-foreground text-lg font-medium hover:opacity-90 transition"
             >
-              Show me something for right now
+              {t("Show me something for right now")}
             </button>
             <button
               onClick={() => {
@@ -233,7 +230,7 @@ function Checkin() {
               }}
               className="w-full rounded-2xl bg-transparent py-2 text-sm text-muted-foreground hover:text-foreground"
             >
-              Skip the word
+              {t("Skip the word")}
             </button>
           </div>
         )}
@@ -241,7 +238,7 @@ function Checkin() {
         {step === 3 && (
           <div className="animate-fade-in space-y-4">
             <p className="text-muted-foreground">
-              Your email — so we can remember you and send your welcome note. No spam.
+              {t("Your email — so we can remember you and send your welcome note. No spam.")}
             </p>
             <input
               type="email"
@@ -258,30 +255,29 @@ function Checkin() {
               onClick={submitFinal}
               className="w-full rounded-2xl bg-primary py-4 text-primary-foreground text-lg font-medium hover:opacity-90 transition"
             >
-              Show me something for right now
+              {t("Show me something for right now")}
             </button>
           </div>
         )}
 
         <div className="mt-10 flex items-center justify-between text-sm">
           <Link to="/history" className="text-muted-foreground hover:text-foreground">
-            Your streak →
+            {t("Your streak →")}
           </Link>
           <Link to="/explore" className="text-muted-foreground hover:text-foreground">
-            Explore tools & advice →
+            {t("Explore tools & advice →")}
           </Link>
         </div>
 
         {!isSubscribed() && usesLeft > 0 && (
           <p className="mt-4 text-right text-xs text-muted-foreground">
-            {usesLeft} free tip left
+            {usesLeft} {t("free tip left")}
           </p>
         )}
 
-
         <div className="mt-8 text-center">
           <Link to="/resources" className="text-xs text-muted-foreground underline">
-            See crisis support resources
+            {t("See crisis support resources")}
           </Link>
         </div>
       </div>
