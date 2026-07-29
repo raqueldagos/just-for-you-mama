@@ -240,3 +240,67 @@ export const changePlan = createServerFn({ method: "POST" })
       return { error: getStripeErrorMessage(error) };
     }
   });
+
+// --- Native Apple In-App Purchase (RevenueCat) -----------------------------
+// Writes into the SAME `subscriptions` table Stripe webhooks use, so both
+// payment paths resolve through checkSubscription()/hasAccess() identically.
+
+export const recordAppleSubscription = createServerFn({ method: "POST" })
+  .inputValidator(
+    (data: {
+      email: string;
+      productId: string;
+      appUserId: string;
+      expiresAt?: string | null;
+      willRenew?: boolean;
+      environment: StripeEnv;
+    }) => {
+      if (!data.email || !data.email.includes("@"))
+        throw new Error("A valid email is required");
+      if (!data.productId) throw new Error("productId is required");
+      if (!data.appUserId) throw new Error("appUserId is required");
+      return data;
+    },
+  )
+  .handler(async ({ data }): Promise<MutationResult> => {
+    try {
+      const { supabaseAdmin } = await import(
+        "@/integrations/supabase/client.server"
+      );
+      const email = data.email.trim().toLowerCase();
+      const priceId = data.productId.endsWith(".annual")
+        ? "even_me_annual"
+        : data.productId.endsWith(".weekly")
+          ? "even_me_weekly"
+          : data.productId;
+      const now = new Date().toISOString();
+
+      await supabaseAdmin.from("subscriptions").upsert(
+        {
+          email,
+          // Namespaced so it can never collide with a real Stripe sub id.
+          stripe_subscription_id: `rc_${data.appUserId}_${data.productId}`,
+          stripe_customer_id: `rc_${data.appUserId}`,
+          price_id: priceId,
+          status: "active",
+          current_period_start: now,
+          current_period_end: data.expiresAt ?? null,
+          cancel_at_period_end: data.willRenew === false,
+          environment: data.environment,
+          updated_at: now,
+        },
+        { onConflict: "stripe_subscription_id" },
+      );
+
+      // Keep the leads row in sync, same as the Stripe webhook does.
+      await supabaseAdmin
+        .from("leads")
+        .update({ subscribed: true, updated_at: now })
+        .eq("email", email);
+
+      return { ok: true };
+    } catch (error) {
+      console.error("recordAppleSubscription failed:", error);
+      return { error: "Could not save your subscription. Please try again." };
+    }
+  });
