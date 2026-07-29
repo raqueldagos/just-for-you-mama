@@ -849,4 +849,127 @@ export const DICT: Record<string, string> = {
     "Explodi no jantar. Vou pedir desculpas quando nós duas nos acalmarmos.",
   "Yelled today. Repaired it after. Still a good mom. Repeating that to myself.":
     "Gritei hoje. Reparei depois. Ainda sou uma boa mãe. Repetindo isso para mim mesma.",
+
+  // ---- Guided flow ----
+  Next: "Próximo",
+  "Start this": "Começar",
+  "Picked for you": "Escolhido para você",
+  "Show me a different one": "Me mostre outro",
+  "Give me another moment": "Me dê outro momento",
+  "Picked for how you felt today": "Escolhido para como você se sentiu hoje",
+  "Tools that help with this": "Ferramentas que ajudam nisso",
+  "Words for this": "Palavras para isso",
+  "All tools": "Todas as ferramentas",
+  "Grouped by what they're for.": "Agrupadas pelo que servem.",
+  "Let's keep this very small. One thing at a time.":
+    "Vamos manter isso bem pequeno. Uma coisa de cada vez.",
+  "No rush. One thing at a time.": "Sem pressa. Uma coisa de cada vez.",
+  "Here's your moment. One thing at a time.":
+    "Este é o seu momento. Uma coisa de cada vez.",
+  "You've got a little to spend today. One thing at a time.":
+    "Você tem um pouco para gastar hoje. Uma coisa de cada vez.",
+  "You showed up for yourself. That counted.":
+    "Você apareceu por você mesma. Isso contou.",
+  "Nothing else to do now. Put the phone down.":
+    "Nada mais a fazer agora. Pode largar o celular.",
+
+  // ---- Tool groups ----
+  "Calm down": "Se acalmar",
+  "When your body is louder than your thoughts.":
+    "Quando o corpo fala mais alto que os pensamentos.",
+  "Get unstuck": "Destravar",
+  "When everything is a blur of next things.":
+    "Quando tudo vira um borrão de próximas coisas.",
+  "Feel less alone": "Se sentir menos sozinha",
+  "When the day was yours to carry by yourself.":
+    "Quando o dia foi só seu para carregar.",
+  "Restore energy": "Recuperar energia",
+  "When there's nothing left in the tank.": "Quando não sobrou nada no tanque.",
+
+  // ---- New tools ----
+  "Three sighs": "Três suspiros",
+  "The fastest way down. Twenty seconds.": "O caminho mais rápido. Vinte segundos.",
+  "Cool water": "Água fresca",
+  "Wrists or face. Forty-five seconds.": "Pulsos ou rosto. Quarenta e cinco segundos.",
+  Unclench: "Destravar o corpo",
+  "Jaw, shoulders, hands. Let go on purpose.":
+    "Mandíbula, ombros, mãos. Solte de propósito.",
+  "Hand on heart": "Mão no coração",
+  "One minute of the care you give everyone else.":
+    "Um minuto do cuidado que você dá a todo mundo.",
+  "Shake it out": "Sacudir",
+  "Thirty seconds of moving the feeling through.":
+    "Trinta segundos para o sentimento atravessar.",
+  "Look far away": "Olhar longe",
+  "Twenty seconds of distance for tired eyes.":
+    "Vinte segundos de distância para olhos cansados.",
+  "Sound off": "Desligar um som",
+  "Turn one noise off for a minute.": "Desligue um barulho por um minuto.",
+  "Count back from five": "Contar de cinco a um",
+  "Slow and boring. Interrupts the spiral.":
+    "Devagar e sem graça. Interrompe a espiral.",
+  "Warm drink": "Bebida quente",
+  "Make one. Hold it before you drink it.":
+    "Faça uma. Segure antes de beber.",
+  "The one thing rule": "A regra da única coisa",
+  "Pick the next thing. Everything else waits.":
+    "Escolha a próxima coisa. O resto espera.",
+  "Text a safe person": "Mande mensagem para alguém seguro",
+  "Words already written for you.": "As palavras já estão escritas para você.",
+  "Tomorrow's one kindness": "Uma gentileza para amanhã",
+  "Choose something small for tomorrow-you.":
+    "Escolha algo pequeno para a você de amanhã.",
+
+  // ---- Tool reasons ----
+  "Your body is running hot. Three long sighs bring the alarm down faster than talking does.":
+    "Seu corpo está a mil. Três suspiros longos baixam o alarme mais rápido do que falar.",
+  "You don't have much left, so this asks for one minute and nothing else.":
+    "Não sobrou muito em você, então isso pede um minuto e nada mais.",
+  "A longer out-breath than in-breath tells your body the emergency is over.":
+    "Soltar o ar por mais tempo do que puxar avisa ao corpo que a emergência passou.",
+  "You've been holding your jaw and shoulders all day. Letting go is quicker than calming down.":
+    "Você segurou a mandíbula e os ombros o dia todo. Soltar é mais rápido do que se acalmar.",
+  "When feelings are too big for words, cool water gives your system a different signal to follow.":
+    "Quando o sentimento é grande demais para palavras, a água fresca dá outro sinal ao corpo.",
+  "That charge in your chest needs somewhere to go. Thirty seconds of movement moves it through.":
+    "Aquela carga no peito precisa de saída. Trinta segundos de movimento fazem ela passar.",
+  "Your head is somewhere else. Naming what's actually in the room brings you back to it.":
+    "Sua cabeça está longe. Nomear o que está no cômodo traz você de volta.",
+  "The spiral needs something boring to trip over. Five slow numbers will do it.":
+    "A espiral precisa tropeçar em algo sem graça. Cinco números lentos bastam.",
+  "You can do this lying down. It asks nothing except noticing.":
+    "Dá para fazer deitada. Só pede que você perceba.",
+  "Too much at once is the problem, not you. Pick one next thing and let the rest wait.":
+    "O problema é tudo ao mesmo tempo, não você. Escolha uma coisa e deixe o resto esperar.",
+  "You've been deciding all day. This decides one small thing for you.":
+    "Você decidiu o dia inteiro. Isso decide uma coisinha por você.",
+  "It's hard to soothe a feeling you haven't named. Naming it takes some of its power.":
+    "É difícil acalmar um sentimento sem nome. Nomear tira parte da força dele.",
+  "The guilt loop keeps going until someone says it's allowed. Today that's you.":
+    "O ciclo de culpa continua até alguém dizer que pode. Hoje esse alguém é você.",
+  "One sentence, not a page. Enough to get today out of your head.":
+    "Uma frase, não uma página. O bastante para tirar o dia da cabeça.",
+  "Reaching out is heavy when you're this tired, so the words are already written for you.":
+    "Pedir ajuda pesa quando se está tão cansada, então as palavras já estão prontas.",
+  "You give this exact kind of care all day. One minute of it comes back to you.":
+    "Você dá exatamente esse cuidado o dia todo. Um minuto dele volta para você.",
+  "Nobody saw what you did today. This is where it gets written down anyway.":
+    "Ninguém viu o que você fez hoje. Aqui fica registrado mesmo assim.",
+  "Something felt tender-good today. Naming it makes it stay a little longer.":
+    "Algo foi bom e delicado hoje. Nomear faz durar um pouco mais.",
+  "A small warm thing, made only for you. That's the whole point of it.":
+    "Uma coisinha quente, feita só para você. É esse o ponto.",
+  "Your eyes have been close-up all day. Twenty seconds of distance unwinds more than you'd think.":
+    "Seus olhos ficaram de perto o dia todo. Vinte segundos de distância relaxam mais do que parece.",
+  "Sensory overload is real for you too. Turning one noise off is one less thing asking for you.":
+    "A sobrecarga sensorial também é sua. Desligar um barulho é uma coisa a menos pedindo de você.",
+  "Two minutes of nothing. Short enough that you can actually take it.":
+    "Dois minutos de nada. Curto o bastante para você conseguir tirar.",
+  "A real pause, still short enough to fit in the day you're having.":
+    "Uma pausa de verdade, ainda curta o bastante para caber no seu dia.",
+  "You have a little to spend. Spend it somewhere that isn't this room.":
+    "Você tem um pouco para gastar. Gaste em outro cômodo que não este.",
+  "Today's nearly done. Leave one small kindness out for tomorrow-you.":
+    "O dia está quase no fim. Deixe uma gentileza para a você de amanhã.",
 };
+
