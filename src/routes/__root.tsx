@@ -13,6 +13,7 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { LanguageToggle } from "@/components/LanguageToggle";
 import { useT } from "@/lib/i18n";
+import { useIapBootstrap } from "@/hooks/useIap";
 
 function NotFoundComponent() {
   const t = useT();
@@ -126,6 +127,7 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  useIapBootstrap();
 
   return (
     <QueryClientProvider client={queryClient}>

@@ -9,6 +9,8 @@ import { createCheckoutSession } from "@/utils/payments.functions";
 import { KEYS, store } from "@/lib/evenme";
 import { PaymentTestModeBanner } from "@/components/PaymentTestModeBanner";
 import { useT } from "@/lib/i18n";
+import { useIsNativeApp } from "@/hooks/useIap";
+import { IapPaywall } from "@/components/IapPaywall";
 
 export const Route = createFileRoute("/paywall")({
   head: () => ({
@@ -35,7 +37,9 @@ export const Route = createFileRoute("/paywall")({
 function Paywall() {
   const navigate = useNavigate();
   const t = useT();
+  const isNative = useIsNativeApp();
   const [plan, setPlan] = useState<"annual" | "weekly">("annual");
+
   const [email, setEmail] = useState<string>(
     () => store.get(KEYS.email) ?? "",
   );
@@ -77,6 +81,10 @@ function Paywall() {
     }
     setCheckoutOpen(true);
   };
+
+  if (isNative) {
+    return <IapPaywall />;
+  }
 
   if (checkoutOpen) {
     return (

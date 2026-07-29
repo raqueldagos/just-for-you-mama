@@ -330,6 +330,22 @@ export const DICT: Record<string, string> = {
   "Weekly": "Semanal",
   "$4.99 / week": "$4,99 / semana",
   "Cancel anytime in Settings.": "Cancele a qualquer momento nos Ajustes.",
+  "Loading plans…": "Carregando os planos…",
+  "Please wait…": "Um momento…",
+  "Restore purchases": "Restaurar compras",
+  "Please pick a plan.": "Escolha um plano.",
+  "No worries — nothing was charged.": "Tudo bem — nada foi cobrado.",
+  "Purchase didn't complete. You can try again anytime.":
+    "A compra não foi concluída. Você pode tentar de novo quando quiser.",
+  "Something went wrong with the purchase. Please try again.":
+    "Algo deu errado com a compra. Tente novamente.",
+  "We couldn't load the plans right now. Please try again.":
+    "Não conseguimos carregar os planos agora. Tente novamente.",
+  "We couldn't find an active purchase on this Apple ID.":
+    "Não encontramos uma compra ativa neste Apple ID.",
+  "Restore didn't work. Please try again.":
+    "A restauração não funcionou. Tente novamente.",
+
   "I already subscribed — refresh my access":
     "Já assinei — atualizar meu acesso",
   "Please enter a valid email so we can remember your subscription.":
