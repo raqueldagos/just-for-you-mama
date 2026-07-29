@@ -6,7 +6,7 @@ import {
   hasAccess,
   freeUsesLeft,
   setSubscribed,
-  isSubscribed,
+  isPremium,
   addMoodCheckin,
 } from "@/lib/evenme";
 import { MOOD_META, ENERGY_META, type Mood, type Energy } from "@/lib/foryou";
@@ -73,7 +73,7 @@ function Checkin() {
         } catch {}
       }
       if (cancelled) return;
-      const ok = isSubscribed() || freeUsesLeft() > 0;
+      const ok = isPremium() || freeUsesLeft() > 0;
       setAccess(ok);
       if (!ok) navigate({ to: "/paywall" });
     })();
@@ -269,7 +269,7 @@ function Checkin() {
           </Link>
         </div>
 
-        {!isSubscribed() && usesLeft > 0 && (
+        {!isPremium() && usesLeft > 0 && (
           <p className="mt-4 text-right text-xs text-muted-foreground">
             {usesLeft} {t("free tip left")}
           </p>

@@ -9,7 +9,7 @@ import {
   type Energy,
 } from "@/lib/foryou";
 import { ToolRenderer, TOOL_META, toolForItemCta, type ToolKey } from "@/components/tools";
-import { KEYS, store, isSubscribed, consumeFreeUse, hasAccess, freeUsesLeft } from "@/lib/evenme";
+import { KEYS, store, isPremium, consumeFreeUse, hasAccess, freeUsesLeft } from "@/lib/evenme";
 import { useT } from "@/lib/i18n";
 
 const searchSchema = z.object({
@@ -57,7 +57,7 @@ function ForYou() {
   }, []);
 
   useEffect(() => {
-    if (isSubscribed()) return;
+    if (isPremium()) return;
     if (consumedForSeed.current === seed) return;
     consumedForSeed.current = seed;
     consumeFreeUse();
@@ -67,7 +67,7 @@ function ForYou() {
   const picked = useMemo(() => pickForYou(m, e, { seed, exclude: seen }), [m, e, seed, seen]);
 
   const another = () => {
-    if (!isSubscribed() && !hasAccess()) {
+    if (!isPremium() && !hasAccess()) {
       navigate({ to: "/paywall" });
       return;
     }
@@ -80,7 +80,7 @@ function ForYou() {
   };
 
   const openToolGuarded = (k: ToolKey) => {
-    if (!isSubscribed() && !hasAccess()) {
+    if (!isPremium() && !hasAccess()) {
       navigate({ to: "/paywall" });
       return;
     }
@@ -134,7 +134,7 @@ function ForYou() {
         </div>
 
         <div className="mt-8 flex flex-col gap-3">
-          {locked && !isSubscribed() ? (
+          {locked && !isPremium() ? (
             <div className="rounded-2xl border border-primary/30 bg-primary/5 p-5 text-center">
               <p className="text-sm text-foreground">
                 {t("Your free tip is used. Subscribe to keep going.")}
@@ -156,7 +156,7 @@ function ForYou() {
           )}
           <button
             onClick={() => {
-              if (!isSubscribed() && !hasAccess()) {
+              if (!isPremium() && !hasAccess()) {
                 navigate({ to: "/paywall" });
                 return;
               }
