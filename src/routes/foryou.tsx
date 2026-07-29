@@ -49,8 +49,11 @@ function ForYou() {
       navigate({ to: "/paywall" });
       return;
     }
+    store.set("evenme:lastmood", m);
+    store.set("evenme:lastenergy", e);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
 
   useEffect(() => {
     if (isPremium()) return;
