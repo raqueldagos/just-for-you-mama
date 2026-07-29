@@ -353,6 +353,13 @@ export const DICT: Record<string, string> = {
   "Subscription resumed.": "Assinatura retomada.",
   "Plan switched. You'll be prorated for the difference.":
     "Plano trocado. A diferença será proporcional.",
+  "Cancel your subscription?": "Cancelar sua assinatura?",
+  "Your subscription will be canceled, but you'll keep full access until {{date}}. After that, you can still use your free tip or resubscribe anytime.":
+    "Sua assinatura será cancelada, mas você mantém acesso completo até {{date}}. Depois disso, ainda poderá usar sua dica grátis ou assinar novamente a qualquer momento.",
+  "Your subscription will be canceled. You'll keep access until the end of your paid period, then you can still use your free tip or resubscribe anytime.":
+    "Sua assinatura será cancelada. Você mantém o acesso até o fim do período pago; depois, ainda poderá usar sua dica grátis ou assinar novamente a qualquer momento.",
+  "Yes, cancel subscription": "Sim, cancelar assinatura",
+  "Keep my subscription": "Manter minha assinatura",
 
   // ---------- History ----------
   "Your streak — Even Me": "Sua sequência — Even Me",
