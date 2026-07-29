@@ -48,6 +48,7 @@ function Settings() {
   const [saved, setSaved] = useState(false);
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
+  const [showCancelConfirm, setShowCancelConfirm] = useState(false);
 
   const refresh = async (e: string) => {
     try {
