@@ -245,3 +245,8 @@ export function pickMeToo(tile: TileKey): string {
   const arr = CONTENT[tile].me_too;
   return arr[Math.floor(Math.random() * arr.length)];
 }
+
+/** Subscribed OR comped — no free-use consumption, no paywall. */
+export function isPremium(): boolean {
+  return isSubscribed() || isUnlimitedUser();
+}
