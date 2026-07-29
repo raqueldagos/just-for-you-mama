@@ -35,6 +35,7 @@ export const Route = createFileRoute("/settings")({
 
 function Settings() {
   const t = useT();
+  const navigate = useNavigate();
   const [reminder, setReminder] = useState("19:00");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
