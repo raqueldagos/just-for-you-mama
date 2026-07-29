@@ -271,10 +271,8 @@ function Settings() {
             </h3>
             <p className="mt-3 text-sm text-muted-foreground leading-relaxed">
               {periodEnd
-                ? t(
-                    "Your subscription will be canceled, but you'll keep full access until {{date}}. After that, you can still use your free tip or resubscribe anytime.",
-                    { date: new Date(periodEnd).toLocaleDateString() }
-                  )
+                ? t("Your subscription will be canceled, but you'll keep full access until")
+                    .replace("{{date}}", new Date(periodEnd).toLocaleDateString())
                 : t(
                     "Your subscription will be canceled. You'll keep access until the end of your paid period, then you can still use your free tip or resubscribe anytime."
                   )}
