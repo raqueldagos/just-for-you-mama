@@ -861,6 +861,30 @@ export function ToolRenderer({ tool }: { tool: ToolKey }) {
       return <TinyWinTool />;
     case "gratitude":
       return <GratitudeTool />;
+    case "sigh":
+      return <SighTool />;
+    case "cold-water":
+      return <ColdWaterTool />;
+    case "unclench":
+      return <UnclenchTool />;
+    case "hand-heart":
+      return <HandOnHeartTool />;
+    case "shake":
+      return <ShakeItOutTool />;
+    case "look-far":
+      return <LookFarTool />;
+    case "sound-off":
+      return <SoundOffTool />;
+    case "count-back":
+      return <CountBackTool />;
+    case "warm-drink":
+      return <WarmDrinkTool />;
+    case "one-thing":
+      return <OneThingTool />;
+    case "text-someone":
+      return <TextSomeoneTool />;
+    case "tomorrow-kindness":
+      return <TomorrowKindnessTool />;
   }
 }
 
