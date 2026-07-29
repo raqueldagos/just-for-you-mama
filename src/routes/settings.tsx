@@ -48,6 +48,7 @@ function Settings() {
   const [saved, setSaved] = useState(false);
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
+  const [showCancelConfirm, setShowCancelConfirm] = useState(false);
 
   const refresh = async (e: string) => {
     try {
@@ -190,7 +191,7 @@ function Settings() {
                   ) : (
                     <button
                       disabled={busy}
-                      onClick={doCancel}
+                      onClick={() => setShowCancelConfirm(true)}
                       className="w-full rounded-2xl border border-border py-3 text-sm text-muted-foreground hover:bg-muted transition disabled:opacity-50"
                     >
                       {t("Cancel subscription")}
@@ -224,7 +225,7 @@ function Settings() {
             <div>
               <button
                 disabled={busy || !subActive || cancelAtEnd}
-                onClick={doCancel}
+                onClick={() => setShowCancelConfirm(true)}
                 className="w-full rounded-2xl border border-border py-3 text-sm text-muted-foreground hover:bg-muted transition disabled:opacity-50"
               >
                 {t("Unsubscribe")}
@@ -261,6 +262,43 @@ function Settings() {
           </Link>
         </footer>
       </div>
+
+      {showCancelConfirm && (
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/40 p-4">
+          <div className="w-full max-w-sm rounded-3xl bg-card p-6 shadow-xl">
+            <h3 className="text-lg font-serif text-foreground">
+              {t("Cancel your subscription?")}
+            </h3>
+            <p className="mt-3 text-sm text-muted-foreground leading-relaxed">
+              {periodEnd
+                ? t(
+                    "Your subscription will be canceled, but you'll keep full access until {{date}}. After that, you can still use your free tip or resubscribe anytime."
+                  ).replace("{{date}}", new Date(periodEnd).toLocaleDateString())
+                : t(
+                    "Your subscription will be canceled. You'll keep access until the end of your paid period, then you can still use your free tip or resubscribe anytime."
+                  )}
+            </p>
+            <div className="mt-6 flex flex-col gap-3">
+              <button
+                disabled={busy}
+                onClick={() => {
+                  setShowCancelConfirm(false);
+                  doCancel();
+                }}
+                className="w-full rounded-2xl border border-border py-3 text-sm text-muted-foreground hover:bg-muted transition disabled:opacity-50"
+              >
+                {t("Yes, cancel subscription")}
+              </button>
+              <button
+                onClick={() => setShowCancelConfirm(false)}
+                className="w-full rounded-2xl bg-primary py-3 text-primary-foreground text-sm font-medium hover:opacity-90 transition"
+              >
+                {t("Keep my subscription")}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
