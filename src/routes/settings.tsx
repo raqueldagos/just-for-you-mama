@@ -252,9 +252,12 @@ function Settings() {
           </div>
         </section>
 
-        <footer className="mt-16 text-center">
+        <footer className="mt-16 flex flex-col items-center gap-3 text-center">
           <Link to="/resources" className="text-xs text-muted-foreground underline">
             {t("See crisis support resources")}
+          </Link>
+          <Link to="/privacy" className="text-xs text-muted-foreground underline">
+            {t("Privacy Policy")}
           </Link>
         </footer>
       </div>
