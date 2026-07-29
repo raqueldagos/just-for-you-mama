@@ -268,7 +268,15 @@ function Checkin() {
           </p>
         )}
 
-        <div className="mt-8 text-center">
+        <div className="mt-8 flex flex-col items-center gap-3 text-center">
+          <Link
+            to="/settings"
+            className="inline-flex items-center gap-2 rounded-2xl border border-border px-5 py-3 text-sm text-muted-foreground hover:bg-muted transition"
+            aria-label={t("Settings")}
+          >
+            <SettingsIcon />
+            {t("Settings")}
+          </Link>
           <Link to="/resources" className="text-xs text-muted-foreground underline">
             {t("See crisis support resources")}
           </Link>
