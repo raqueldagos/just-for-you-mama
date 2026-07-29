@@ -8,9 +8,11 @@ export const IOS_PRODUCTS = {
   weekly: "com.brunadagostino.evenme.weekly",
 } as const;
 
-const API_KEY = import.meta.env.VITE_REVENUECAT_IOS_API_KEY as
+// Public RevenueCat SDK key — safe to ship in the client bundle.
+const API_KEY = (import.meta.env.VITE_REVENUECAT_IOS_API_KEY as
   | string
-  | undefined;
+  | undefined) ?? "appl_aovhwzJdXNSeadVOfVuxZgEypbV";
+
 
 // Optional: pin a single entitlement id. When unset we treat ANY active
 // entitlement as premium, which is safe and avoids name drift.
