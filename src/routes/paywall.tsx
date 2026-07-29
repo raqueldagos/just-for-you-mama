@@ -9,6 +9,8 @@ import { createCheckoutSession } from "@/utils/payments.functions";
 import { KEYS, store } from "@/lib/evenme";
 import { PaymentTestModeBanner } from "@/components/PaymentTestModeBanner";
 import { useT } from "@/lib/i18n";
+import { useIsNativeApp } from "@/hooks/useIap";
+import { IapPaywall } from "@/components/IapPaywall";
 
 export const Route = createFileRoute("/paywall")({
   head: () => ({
@@ -79,6 +81,10 @@ function Paywall() {
     }
     setCheckoutOpen(true);
   };
+
+  if (isNative) {
+    return <IapPaywall />;
+  }
 
   if (checkoutOpen) {
     return (
