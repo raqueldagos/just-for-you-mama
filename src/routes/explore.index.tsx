@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { CATEGORIES } from "@/lib/foryou";
 import { TOOL_META, type ToolKey } from "@/components/tools";
 import { useAccessGuard } from "@/hooks/useAccessGuard";
+import { useT } from "@/lib/i18n";
 
 export const Route = createFileRoute("/explore/")({
   head: () => ({
@@ -19,21 +20,22 @@ const TOOL_LIST: ToolKey[] = [
 ];
 
 function Explore() {
+  const t = useT();
   const ok = useAccessGuard();
   if (!ok) return null;
   return (
     <div className="min-h-screen px-6 py-10">
       <div className="mx-auto max-w-2xl">
         <Link to="/checkin" className="text-sm text-muted-foreground hover:text-foreground">
-          ← Back
+          {t("← Back")}
         </Link>
-        <h1 className="mt-4 text-3xl font-serif text-foreground">Explore</h1>
+        <h1 className="mt-4 text-3xl font-serif text-foreground">{t("Explore")}</h1>
         <p className="mt-1 text-muted-foreground">
-          Small things to reach for. No commitment.
+          {t("Small things to reach for. No commitment.")}
         </p>
 
         <h2 className="mt-10 text-sm uppercase tracking-widest text-muted-foreground">
-          By how you feel
+          {t("By how you feel")}
         </h2>
         <div className="mt-3 grid grid-cols-2 gap-2">
           {CATEGORIES.map((c) => (
@@ -43,17 +45,17 @@ function Explore() {
               params={{ cat: c.key }}
               className="rounded-2xl border border-border bg-card p-4 text-card-foreground hover:border-primary transition"
             >
-              {c.label}
+              {t(c.label)}
             </Link>
           ))}
         </div>
 
         <h2 className="mt-10 text-sm uppercase tracking-widest text-muted-foreground">
-          Tools
+          {t("Tools")}
         </h2>
         <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-2">
           {TOOL_LIST.map((k) => {
-            const t = TOOL_META[k];
+            const tm = TOOL_META[k];
             return (
               <Link
                 key={k}
@@ -61,8 +63,8 @@ function Explore() {
                 params={{ key: k }}
                 className="rounded-2xl border border-border bg-card p-4 hover:border-primary transition"
               >
-                <div className="font-medium text-card-foreground">{t.title}</div>
-                <div className="text-xs text-muted-foreground">{t.blurb}</div>
+                <div className="font-medium text-card-foreground">{t(tm.title)}</div>
+                <div className="text-xs text-muted-foreground">{t(tm.blurb)}</div>
               </Link>
             );
           })}
@@ -70,7 +72,7 @@ function Explore() {
 
         <div className="mt-10 text-center">
           <Link to="/resources" className="text-xs text-muted-foreground underline">
-            If you're in crisis, tap here.
+            {t("If you're in crisis, tap here.")}
           </Link>
         </div>
       </div>

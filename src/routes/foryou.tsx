@@ -10,6 +10,7 @@ import {
 } from "@/lib/foryou";
 import { ToolRenderer, TOOL_META, toolForItemCta, type ToolKey } from "@/components/tools";
 import { KEYS, store, isSubscribed, consumeFreeUse, hasAccess, freeUsesLeft } from "@/lib/evenme";
+import { useT } from "@/lib/i18n";
 
 const searchSchema = z.object({
   mood: z.string(),
@@ -31,6 +32,7 @@ export const Route = createFileRoute("/foryou")({
 function ForYou() {
   const { mood, energy, note } = Route.useSearch();
   const navigate = useNavigate();
+  const t = useT();
   const m = mood as Mood;
   const e = energy as Energy;
   const meta = MOOD_META[m] ?? MOOD_META.neutral;
@@ -41,7 +43,6 @@ function ForYou() {
   const [locked, setLocked] = useState(false);
   const consumedForSeed = useRef<number | null>(null);
 
-  // Access + email gate on mount.
   useEffect(() => {
     const savedEmail = store.get(KEYS.email);
     if (!savedEmail) {
@@ -55,7 +56,6 @@ function ForYou() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Consume one free use per rendered tip (per seed) for non-subscribers.
   useEffect(() => {
     if (isSubscribed()) return;
     if (consumedForSeed.current === seed) return;
@@ -88,7 +88,7 @@ function ForYou() {
   };
 
   if (openTool) {
-    const t = TOOL_META[openTool];
+    const tm = TOOL_META[openTool];
     return (
       <div className="min-h-screen px-6 py-10">
         <div className="mx-auto max-w-xl">
@@ -96,10 +96,10 @@ function ForYou() {
             onClick={() => setOpenTool(null)}
             className="text-sm text-muted-foreground hover:text-foreground"
           >
-            ← Back to your moment
+            {t("← Back to your moment")}
           </button>
-          <h1 className="mt-4 text-2xl font-serif text-foreground">{t.title}</h1>
-          <p className="text-sm text-muted-foreground">{t.blurb}</p>
+          <h1 className="mt-4 text-2xl font-serif text-foreground">{t(tm.title)}</h1>
+          <p className="text-sm text-muted-foreground">{t(tm.blurb)}</p>
           <div className="mt-6 rounded-3xl bg-card border border-border p-6 animate-fade-in">
             <ToolRenderer tool={openTool} />
           </div>
@@ -112,11 +112,11 @@ function ForYou() {
     <div className="min-h-screen px-6 py-10">
       <div className="mx-auto max-w-xl">
         <p className="text-sm text-muted-foreground">
-          Because you said you're feeling
+          {t("Because you said you're feeling")}
         </p>
         <h1 className="mt-1 text-3xl font-serif text-foreground">
           <span className="mr-2">{meta.emoji}</span>
-          {meta.label.toLowerCase()}
+          {t(meta.label).toLowerCase()}
           {note ? <span className="text-muted-foreground"> · {note}</span> : null}
         </h1>
 
@@ -137,13 +137,13 @@ function ForYou() {
           {locked && !isSubscribed() ? (
             <div className="rounded-2xl border border-primary/30 bg-primary/5 p-5 text-center">
               <p className="text-sm text-foreground">
-                Your free tip is used. Subscribe to keep going.
+                {t("Your free tip is used. Subscribe to keep going.")}
               </p>
               <button
                 onClick={() => navigate({ to: "/paywall" })}
                 className="mt-3 w-full rounded-2xl bg-primary py-3 text-primary-foreground font-medium hover:opacity-90 transition"
               >
-                Continue
+                {t("Continue")}
               </button>
             </div>
           ) : (
@@ -151,7 +151,7 @@ function ForYou() {
               onClick={another}
               className="w-full rounded-2xl bg-primary py-4 text-primary-foreground text-lg font-medium hover:opacity-90 transition"
             >
-              Give me another
+              {t("Give me another")}
             </button>
           )}
           <button
@@ -164,17 +164,17 @@ function ForYou() {
             }}
             className="w-full rounded-2xl border border-border py-3 text-foreground hover:bg-muted transition"
           >
-            Explore more tools & advice
+            {t("Explore more tools & advice")}
           </button>
         </div>
 
         <p className="mt-8 text-center text-sm text-muted-foreground">
-          That's enough for today. Come back tomorrow if you want to.
+          {t("That's enough for today. Come back tomorrow if you want to.")}
         </p>
 
         <div className="mt-6 text-center">
           <Link to="/resources" className="text-xs text-muted-foreground underline">
-            If you're in crisis, tap here.
+            {t("If you're in crisis, tap here.")}
           </Link>
         </div>
       </div>
@@ -182,8 +182,8 @@ function ForYou() {
   );
 }
 
-
 function ContentCard({ item, index }: { item: Item; index: number }) {
+  const t = useT();
   const styleByKind: Record<string, string> = {
     affirmation: "bg-card border-border",
     reflection: "bg-card border-border",
@@ -210,7 +210,7 @@ function ContentCard({ item, index }: { item: Item; index: number }) {
     >
       {label[item.kind] && (
         <p className="text-xs uppercase tracking-widest text-muted-foreground">
-          {label[item.kind]}
+          {t(label[item.kind])}
         </p>
       )}
       <p
@@ -220,24 +220,25 @@ function ContentCard({ item, index }: { item: Item; index: number }) {
             : "text-lg leading-relaxed"
         }`}
       >
-        {item.text}
+        {t(item.text)}
       </p>
     </div>
   );
 }
 
 function ToolCard({ item, onOpen }: { item: Item; onOpen: (k: ToolKey) => void }) {
+  const t = useT();
   const key = toolForItemCta(item.cta) ?? "breath-90";
   const meta = TOOL_META[key];
   return (
     <div className="animate-fade-in rounded-3xl border border-secondary/60 bg-secondary/20 p-6">
-      <p className="text-xs uppercase tracking-widest text-muted-foreground">Try this next</p>
-      <p className="mt-2 text-lg text-foreground">{item.text}</p>
+      <p className="text-xs uppercase tracking-widest text-muted-foreground">{t("Try this next")}</p>
+      <p className="mt-2 text-lg text-foreground">{t(item.text)}</p>
       <button
         onClick={() => onOpen(key)}
         className="mt-4 rounded-2xl bg-foreground/90 px-5 py-3 text-background font-medium hover:opacity-90"
       >
-        {item.cta ?? meta.title}
+        {t(item.cta ?? meta.title)}
       </button>
     </div>
   );

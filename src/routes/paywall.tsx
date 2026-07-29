@@ -8,6 +8,7 @@ import { getStripe, getStripeEnvironment } from "@/lib/stripe";
 import { createCheckoutSession } from "@/utils/payments.functions";
 import { KEYS, store } from "@/lib/evenme";
 import { PaymentTestModeBanner } from "@/components/PaymentTestModeBanner";
+import { useT } from "@/lib/i18n";
 
 export const Route = createFileRoute("/paywall")({
   head: () => ({
@@ -18,10 +19,7 @@ export const Route = createFileRoute("/paywall")({
         content:
           "Subscribe to keep showing up for you. $4.99 per week or $79 per year — a small daily companion for mothers of neurodivergent kids. Cancel anytime.",
       },
-      {
-        property: "og:title",
-        content: "Even Me — subscribe",
-      },
+      { property: "og:title", content: "Even Me — subscribe" },
       {
         property: "og:description",
         content: "Subscribe to keep your daily check-in — $4.99/week or $79/year. Cancel anytime.",
@@ -36,6 +34,7 @@ export const Route = createFileRoute("/paywall")({
 
 function Paywall() {
   const navigate = useNavigate();
+  const t = useT();
   const [plan, setPlan] = useState<"annual" | "weekly">("annual");
   const [email, setEmail] = useState<string>(
     () => store.get(KEYS.email) ?? "",
@@ -73,7 +72,7 @@ function Paywall() {
     setError(null);
     const clean = email.trim();
     if (!clean || !clean.includes("@")) {
-      setError("Please enter a valid email so we can remember your subscription.");
+      setError(t("Please enter a valid email so we can remember your subscription."));
       return;
     }
     setCheckoutOpen(true);
@@ -88,7 +87,7 @@ function Paywall() {
             onClick={() => setCheckoutOpen(false)}
             className="mb-4 text-sm text-muted-foreground hover:text-foreground"
           >
-            ← Change plan
+            {t("← Change plan")}
           </button>
           <EmbeddedCheckoutProvider
             stripe={getStripe()}
@@ -109,19 +108,18 @@ function Paywall() {
           to="/checkin"
           className="text-sm text-muted-foreground hover:text-foreground"
         >
-          ← Not now
+          {t("← Not now")}
         </Link>
         <h1 className="mt-4 text-3xl font-serif text-foreground">
-          Keep showing up for you.
+          {t("Keep showing up for you.")}
         </h1>
         <p className="mt-2 text-muted-foreground">
-          Your free tip is used. Pick what works.
+          {t("Your free tip is used. Pick what works.")}
         </p>
-
 
         <div className="mt-6">
           <label className="block text-sm text-muted-foreground mb-2">
-            Your email
+            {t("Your email")}
           </label>
           <input
             type="email"
@@ -145,15 +143,15 @@ function Paywall() {
             }`}
           >
             <div className="flex items-baseline justify-between">
-              <span className="font-medium text-card-foreground">Annual</span>
+              <span className="font-medium text-card-foreground">{t("Annual")}</span>
               <span className="text-xs rounded-full bg-primary px-2 py-0.5 text-primary-foreground">
-                35% off
+                {t("35% off")}
               </span>
             </div>
             <p className="mt-1 text-2xl font-serif text-foreground">
-              $79 / year
+              {t("$79 / year")}
             </p>
-            <p className="text-xs text-muted-foreground">≈ $1.52 / week</p>
+            <p className="text-xs text-muted-foreground">{t("≈ $1.52 / week")}</p>
           </button>
 
           <button
@@ -164,9 +162,9 @@ function Paywall() {
                 : "border-border bg-card"
             }`}
           >
-            <span className="font-medium text-card-foreground">Weekly</span>
+            <span className="font-medium text-card-foreground">{t("Weekly")}</span>
             <p className="mt-1 text-2xl font-serif text-foreground">
-              $4.99 / week
+              {t("$4.99 / week")}
             </p>
           </button>
         </div>
@@ -175,17 +173,17 @@ function Paywall() {
           onClick={start}
           className="mt-8 w-full rounded-2xl bg-primary py-4 text-primary-foreground text-lg font-medium hover:opacity-90 transition"
         >
-          Continue
+          {t("Continue")}
         </button>
         <p className="mt-3 text-center text-xs text-muted-foreground">
-          Cancel anytime in Settings.
+          {t("Cancel anytime in Settings.")}
         </p>
         <p className="mt-6 text-center">
           <button
             onClick={() => navigate({ to: "/checkin" })}
             className="text-xs text-muted-foreground underline"
           >
-            I already subscribed — refresh my access
+            {t("I already subscribed — refresh my access")}
           </button>
         </p>
       </div>

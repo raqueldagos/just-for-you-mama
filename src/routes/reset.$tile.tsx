@@ -1,6 +1,7 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { CONTENT, TILES, addCheckin, type TileKey } from "@/lib/evenme";
+import { useT } from "@/lib/i18n";
 
 export const Route = createFileRoute("/reset/$tile")({
   head: () => ({
@@ -15,10 +16,11 @@ export const Route = createFileRoute("/reset/$tile")({
 function Reset() {
   const { tile } = Route.useParams();
   const navigate = useNavigate();
+  const t = useT();
   const [copied, setCopied] = useState(false);
   const key = tile as TileKey;
   const content = CONTENT[key];
-  const label = TILES.find((t) => t.key === key)?.label ?? "";
+  const label = TILES.find((x) => x.key === key)?.label ?? "";
 
   useEffect(() => {
     if (content) addCheckin(key);
@@ -28,7 +30,7 @@ function Reset() {
     return (
       <div className="min-h-screen flex items-center justify-center p-6">
         <Link to="/checkin" className="text-primary underline">
-          Back to check-in
+          {t("Back to check-in")}
         </Link>
       </div>
     );
@@ -40,28 +42,24 @@ function Reset() {
       try {
         await navigator.share({ text });
         return;
-      } catch {
-        // fallthrough to copy
-      }
+      } catch {}
     }
     try {
       await navigator.clipboard.writeText(text);
       setCopied(true);
       setTimeout(() => setCopied(false), 2500);
-    } catch {
-      // ignore
-    }
+    } catch {}
   };
 
   return (
     <div className="min-h-screen px-6 py-10">
       <div className="mx-auto max-w-xl">
-        <p className="text-sm text-muted-foreground">You picked</p>
-        <h1 className="mt-1 text-2xl font-serif text-foreground">{label}</h1>
+        <p className="text-sm text-muted-foreground">{t("You picked")}</p>
+        <h1 className="mt-1 text-2xl font-serif text-foreground">{t(label)}</h1>
 
         <div className="mt-8 rounded-3xl bg-card p-7 border border-border shadow-sm">
           <p className="text-lg leading-relaxed text-card-foreground">
-            {content.reset}
+            {t(content.reset)}
           </p>
         </div>
 
@@ -69,14 +67,14 @@ function Reset() {
           onClick={() => navigate({ to: "/metoo/$tile", params: { tile } })}
           className="mt-8 w-full rounded-2xl bg-primary py-4 text-primary-foreground text-lg font-medium hover:opacity-90 transition"
         >
-          I'm through it
+          {t("I'm through it")}
         </button>
 
         <button
           onClick={share}
           className="mt-3 w-full rounded-2xl bg-transparent py-3 text-muted-foreground text-sm hover:text-foreground transition"
         >
-          {copied ? "Copied — paste it anywhere" : "Send this to someone"}
+          {copied ? t("Copied — paste it anywhere") : t("Send this to someone")}
         </button>
       </div>
     </div>

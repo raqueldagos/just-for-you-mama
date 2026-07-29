@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { checkSubscription } from "@/utils/payments.functions";
 import { getStripeEnvironment } from "@/lib/stripe";
 import { KEYS, setSubscribed, store } from "@/lib/evenme";
+import { useT } from "@/lib/i18n";
 
 export const Route = createFileRoute("/checkout-return")({
   head: () => ({
@@ -20,6 +21,7 @@ export const Route = createFileRoute("/checkout-return")({
 
 function CheckoutReturn() {
   const navigate = useNavigate();
+  const t = useT();
   const [status, setStatus] = useState<"checking" | "active" | "pending">(
     "checking",
   );
@@ -46,9 +48,7 @@ function CheckoutReturn() {
           setTimeout(() => navigate({ to: "/checkin" }), 1500);
           return;
         }
-      } catch {
-        // fall through to retry
-      }
+      } catch {}
       if (attempts < 10) {
         setTimeout(poll, 1500);
       } else {
@@ -67,35 +67,34 @@ function CheckoutReturn() {
         {status === "checking" && (
           <>
             <h1 className="text-3xl font-serif text-foreground">
-              Confirming your subscription…
+              {t("Confirming your subscription…")}
             </h1>
             <p className="mt-3 text-muted-foreground">
-              Just a moment while we save this on our end.
+              {t("Just a moment while we save this on our end.")}
             </p>
           </>
         )}
         {status === "active" && (
           <>
-            <h1 className="text-3xl font-serif text-primary">Thank you.</h1>
+            <h1 className="text-3xl font-serif text-primary">{t("Thank you.")}</h1>
             <p className="mt-3 text-muted-foreground">
-              You're all set. Taking you back to your check-in.
+              {t("You're all set. Taking you back to your check-in.")}
             </p>
           </>
         )}
         {status === "pending" && (
           <>
             <h1 className="text-3xl font-serif text-foreground">
-              Almost there.
+              {t("Almost there.")}
             </h1>
             <p className="mt-3 text-muted-foreground">
-              Your payment went through, but we're still syncing. It usually
-              takes a few seconds — try heading back to the app.
+              {t("Your payment went through, but we're still syncing. It usually takes a few seconds — try heading back to the app.")}
             </p>
             <Link
               to="/checkin"
               className="mt-6 inline-block rounded-2xl bg-primary px-5 py-3 text-primary-foreground font-medium"
             >
-              Back to check-in
+              {t("Back to check-in")}
             </Link>
           </>
         )}

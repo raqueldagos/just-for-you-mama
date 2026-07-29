@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { getCheckins, streakCount, type Checkin } from "@/lib/evenme";
+import { useT } from "@/lib/i18n";
 
 export const Route = createFileRoute("/history")({
   head: () => ({
@@ -34,6 +35,7 @@ const TILE_COLORS: Record<string, string> = {
 };
 
 function History() {
+  const t = useT();
   const [checkins, setCheckins] = useState<Checkin[]>([]);
   const [streak, setStreak] = useState(0);
 
@@ -42,7 +44,6 @@ function History() {
     setStreak(streakCount());
   }, []);
 
-  // build last 42 days grid
   const days: { date: string; tile?: string }[] = [];
   const today = new Date();
   const map = new Map(checkins.map((c) => [c.date, c.tile]));
@@ -57,19 +58,19 @@ function History() {
     <main className="min-h-screen px-6 py-10">
       <div className="mx-auto max-w-xl">
         <Link to="/checkin" className="text-sm text-muted-foreground hover:text-foreground">
-          ← Back
+          {t("← Back")}
         </Link>
 
-        <h1 className="mt-6 text-3xl font-serif text-foreground">Your streak</h1>
+        <h1 className="mt-6 text-3xl font-serif text-foreground">{t("Your streak")}</h1>
         <div className="mt-4 rounded-3xl bg-card border border-border p-8 text-center">
           <p className="text-6xl font-serif text-primary">{streak}</p>
           <p className="mt-2 text-muted-foreground">
-            day{streak === 1 ? "" : "s"} you showed up for you
+            {streak === 1 ? t("day you showed up for you") : t("days you showed up for you")}
           </p>
         </div>
 
         <h2 className="mt-10 text-sm uppercase tracking-widest text-muted-foreground">
-          Last 6 weeks
+          {t("Last 6 weeks")}
         </h2>
         <div className="mt-4 grid grid-cols-7 gap-2">
           {days.map((d) => (
@@ -83,7 +84,7 @@ function History() {
           ))}
         </div>
         <p className="mt-6 text-xs text-muted-foreground">
-          Just dates. No notes, no exports, no data about your kid. Ever.
+          {t("Just dates. No notes, no exports, no data about your kid. Ever.")}
         </p>
       </div>
     </main>

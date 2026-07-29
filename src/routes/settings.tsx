@@ -8,6 +8,7 @@ import {
   changePlan,
 } from "@/utils/payments.functions";
 import { getStripeEnvironment } from "@/lib/stripe";
+import { useT } from "@/lib/i18n";
 
 export const Route = createFileRoute("/settings")({
   head: () => ({
@@ -33,6 +34,7 @@ export const Route = createFileRoute("/settings")({
 });
 
 function Settings() {
+  const t = useT();
   const [reminder, setReminder] = useState("19:00");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -92,47 +94,38 @@ function Settings() {
 
   const doCancel = () =>
     run(
-      () =>
-        cancelSubscription({
-          data: { email, environment: getStripeEnvironment() },
-        }),
-      "Canceled. You'll keep access until your period ends.",
+      () => cancelSubscription({ data: { email, environment: getStripeEnvironment() } }),
+      t("Canceled. You'll keep access until your period ends."),
     );
 
   const doResume = () =>
     run(
-      () =>
-        resumeSubscription({
-          data: { email, environment: getStripeEnvironment() },
-        }),
-      "Subscription resumed.",
+      () => resumeSubscription({ data: { email, environment: getStripeEnvironment() } }),
+      t("Subscription resumed."),
     );
 
   const doSwitch = (newPriceId: string) =>
     run(
-      () =>
-        changePlan({
-          data: { email, newPriceId, environment: getStripeEnvironment() },
-        }),
-      "Plan switched. You'll be prorated for the difference.",
+      () => changePlan({ data: { email, newPriceId, environment: getStripeEnvironment() } }),
+      t("Plan switched. You'll be prorated for the difference."),
     );
 
   const otherPlan =
     priceId === "even_me_annual" ? "even_me_weekly" : "even_me_annual";
   const otherLabel =
-    priceId === "even_me_annual" ? "Switch to weekly ($4.99/wk)" : "Switch to annual ($79/yr)";
+    priceId === "even_me_annual" ? t("Switch to weekly ($4.99/wk)") : t("Switch to annual ($79/yr)");
 
   return (
     <div className="min-h-screen px-6 py-10">
       <div className="mx-auto max-w-xl">
         <Link to="/checkin" className="text-sm text-muted-foreground hover:text-foreground">
-          ← Back
+          {t("← Back")}
         </Link>
-        <h1 className="mt-4 text-3xl font-serif text-foreground">Settings</h1>
+        <h1 className="mt-4 text-3xl font-serif text-foreground">{t("Settings")}</h1>
 
         <section className="mt-8 space-y-4">
           <div>
-            <label className="block text-sm text-muted-foreground mb-2">Your name</label>
+            <label className="block text-sm text-muted-foreground mb-2">{t("Your name")}</label>
             <input
               value={name}
               onChange={(e) => setName(e.target.value)}
@@ -141,7 +134,7 @@ function Settings() {
           </div>
           <div>
             <label className="block text-sm text-muted-foreground mb-2">
-              Daily reminder time
+              {t("Daily reminder time")}
             </label>
             <input
               type="time"
@@ -154,26 +147,26 @@ function Settings() {
             onClick={save}
             className="w-full rounded-2xl bg-primary py-3 text-primary-foreground font-medium hover:opacity-90 transition"
           >
-            {saved ? "Saved" : "Save"}
+            {saved ? t("Saved") : t("Save")}
           </button>
         </section>
 
         <section className="mt-10">
           <h2 className="text-sm uppercase tracking-widest text-muted-foreground">
-            Subscription
+            {t("Subscription")}
           </h2>
           <div className="mt-4 rounded-3xl bg-card border border-border p-6 space-y-4">
             {subActive ? (
               <>
-                <p className="text-foreground font-medium">You're subscribed. Thank you.</p>
+                <p className="text-foreground font-medium">{t("You're subscribed. Thank you.")}</p>
                 {periodEnd && (
                   <p className="text-sm text-muted-foreground">
                     {cancelAtEnd
-                      ? `Ends ${new Date(periodEnd).toLocaleDateString()}. You'll keep access until then.`
-                      : `Renews ${new Date(periodEnd).toLocaleDateString()}.`}
+                      ? `${t("Ends")} ${new Date(periodEnd).toLocaleDateString()}. ${t("You'll keep access until then.")}`
+                      : `${t("Renews")} ${new Date(periodEnd).toLocaleDateString()}.`}
                   </p>
                 )}
-                <p className="text-xs text-muted-foreground">Status: {subStatus}</p>
+                <p className="text-xs text-muted-foreground">{t("Status")}: {subStatus}</p>
 
                 <div className="pt-2 flex flex-col gap-2">
                   {priceId && (priceId === "even_me_annual" || priceId === "even_me_weekly") && (
@@ -191,7 +184,7 @@ function Settings() {
                       onClick={doResume}
                       className="w-full rounded-2xl bg-primary py-3 text-primary-foreground text-sm font-medium hover:opacity-90 transition disabled:opacity-50"
                     >
-                      Resume subscription
+                      {t("Resume subscription")}
                     </button>
                   ) : (
                     <button
@@ -199,7 +192,7 @@ function Settings() {
                       onClick={doCancel}
                       className="w-full rounded-2xl border border-border py-3 text-sm text-muted-foreground hover:bg-muted transition disabled:opacity-50"
                     >
-                      Cancel subscription
+                      {t("Cancel subscription")}
                     </button>
                   )}
                 </div>
@@ -208,16 +201,14 @@ function Settings() {
             ) : (
               <>
                 <p className="text-foreground">
-                  {usesLeft > 0
-                    ? "You have 1 free tip left."
-                    : "Your free tip is used."}
+                  {usesLeft > 0 ? t("You have 1 free tip left.") : t("Your free tip is used.")}
                 </p>
 
                 <Link
                   to="/paywall"
                   className="mt-4 inline-block rounded-2xl bg-primary px-5 py-3 text-primary-foreground font-medium hover:opacity-90 transition"
                 >
-                  See plans
+                  {t("See plans")}
                 </Link>
               </>
             )}
@@ -226,7 +217,7 @@ function Settings() {
 
         <footer className="mt-16 text-center">
           <Link to="/resources" className="text-xs text-muted-foreground underline">
-            See crisis support resources
+            {t("See crisis support resources")}
           </Link>
         </footer>
       </div>
