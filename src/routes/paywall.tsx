@@ -35,7 +35,9 @@ export const Route = createFileRoute("/paywall")({
 function Paywall() {
   const navigate = useNavigate();
   const t = useT();
+  const isNative = useIsNativeApp();
   const [plan, setPlan] = useState<"annual" | "weekly">("annual");
+
   const [email, setEmail] = useState<string>(
     () => store.get(KEYS.email) ?? "",
   );
