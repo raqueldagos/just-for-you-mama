@@ -277,9 +277,14 @@ function Checkin() {
             <SettingsIcon />
             {t("Settings")}
           </Link>
-          <Link to="/resources" className="text-xs text-muted-foreground underline">
-            {t("See crisis support resources")}
-          </Link>
+          <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
+            <Link to="/resources" className="underline">
+              {t("See crisis support resources")}
+            </Link>
+            <Link to="/privacy" className="underline">
+              {t("Privacy Policy")}
+            </Link>
+          </div>
         </div>
       </div>
     </div>

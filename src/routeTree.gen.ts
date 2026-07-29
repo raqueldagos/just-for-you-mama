@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as ResourcesRouteImport } from './routes/resources'
+import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as PaywallRouteImport } from './routes/paywall'
 import { Route as HistoryRouteImport } from './routes/history'
 import { Route as ForyouRouteImport } from './routes/foryou'
@@ -39,6 +40,11 @@ const SettingsRoute = SettingsRouteImport.update({
 const ResourcesRoute = ResourcesRouteImport.update({
   id: '/resources',
   path: '/resources',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PaywallRoute = PaywallRouteImport.update({
@@ -116,6 +122,7 @@ export interface FileRoutesByFullPath {
   '/foryou': typeof ForyouRoute
   '/history': typeof HistoryRoute
   '/paywall': typeof PaywallRoute
+  '/privacy': typeof PrivacyRoute
   '/resources': typeof ResourcesRoute
   '/settings': typeof SettingsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -134,6 +141,7 @@ export interface FileRoutesByTo {
   '/foryou': typeof ForyouRoute
   '/history': typeof HistoryRoute
   '/paywall': typeof PaywallRoute
+  '/privacy': typeof PrivacyRoute
   '/resources': typeof ResourcesRoute
   '/settings': typeof SettingsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -153,6 +161,7 @@ export interface FileRoutesById {
   '/foryou': typeof ForyouRoute
   '/history': typeof HistoryRoute
   '/paywall': typeof PaywallRoute
+  '/privacy': typeof PrivacyRoute
   '/resources': typeof ResourcesRoute
   '/settings': typeof SettingsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -173,6 +182,7 @@ export interface FileRouteTypes {
     | '/foryou'
     | '/history'
     | '/paywall'
+    | '/privacy'
     | '/resources'
     | '/settings'
     | '/sitemap.xml'
@@ -191,6 +201,7 @@ export interface FileRouteTypes {
     | '/foryou'
     | '/history'
     | '/paywall'
+    | '/privacy'
     | '/resources'
     | '/settings'
     | '/sitemap.xml'
@@ -209,6 +220,7 @@ export interface FileRouteTypes {
     | '/foryou'
     | '/history'
     | '/paywall'
+    | '/privacy'
     | '/resources'
     | '/settings'
     | '/sitemap.xml'
@@ -228,6 +240,7 @@ export interface RootRouteChildren {
   ForyouRoute: typeof ForyouRoute
   HistoryRoute: typeof HistoryRoute
   PaywallRoute: typeof PaywallRoute
+  PrivacyRoute: typeof PrivacyRoute
   ResourcesRoute: typeof ResourcesRoute
   SettingsRoute: typeof SettingsRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
@@ -261,6 +274,13 @@ declare module '@tanstack/react-router' {
       path: '/resources'
       fullPath: '/resources'
       preLoaderRoute: typeof ResourcesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/paywall': {
@@ -364,6 +384,7 @@ const rootRouteChildren: RootRouteChildren = {
   ForyouRoute: ForyouRoute,
   HistoryRoute: HistoryRoute,
   PaywallRoute: PaywallRoute,
+  PrivacyRoute: PrivacyRoute,
   ResourcesRoute: ResourcesRoute,
   SettingsRoute: SettingsRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
