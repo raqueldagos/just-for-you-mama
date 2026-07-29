@@ -218,7 +218,7 @@ export function trialDaysLeft(): number {
  * Add addresses here — matching is case-insensitive.
  */
 export const UNLIMITED_EMAILS: string[] = [
-  // "you@example.com",
+  "brunardramos@icloud.com",
 ];
 
 export function isUnlimitedUser(): boolean {
