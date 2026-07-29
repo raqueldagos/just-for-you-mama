@@ -225,7 +225,7 @@ function Settings() {
             <div>
               <button
                 disabled={busy || !subActive || cancelAtEnd}
-                onClick={doCancel}
+                onClick={() => setShowCancelConfirm(true)}
                 className="w-full rounded-2xl border border-border py-3 text-sm text-muted-foreground hover:bg-muted transition disabled:opacity-50"
               >
                 {t("Unsubscribe")}
