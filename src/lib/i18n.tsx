@@ -978,5 +978,60 @@ export const DICT: Record<string, string> = {
     "Você tem um pouco para gastar. Gaste em outro cômodo que não este.",
   "Today's nearly done. Leave one small kindness out for tomorrow-you.":
     "O dia está quase no fim. Deixe uma gentileza para a você de amanhã.",
+
+  // Privacy policy
+  "This page is maintained by EvenMe to answer common privacy questions about the EvenMe service.":
+    "Esta página é mantida pela EvenMe para responder perguntas comuns sobre privacidade do serviço EvenMe.",
+  "Privacy Policy for EvenMe": "Política de Privacidade do EvenMe",
+  "Last updated: July 29, 2026.": "Última atualização: 29 de julho de 2026.",
+  "This Privacy Policy describes how EvenMe (\"we,\" \"us,\" or \"our\") collects, uses, and protects information when you use our mobile application and website (the \"Service\").":
+    "Esta Política de Privacidade descreve como o EvenMe (\"nós,\" \"nos,\" ou \"nosso\") coleta, usa e protege as informações quando você usa nosso aplicativo móvel e site (o \"Serviço\").",
+  "1. Information We Collect": "1. Informações que Coletamos",
+  "Account Information": "Informações da Conta",
+  "When you create an account, we collect information such as your email address and any other details you provide during sign-up. This information is stored and managed through our authentication provider, Supabase.":
+    "Quando você cria uma conta, coletamos informações como seu endereço de e-mail e quaisquer outros detalhes fornecidos durante o cadastro. Essas informações são armazenadas e gerenciadas por meio do nosso provedor de autenticação, Supabase.",
+  "Payment Information": "Informações de Pagamento",
+  "If you make a purchase or subscribe through EvenMe, payment processing is handled entirely by Stripe, a third-party payment processor. We do not directly collect, store, or have access to your full credit card number or sensitive payment credentials. Stripe's own privacy policy governs how they handle this data, available at":
+    "Se você fizer uma compra ou assinar o EvenMe, o processamento de pagamentos é feito inteiramente pela Stripe, um processador de pagamentos terceirizado. Não coletamos, armazenamos ou temos acesso ao número completo do seu cartão de crédito ou a dados de pagamento sensíveis. A política de privacidade da Stripe rege como eles tratam esses dados, disponível em",
+  "Usage Information": "Informações de Uso",
+  "We may collect basic information about how you interact with the Service to help us maintain and improve it.":
+    "Podemos coletar informações básicas sobre como você interage com o Serviço para nos ajudar a mantê-lo e melhorá-lo.",
+  "2. How We Use Your Information": "2. Como Usamos Suas Informações",
+  "We use the information we collect to:": "Usamos as informações que coletamos para:",
+  "Create and manage your account": "Criar e gerenciar sua conta",
+  "Process payments and subscriptions": "Processar pagamentos e assinaturas",
+  "Provide, maintain, and improve the Service": "Fornecer, manter e melhorar o Serviço",
+  "Communicate with you about your account or updates to the Service":
+    "Comunicar-nos com você sobre sua conta ou atualizações do Serviço",
+  "Ensure the security and integrity of the Service": "Garantir a segurança e integridade do Serviço",
+  "3. How We Share Your Information": "3. Como Compartilhamos Suas Informações",
+  "We do not sell your personal information. We may share information with:":
+    "Não vendemos suas informações pessoais. Podemos compartilhar informações com:",
+  "Service providers (such as Supabase and Stripe) who help us operate the Service, under their own privacy and security obligations":
+    "Provedores de serviços (como Supabase e Stripe) que nos ajudam a operar o Serviço, sob suas próprias obrigações de privacidade e segurança",
+  "Legal authorities, if required to comply with the law, protect our rights, or ensure user safety":
+    "Autoridades legais, se necessário para cumprir a lei, proteger nossos direitos ou garantir a segurança dos usuários",
+  "4. Data Storage and Security": "4. Armazenamento e Segurança de Dados",
+  "Your account information is stored securely through Supabase's infrastructure. Payment information is stored and secured by Stripe in accordance with industry-standard security practices (including PCI-DSS compliance). While we take reasonable measures to protect your information, no method of transmission or storage is 100% secure.":
+    "As informações da sua conta são armazenadas com segurança por meio da infraestrutura da Supabase. As informações de pagamento são armazenadas e protegidas pela Stripe de acordo com práticas padrão da indústria (incluindo conformidade com PCI-DSS). Embora tomemos medidas razoáveis para proteger suas informações, nenhum método de transmissão ou armazenamento é 100% seguro.",
+  "5. Your Choices and Rights": "5. Suas Escolhas e Direitos",
+  "You may:": "Você pode:",
+  "Access, update, or delete your account information by contacting us":
+    "Acessar, atualizar ou excluir as informações da sua conta entrando em contato conosco",
+  "Request a copy of the personal data we hold about you": "Solicitar uma cópia dos dados pessoais que mantemos sobre você",
+  "Withdraw consent for data processing, where applicable": "Retirar o consentimento para o processamento de dados, quando aplicável",
+  "To exercise any of these rights, please contact us at": "Para exercer qualquer um desses direitos, entre em contato conosco pelo e-mail",
+  "6. Children's Privacy": "6. Privacidade de Crianças",
+  "EvenMe is intended for a general adult audience. We do not knowingly collect personal information from children under 13. If you believe a child has provided us with personal information, please contact us so we can remove it.":
+    "O EvenMe é destinado a um público adulto em geral. Não coletamos intencionalmente informações pessoais de crianças menores de 13 anos. Se você acredita que uma criança nos forneceu informações pessoais, entre em contato para que possamos removê-las.",
+  "7. Changes to This Policy": "7. Alterações a Esta Política",
+  "We may update this Privacy Policy from time to time. We will notify users of significant changes by updating the \"Last updated\" date above.":
+    "Podemos atualizar esta Política de Privacidade periodicamente. Notificaremos os usuários sobre mudanças significativas atualizando a data de \"Última atualização\" acima.",
+  "8. Contact Us": "8. Entre em Contato",
+  "If you have any questions about this Privacy Policy, please contact us at:":
+    "Se tiver alguma dúvida sobre esta Política de Privacidade, entre em contato conosco:",
+  "Email:": "E-mail:",
+  "Website:": "Site:",
+  "Go home": "Voltar ao início",
 };
 
