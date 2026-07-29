@@ -1,5 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { CATEGORIES, ITEMS, type Item } from "@/lib/foryou";
+import { recommendForMoods } from "@/lib/toolmatch";
+import { ToolReasonCard } from "@/routes/explore.index";
 import { useAccessGuard } from "@/hooks/useAccessGuard";
 import { useT } from "@/lib/i18n";
 
@@ -34,6 +36,8 @@ function ExploreCat() {
     i.moods.some((m) => category.moods.includes(m)),
   ).slice(0, 30);
 
+  const tools = recommendForMoods(category.moods, 3);
+
   return (
     <div className="min-h-screen px-6 py-10">
       <div className="mx-auto max-w-xl">
@@ -41,7 +45,24 @@ function ExploreCat() {
           {t("← Explore")}
         </Link>
         <h1 className="mt-4 text-3xl font-serif text-foreground">{t(category.label)}</h1>
-        <div className="mt-6 space-y-3">
+
+        {tools.length > 0 && (
+          <>
+            <h2 className="mt-8 text-sm uppercase tracking-widest text-muted-foreground">
+              {t("Tools that help with this")}
+            </h2>
+            <div className="mt-3 space-y-3">
+              {tools.map((k) => (
+                <ToolReasonCard key={k} toolKey={k} />
+              ))}
+            </div>
+          </>
+        )}
+
+        <h2 className="mt-10 text-sm uppercase tracking-widest text-muted-foreground">
+          {t("Words for this")}
+        </h2>
+        <div className="mt-3 space-y-3">
           {items.map((it) => (
             <div
               key={it.id}
