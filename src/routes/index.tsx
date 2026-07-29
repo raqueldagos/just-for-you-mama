@@ -133,7 +133,7 @@ function Onboarding() {
                 type="time"
                 value={reminder}
                 onChange={(e) => setReminder(e.target.value)}
-                className="w-full rounded-2xl border border-border bg-card px-5 py-4 text-lg outline-none focus:ring-2 focus:ring-ring"
+                className="w-full min-w-0 max-w-full rounded-2xl border border-border bg-card px-4 py-3 text-base outline-none focus:ring-2 focus:ring-ring box-border"
               />
             </div>
             <div>
