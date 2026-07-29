@@ -10,6 +10,19 @@ import {
 import { getStripeEnvironment } from "@/lib/stripe";
 import { useT } from "@/lib/i18n";
 
+const clampTimePart = (value: string, max: number) => {
+  const parsed = Number.parseInt(value, 10);
+  if (Number.isNaN(parsed)) return "00";
+  return Math.min(Math.max(parsed, 0), max).toString().padStart(2, "0");
+};
+
+const normalizeReminderTime = (value: string) => {
+  const [hours = "00", minutes = "00"] = value.split(":");
+  return `${clampTimePart(hours, 23)}:${clampTimePart(minutes, 59)}`;
+};
+
+const cleanReminderTime = (value: string) => value.replace(/[^\d:]/g, "").slice(0, 5);
+
 export const Route = createFileRoute("/settings")({
   head: () => ({
     meta: [
@@ -74,7 +87,9 @@ function Settings() {
   }, []);
 
   const save = () => {
-    store.set(KEYS.reminder, reminder);
+    const normalizedReminder = normalizeReminderTime(reminder);
+    setReminder(normalizedReminder);
+    store.set(KEYS.reminder, normalizedReminder);
     store.set(KEYS.name, name);
     if (email) store.set(KEYS.email, email.trim().toLowerCase());
     setSaved(true);
@@ -139,10 +154,16 @@ function Settings() {
               {t("Daily reminder time")}
             </label>
             <input
-              type="time"
+              type="text"
+              inputMode="numeric"
+              pattern="[0-9:]*"
+              maxLength={5}
+              aria-label={t("Daily reminder time")}
               value={reminder}
-              onChange={(e) => setReminder(e.target.value)}
-              className="w-full min-w-0 max-w-full rounded-2xl border border-border bg-card px-4 py-3 text-base outline-none focus:ring-2 focus:ring-ring box-border"
+              onChange={(e) => setReminder(cleanReminderTime(e.target.value))}
+              onBlur={() => setReminder((value) => normalizeReminderTime(value))}
+              placeholder="19:00"
+              className="block h-12 w-28 max-w-full rounded-xl border border-border bg-card px-3 text-center text-base font-medium outline-none focus:ring-2 focus:ring-ring box-border"
             />
           </div>
           <button
