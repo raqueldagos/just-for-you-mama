@@ -113,7 +113,7 @@ function Checkin() {
   return (
     <div className="min-h-screen px-6 py-10">
       <div className="mx-auto max-w-2xl">
-        <header className="mb-8 flex items-start justify-between">
+        <header className="mb-8">
           <div>
             <p className="text-sm text-muted-foreground">
               {name ? `${t("Hi.").replace(".", "")} ${name}.` : t("Hi.")}
@@ -125,13 +125,6 @@ function Checkin() {
               {step === 3 && t("Where should we send it?")}
             </h1>
           </div>
-          <Link
-            to="/settings"
-            className="rounded-full p-2 text-muted-foreground hover:bg-muted"
-            aria-label={t("Settings")}
-          >
-            <SettingsIcon />
-          </Link>
         </header>
 
         <div className="mb-8 flex gap-2">
@@ -275,7 +268,15 @@ function Checkin() {
           </p>
         )}
 
-        <div className="mt-8 text-center">
+        <div className="mt-8 flex flex-col items-center gap-3 text-center">
+          <Link
+            to="/settings"
+            className="inline-flex items-center gap-2 rounded-2xl border border-border px-5 py-3 text-sm text-muted-foreground hover:bg-muted transition"
+            aria-label={t("Settings")}
+          >
+            <SettingsIcon />
+            {t("Settings")}
+          </Link>
           <Link to="/resources" className="text-xs text-muted-foreground underline">
             {t("See crisis support resources")}
           </Link>

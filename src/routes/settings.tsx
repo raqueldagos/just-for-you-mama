@@ -1,6 +1,6 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { KEYS, store, freeUsesLeft, setSubscribed } from "@/lib/evenme";
+import { KEYS, store, freeUsesLeft, setSubscribed, signOutLocal } from "@/lib/evenme";
 import {
   checkSubscription,
   cancelSubscription,
@@ -35,6 +35,7 @@ export const Route = createFileRoute("/settings")({
 
 function Settings() {
   const t = useT();
+  const navigate = useNavigate();
   const [reminder, setReminder] = useState("19:00");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -212,6 +213,42 @@ function Settings() {
                 </Link>
               </>
             )}
+          </div>
+        </section>
+
+        <section className="mt-10">
+          <h2 className="text-sm uppercase tracking-widest text-muted-foreground">
+            {t("Account")}
+          </h2>
+          <div className="mt-4 rounded-3xl bg-card border border-border p-6 space-y-4">
+            <div>
+              <button
+                disabled={busy || !subActive || cancelAtEnd}
+                onClick={doCancel}
+                className="w-full rounded-2xl border border-border py-3 text-sm text-muted-foreground hover:bg-muted transition disabled:opacity-50"
+              >
+                {t("Unsubscribe")}
+              </button>
+              <p className="mt-2 text-xs text-muted-foreground">
+                {subActive
+                  ? t("You'll keep access until the end of your paid period.")
+                  : t("You don't have an active subscription.")}
+              </p>
+            </div>
+            <div className="pt-2 border-t border-border">
+              <button
+                onClick={() => {
+                  signOutLocal();
+                  navigate({ to: "/" });
+                }}
+                className="mt-4 w-full rounded-2xl border border-destructive/40 py-3 text-sm text-destructive hover:bg-destructive/5 transition"
+              >
+                {t("Log out")}
+              </button>
+              <p className="mt-2 text-xs text-muted-foreground">
+                {t("This clears your name, email and check-ins saved on this device.")}
+              </p>
+            </div>
           </div>
         </section>
 

@@ -106,7 +106,19 @@ export const store = {
     if (!isBrowser()) return;
     window.localStorage.setItem(key, value);
   },
+  remove(key: string) {
+    if (!isBrowser()) return;
+    window.localStorage.removeItem(key);
+  },
 };
+
+/** Clears all local Even Me data (log out on this device). */
+export function signOutLocal() {
+  if (!isBrowser()) return;
+  Object.values(K).forEach((k) => window.localStorage.removeItem(k));
+  window.localStorage.removeItem("evenme:lastmood");
+  window.localStorage.removeItem("evenme:lastenergy");
+}
 
 export const KEYS = K;
 
