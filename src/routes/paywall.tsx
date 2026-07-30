@@ -194,6 +194,17 @@ function Paywall() {
             {t("I already subscribed — refresh my access")}
           </button>
         </p>
+        <p className="mt-4 text-center text-xs text-muted-foreground">
+          {t("By subscribing, you agree to our")}{" "}
+          <Link to="/terms" className="underline hover:text-foreground">
+            {t("Terms of Use")}
+          </Link>{" "}
+          {t("and")}{" "}
+          <Link to="/privacy" className="underline hover:text-foreground">
+            {t("Privacy Policy")}
+          </Link>
+          .
+        </p>
       </div>
     </div>
   );
