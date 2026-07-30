@@ -1055,5 +1055,64 @@ export const DICT: Record<string, string> = {
     "Se tiver alguma dúvida sobre esta Política de Privacidade, entre em contato conosco:",
   "Email:": "E-mail:",
   "Website:": "Site:",
+
+  // Terms of Use
+  "This page is maintained by EvenMe to set out the rules and expectations for using the EvenMe service.":
+    "Esta página é mantida pela EvenMe para estabelecer as regras e expectativas de uso do serviço EvenMe.",
+  "Terms of Use for EvenMe": "Termos de Uso do EvenMe",
+  "Welcome to EvenMe. These Terms of Use (\"Terms\") govern your access to and use of the EvenMe mobile application and website (together, the \"Service\"), operated by Bruna Raquel Dagostino (\"we,\" \"us,\" or \"our\"). By creating an account or using the Service, you agree to these Terms. If you do not agree, please do not use the Service.":
+    "Bem-vinda ao EvenMe. Estes Termos de Uso (\"Termos\") regem seu acesso e uso do aplicativo móvel e site do EvenMe (juntos, o \"Serviço\"), operado por Bruna Raquel Dagostino (\"nós,\" \"nos,\" ou \"nosso\"). Ao criar uma conta ou usar o Serviço, você concorda com estes Termos. Se não concordar, por favor, não use o Serviço.",
+  "1. The Service": "1. O Serviço",
+  "EvenMe provides mood and energy check-ins along with personalized suggestions intended to support everyday emotional wellbeing. EvenMe is not a substitute for professional medical or mental health care, diagnosis, or treatment. If you are experiencing a crisis or having thoughts of harming yourself, please contact emergency services or a crisis helpline in your area immediately.":
+    "O EvenMe oferece check-ins de humor e energia junto com sugestões personalizadas destinadas a apoiar o bem-estar emocional do dia a dia. O EvenMe não substitui cuidados médicos ou de saúde mental profissionais, diagnóstico ou tratamento. Se você estiver em crise ou tendo pensamentos de se machucar, entre em contato imediatamente com os serviços de emergência ou uma linha de crise na sua região.",
+  "2. Eligibility": "2. Elegibilidade",
+  "The Service is intended for general audiences and adults. By using the Service, you confirm that you are legally able to enter into these Terms in your jurisdiction.":
+    "O Serviço é destinado ao público em geral e a adultos. Ao usar o Serviço, você confirma que é legalmente capaz de aceitar estes Termos na sua jurisdição.",
+  "3. Accounts": "3. Contas",
+  "You are responsible for maintaining the confidentiality of your account credentials and for all activity under your account. Please notify us promptly if you suspect unauthorized use of your account.":
+    "Você é responsável por manter a confidencialidade das credenciais da sua conta e por toda atividade realizada sob ela. Por favor, nos avise prontamente se suspeitar de uso não autorizado da sua conta.",
+  "4. Free Access and Subscriptions": "4. Acesso Gratuito e Assinaturas",
+  "Free access: New users may access one piece of advice or content from EvenMe free of charge before being asked to subscribe.":
+    "Acesso gratuito: novos usuários podem acessar uma dica ou conteúdo do EvenMe gratuitamente antes de serem convidados a assinar.",
+  "Subscription plans: Continued access to EvenMe's full features requires a paid subscription, offered as either a Weekly Plan or an Annual Plan, at the prices displayed in the app at the time of purchase.":
+    "Planos de assinatura: o acesso contínuo a todos os recursos do EvenMe requer uma assinatura paga, oferecida como Plano Semanal ou Plano Anual, nos preços exibidos no app no momento da compra.",
+  "Billing: If you subscribe through the iOS app, payment is processed through your Apple ID account, and your subscription automatically renews unless you turn off auto-renewal at least 24 hours before the end of the current period. Payment will be charged to your Apple ID account at confirmation of purchase.":
+    "Cobrança: se você assinar pelo app iOS, o pagamento é processado pela sua conta Apple ID, e a assinatura é renovada automaticamente a menos que você desative a renovação automática com pelo menos 24 horas de antecedência antes do fim do período atual. O pagamento será cobrado na sua conta Apple ID na confirmação da compra.",
+  "Managing your subscription: You can manage or cancel your subscription at any time through your device's Settings (Settings → [Your Name] → Subscriptions on iOS), or through your account settings if you subscribed via our website.":
+    "Gerenciamento da assinatura: você pode gerenciar ou cancelar sua assinatura a qualquer momento pelos Ajustes do dispositivo (Ajustes → [Seu Nome] → Assinaturas no iOS), ou pelas configurações da sua conta se assinou pelo nosso site.",
+  "5. Cancellation and Refunds": "5. Cancelamento e Reembolsos",
+  "You may cancel your subscription at any time. Cancelling stops future renewal charges, but you will continue to have access to paid features through the end of the period you already paid for.":
+    "Você pode cancelar sua assinatura a qualquer momento. O cancelamento interrompe cobranças futuras de renovação, mas você continuará tendo acesso aos recursos pagos até o fim do período já pago.",
+  "Annual Plan: The Annual Plan is billed as a single upfront payment covering a full year of access. If you cancel partway through the year, your access continues until the end of the paid annual period, but no partial refund will be issued for the unused portion.":
+    "Plano Anual: o Plano Anual é cobrado como um único pagamento antecipado que cobre um ano inteiro de acesso. Se cancelar no meio do ano, seu acesso continua até o fim do período anual pago, mas não será emitido reembolso parcial pela parte não usada.",
+  "Weekly Plan: The Weekly Plan renews on a weekly basis. Cancelling stops future weekly charges; the current paid week is non-refundable but remains active until it ends.":
+    "Plano Semanal: o Plano Semanal é renovado semanalmente. O cancelamento interrompe cobranças semanais futuras; a semana paga atual não é reembolsável, mas permanece ativa até o fim.",
+  "Refund requests for purchases made through the Apple App Store are handled by Apple in accordance with Apple's own refund policies, not by us directly.":
+    "Pedidos de reembolso para compras feitas pela Apple App Store são tratados pela Apple de acordo com as próprias políticas de reembolso da Apple, não por nós diretamente.",
+  "6. Acceptable Use": "6. Uso Aceitável",
+  "You agree not to misuse the Service, including attempting to interfere with its normal operation, reverse-engineer the app, or use it for any unlawful purpose.":
+    "Você concorda em não usar o Serviço de forma indevida, incluindo tentar interferir em seu funcionamento normal, fazer engenharia reversa do app ou usá-lo para qualquer finalidade ilícita.",
+  "7. Content and Intellectual Property": "7. Conteúdo e Propriedade Intelectual",
+  "All content, design, and materials provided through EvenMe are owned by us or our licensors and are protected by applicable intellectual property laws. You may not copy, distribute, or create derivative works from the Service without our permission.":
+    "Todo conteúdo, design e materiais fornecidos pelo EvenMe são de nossa propriedade ou de nossos licenciadores e são protegidos pelas leis de propriedade intelectual aplicáveis. Você não pode copiar, distribuir ou criar obras derivadas do Serviço sem nossa permissão.",
+  "8. Disclaimer of Warranties": "8. Isenção de Garantias",
+  "The Service is provided \"as is\" without warranties of any kind, express or implied. We do not guarantee that the Service will be uninterrupted, error-free, or suitable for any particular purpose.":
+    "O Serviço é fornecido \"no estado em que se encontra\" sem garantias de qualquer tipo, expressas ou implícitas. Não garantimos que o Serviço será ininterrupto, livre de erros ou adequado a qualquer finalidade específica.",
+  "9. Limitation of Liability": "9. Limitação de Responsabilidade",
+  "To the fullest extent permitted by law, we are not liable for any indirect, incidental, or consequential damages arising from your use of the Service.":
+    "No máximo permitido por lei, não nos responsabilizamos por quaisquer danos indiretos, incidentais ou consequenciais decorrentes do uso do Serviço por você.",
+  "10. Changes to These Terms": "10. Alterações a Estes Termos",
+  "We may update these Terms from time to time. Continued use of the Service after changes take effect constitutes acceptance of the revised Terms.":
+    "Podemos atualizar estes Termos periodicamente. O uso contínuo do Serviço após as alterações entrarem em vigor constitui aceitação dos Termos revisados.",
+  "11. Contact": "11. Contato",
+  "Questions about these Terms can be sent to": "Dúvidas sobre estes Termos podem ser enviadas para",
+  "This document is a general starting template and does not constitute legal advice. If you want full legal certainty for your specific business, consider having it reviewed by a lawyer.":
+    "Este documento é um modelo inicial geral e não constitui aconselhamento jurídico. Se quiser total segurança jurídica para o seu negócio específico, considere revisá-lo com um advogado.",
+
+  // Paywall footer links
+  "By subscribing, you agree to our": "Ao assinar, você concorda com nossos",
+  "Terms of Use": "Termos de Uso",
+  "Privacy Policy": "Política de Privacidade",
+  "and": "e",
 };
 
