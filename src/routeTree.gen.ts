@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TermsRouteImport } from './routes/terms'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as ResourcesRouteImport } from './routes/resources'
@@ -27,6 +28,11 @@ import { Route as ExploreCatRouteImport } from './routes/explore.$cat'
 import { Route as LovableEmailTransactionalPreviewRouteImport } from './routes/lovable/email/transactional/preview'
 import { Route as ApiPublicPaymentsWebhookRouteImport } from './routes/api/public/payments/webhook'
 
+const TermsRoute = TermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
@@ -126,6 +132,7 @@ export interface FileRoutesByFullPath {
   '/resources': typeof ResourcesRoute
   '/settings': typeof SettingsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/terms': typeof TermsRoute
   '/explore/$cat': typeof ExploreCatRoute
   '/metoo/$tile': typeof MetooTileRoute
   '/reset/$tile': typeof ResetTileRoute
@@ -145,6 +152,7 @@ export interface FileRoutesByTo {
   '/resources': typeof ResourcesRoute
   '/settings': typeof SettingsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/terms': typeof TermsRoute
   '/explore/$cat': typeof ExploreCatRoute
   '/metoo/$tile': typeof MetooTileRoute
   '/reset/$tile': typeof ResetTileRoute
@@ -165,6 +173,7 @@ export interface FileRoutesById {
   '/resources': typeof ResourcesRoute
   '/settings': typeof SettingsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/terms': typeof TermsRoute
   '/explore/$cat': typeof ExploreCatRoute
   '/metoo/$tile': typeof MetooTileRoute
   '/reset/$tile': typeof ResetTileRoute
@@ -186,6 +195,7 @@ export interface FileRouteTypes {
     | '/resources'
     | '/settings'
     | '/sitemap.xml'
+    | '/terms'
     | '/explore/$cat'
     | '/metoo/$tile'
     | '/reset/$tile'
@@ -205,6 +215,7 @@ export interface FileRouteTypes {
     | '/resources'
     | '/settings'
     | '/sitemap.xml'
+    | '/terms'
     | '/explore/$cat'
     | '/metoo/$tile'
     | '/reset/$tile'
@@ -224,6 +235,7 @@ export interface FileRouteTypes {
     | '/resources'
     | '/settings'
     | '/sitemap.xml'
+    | '/terms'
     | '/explore/$cat'
     | '/metoo/$tile'
     | '/reset/$tile'
@@ -244,6 +256,7 @@ export interface RootRouteChildren {
   ResourcesRoute: typeof ResourcesRoute
   SettingsRoute: typeof SettingsRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  TermsRoute: typeof TermsRoute
   ExploreCatRoute: typeof ExploreCatRoute
   MetooTileRoute: typeof MetooTileRoute
   ResetTileRoute: typeof ResetTileRoute
@@ -255,6 +268,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/terms': {
+      id: '/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof TermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/sitemap.xml': {
       id: '/sitemap.xml'
       path: '/sitemap.xml'
@@ -388,6 +408,7 @@ const rootRouteChildren: RootRouteChildren = {
   ResourcesRoute: ResourcesRoute,
   SettingsRoute: SettingsRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  TermsRoute: TermsRoute,
   ExploreCatRoute: ExploreCatRoute,
   MetooTileRoute: MetooTileRoute,
   ResetTileRoute: ResetTileRoute,
