@@ -148,12 +148,6 @@ function Terms() {
           </p>
         </section>
 
-        <section className="mt-6 rounded-3xl bg-card border border-border p-6">
-          <p className="text-sm text-muted-foreground leading-relaxed">
-            {t("This document is a general starting template and does not constitute legal advice. If you want full legal certainty for your specific business, consider having it reviewed by a lawyer.")}
-          </p>
-        </section>
-
         <footer className="mt-12 text-center">
           <Link to="/" className="text-sm text-muted-foreground underline">
             {t("Go home")}
