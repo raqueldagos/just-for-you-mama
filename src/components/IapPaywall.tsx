@@ -84,26 +84,24 @@ export function IapPaywall() {
   async function handleBuy() {
     setError(null);
     setNotice(null);
+    // Email is optional: purchases work with RevenueCat's anonymous app user id.
     const clean = email.trim().toLowerCase();
-    if (!clean.includes("@")) {
-      setError(t("Please enter a valid email so we can remember your subscription."));
-      return;
-    }
+    const hasEmail = clean.includes("@");
     const pkg = packages?.find((p) => p.identifier === selected);
     if (!pkg) {
       setError(t("Please pick a plan."));
       return;
     }
-    store.set(KEYS.email, clean);
+    if (hasEmail) store.set(KEYS.email, clean);
     setBusy(true);
     try {
-      await identifyRevenueCatUser(clean);
+      if (hasEmail) await identifyRevenueCatUser(clean);
       const status = await purchase(pkg);
       if (!status.active) {
         setNotice(t("Purchase didn't complete. You can try again anytime."));
         return;
       }
-      await saveAndUnlock(status, clean);
+      await saveAndUnlock(status, hasEmail ? clean : "");
     } catch (err) {
       if (isUserCancelled(err)) {
         setNotice(t("No worries — nothing was charged."));
@@ -115,6 +113,7 @@ export function IapPaywall() {
       setBusy(false);
     }
   }
+
 
   async function handleRestore() {
     setError(null);
