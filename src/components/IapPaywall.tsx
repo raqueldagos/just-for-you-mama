@@ -158,7 +158,7 @@ export function IapPaywall() {
 
         <div className="mt-6">
           <label className="block text-sm text-muted-foreground mb-2">
-            {t("Your email")}
+            {t("Email (optional) — to access your subscription on other devices")}
           </label>
           <input
             type="email"
@@ -169,30 +169,44 @@ export function IapPaywall() {
             placeholder="you@example.com"
             className="w-full rounded-2xl border border-border bg-card px-5 py-4 outline-none focus:ring-2 focus:ring-ring"
           />
+          <p className="mt-2 text-xs text-muted-foreground">
+            {t("You can subscribe without giving an email.")}
+          </p>
         </div>
 
         <div className="mt-6 space-y-3">
           {packages === null && (
             <p className="text-sm text-muted-foreground">{t("Loading plans…")}</p>
           )}
-          {packages?.map((p) => (
-            <button
-              key={p.identifier}
-              onClick={() => setSelected(p.identifier)}
-              className={`w-full text-left rounded-3xl border p-5 transition ${
-                selected === p.identifier
-                  ? "border-primary bg-card ring-2 ring-primary"
-                  : "border-border bg-card"
-              }`}
-            >
-              <span className="font-medium text-card-foreground">
-                {p.productId.endsWith(".annual") ? t("Annual") : t("Weekly")}
-              </span>
-              <p className="mt-1 text-2xl font-serif text-foreground">
-                {p.priceString}
-              </p>
-            </button>
-          ))}
+          {packages?.map((p) => {
+            const annual = p.productId.endsWith(".annual");
+            return (
+              <button
+                key={p.identifier}
+                onClick={() => setSelected(p.identifier)}
+                className={`w-full text-left rounded-3xl border p-5 transition ${
+                  selected === p.identifier
+                    ? "border-primary bg-card ring-2 ring-primary"
+                    : "border-border bg-card"
+                }`}
+              >
+                <span className="font-medium text-card-foreground">
+                  {annual ? t("EvenMe Annual") : t("EvenMe Weekly")}
+                </span>
+                <p className="mt-1 text-2xl font-serif text-foreground">
+                  {p.priceString}
+                </p>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  {annual
+                    ? t("Subscription length: 1 year. Billed once per year.")
+                    : t("Subscription length: 1 week. Billed every week.")}
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  {t("Auto-renews until canceled. Cancel anytime in Settings.")}
+                </p>
+              </button>
+            );
+          })}
         </div>
 
         {error && <p className="mt-4 text-sm text-destructive">{error}</p>}
@@ -215,6 +229,28 @@ export function IapPaywall() {
         <p className="mt-3 text-center text-xs text-muted-foreground">
           {t("Cancel anytime in Settings.")}
         </p>
+        <p className="mt-4 text-center text-xs text-muted-foreground">
+          {t("By subscribing, you agree to our")}{" "}
+          <a
+            href="https://evenme.online/terms"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline hover:text-foreground"
+          >
+            {t("Terms of Use")}
+          </a>{" "}
+          {t("and")}{" "}
+          <a
+            href="https://evenme.online/privacy"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline hover:text-foreground"
+          >
+            {t("Privacy Policy")}
+          </a>
+          .
+        </p>
+
       </div>
     </div>
   );
