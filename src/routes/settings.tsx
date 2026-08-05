@@ -7,6 +7,8 @@ import {
   resumeSubscription,
   changePlan,
 } from "@/utils/payments.functions";
+import { deleteAccount } from "@/utils/account.functions";
+
 import { getStripeEnvironment } from "@/lib/stripe";
 import { useT } from "@/lib/i18n";
 
