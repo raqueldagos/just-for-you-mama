@@ -62,6 +62,31 @@ function Settings() {
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
   const [showCancelConfirm, setShowCancelConfirm] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+
+  async function doDeleteAccount() {
+    setBusy(true);
+    setMsg(null);
+    try {
+      const clean = (email || store.get(KEYS.email) || "").trim().toLowerCase();
+      if (clean.includes("@")) {
+        const res = await deleteAccount({ data: { email: clean } });
+        if (!res.ok) {
+          setMsg(t("We couldn't delete your account. Please try again."));
+          setBusy(false);
+          return;
+        }
+      }
+      signOutLocal();
+      setShowDeleteConfirm(false);
+      navigate({ to: "/" });
+    } catch {
+      setMsg(t("We couldn't delete your account. Please try again."));
+    } finally {
+      setBusy(false);
+    }
+  }
+
 
   const refresh = async (e: string) => {
     try {
