@@ -298,6 +298,19 @@ function Settings() {
                 {t("This clears your name, email and check-ins saved on this device.")}
               </p>
             </div>
+            <div className="pt-2 border-t border-border">
+              <button
+                disabled={busy}
+                onClick={() => setShowDeleteConfirm(true)}
+                className="mt-4 w-full rounded-2xl bg-destructive py-3 text-sm font-medium text-destructive-foreground hover:opacity-90 transition disabled:opacity-50"
+              >
+                {t("Delete Account")}
+              </button>
+              <p className="mt-2 text-xs text-muted-foreground">
+                {t("This permanently deletes your account and all data we store about you.")}
+              </p>
+            </div>
+
           </div>
         </section>
 
