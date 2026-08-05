@@ -62,24 +62,28 @@ export function IapPaywall() {
   ) {
     applyStatusLocally(status);
     if (status.active) {
-      try {
-        await recordAppleSubscription({
-          data: {
-            email: cleanEmail,
-            productId: status.productId ?? "unknown",
-            appUserId: status.appUserId ?? cleanEmail,
-            expiresAt: status.expiresAt,
-            willRenew: status.willRenew,
-            environment,
-          },
-        });
-      } catch (err) {
-        // Local access is already granted; the backend can be retried later.
-        console.error("[iap] record failed", err);
+      // Only sync to our backend when the user chose to share an email.
+      if (cleanEmail.includes("@")) {
+        try {
+          await recordAppleSubscription({
+            data: {
+              email: cleanEmail,
+              productId: status.productId ?? "unknown",
+              appUserId: status.appUserId ?? cleanEmail,
+              expiresAt: status.expiresAt,
+              willRenew: status.willRenew,
+              environment,
+            },
+          });
+        } catch (err) {
+          // Local access is already granted; the backend can be retried later.
+          console.error("[iap] record failed", err);
+        }
       }
       navigate({ to: "/checkin" });
     }
   }
+
 
   async function handleBuy() {
     setError(null);
