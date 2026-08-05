@@ -7,6 +7,8 @@ import {
   resumeSubscription,
   changePlan,
 } from "@/utils/payments.functions";
+import { deleteAccount } from "@/utils/account.functions";
+
 import { getStripeEnvironment } from "@/lib/stripe";
 import { useT } from "@/lib/i18n";
 
@@ -62,6 +64,31 @@ function Settings() {
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
   const [showCancelConfirm, setShowCancelConfirm] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+
+  async function doDeleteAccount() {
+    setBusy(true);
+    setMsg(null);
+    try {
+      const clean = (email || store.get(KEYS.email) || "").trim().toLowerCase();
+      if (clean.includes("@")) {
+        const res = await deleteAccount({ data: { email: clean } });
+        if (!res.ok) {
+          setMsg(t("We couldn't delete your account. Please try again."));
+          setBusy(false);
+          return;
+        }
+      }
+      signOutLocal();
+      setShowDeleteConfirm(false);
+      navigate({ to: "/" });
+    } catch {
+      setMsg(t("We couldn't delete your account. Please try again."));
+    } finally {
+      setBusy(false);
+    }
+  }
+
 
   const refresh = async (e: string) => {
     try {
@@ -271,6 +298,19 @@ function Settings() {
                 {t("This clears your name, email and check-ins saved on this device.")}
               </p>
             </div>
+            <div className="pt-2 border-t border-border">
+              <button
+                disabled={busy}
+                onClick={() => setShowDeleteConfirm(true)}
+                className="mt-4 w-full rounded-2xl bg-destructive py-3 text-sm font-medium text-destructive-foreground hover:opacity-90 transition disabled:opacity-50"
+              >
+                {t("Delete Account")}
+              </button>
+              <p className="mt-2 text-xs text-muted-foreground">
+                {t("This permanently deletes your account and all data we store about you.")}
+              </p>
+            </div>
+
           </div>
         </section>
 
@@ -320,6 +360,39 @@ function Settings() {
           </div>
         </div>
       )}
+
+      {showDeleteConfirm && (
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/40 p-4">
+          <div className="w-full max-w-sm rounded-3xl bg-card p-6 shadow-xl">
+            <h3 className="text-lg font-serif text-foreground">
+              {t("Delete your account?")}
+            </h3>
+            <p className="mt-3 text-sm text-muted-foreground leading-relaxed">
+              {t(
+                "Are you sure? This will permanently delete your account and data. Your email, saved check-ins and subscription records will be removed and this can't be undone.",
+              )}
+            </p>
+            {msg && <p className="mt-3 text-xs text-destructive">{msg}</p>}
+            <div className="mt-6 flex flex-col gap-3">
+              <button
+                disabled={busy}
+                onClick={doDeleteAccount}
+                className="w-full rounded-2xl bg-destructive py-3 text-sm font-medium text-destructive-foreground hover:opacity-90 transition disabled:opacity-50"
+              >
+                {busy ? t("Please wait…") : t("Yes, delete my account")}
+              </button>
+              <button
+                disabled={busy}
+                onClick={() => setShowDeleteConfirm(false)}
+                className="w-full rounded-2xl bg-primary py-3 text-primary-foreground text-sm font-medium hover:opacity-90 transition disabled:opacity-50"
+              >
+                {t("Keep my account")}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }

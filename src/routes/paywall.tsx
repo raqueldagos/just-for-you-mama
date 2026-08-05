@@ -151,7 +151,9 @@ function Paywall() {
             }`}
           >
             <div className="flex items-baseline justify-between">
-              <span className="font-medium text-card-foreground">{t("Annual")}</span>
+              <span className="font-medium text-card-foreground">
+                {t("EvenMe Annual")}
+              </span>
               <span className="text-xs rounded-full bg-primary px-2 py-0.5 text-primary-foreground">
                 {t("35% off")}
               </span>
@@ -160,6 +162,12 @@ function Paywall() {
               {t("$79 / year")}
             </p>
             <p className="text-xs text-muted-foreground">{t("≈ $1.52 / week")}</p>
+            <p className="mt-1 text-xs text-muted-foreground">
+              {t("Subscription length: 1 year. Billed once per year.")}
+            </p>
+            <p className="text-xs text-muted-foreground">
+              {t("Auto-renews until canceled. Cancel anytime in Settings.")}
+            </p>
           </button>
 
           <button
@@ -170,9 +178,17 @@ function Paywall() {
                 : "border-border bg-card"
             }`}
           >
-            <span className="font-medium text-card-foreground">{t("Weekly")}</span>
+            <span className="font-medium text-card-foreground">
+              {t("EvenMe Weekly")}
+            </span>
             <p className="mt-1 text-2xl font-serif text-foreground">
               {t("$4.99 / week")}
+            </p>
+            <p className="mt-1 text-xs text-muted-foreground">
+              {t("Subscription length: 1 week. Billed every week.")}
+            </p>
+            <p className="text-xs text-muted-foreground">
+              {t("Auto-renews until canceled. Cancel anytime in Settings.")}
             </p>
           </button>
         </div>
@@ -196,15 +212,26 @@ function Paywall() {
         </p>
         <p className="mt-4 text-center text-xs text-muted-foreground">
           {t("By subscribing, you agree to our")}{" "}
-          <Link to="/terms" className="underline hover:text-foreground">
+          <a
+            href="https://evenme.online/terms"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline hover:text-foreground"
+          >
             {t("Terms of Use")}
-          </Link>{" "}
+          </a>{" "}
           {t("and")}{" "}
-          <Link to="/privacy" className="underline hover:text-foreground">
+          <a
+            href="https://evenme.online/privacy"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline hover:text-foreground"
+          >
             {t("Privacy Policy")}
-          </Link>
+          </a>
           .
         </p>
+
       </div>
     </div>
   );

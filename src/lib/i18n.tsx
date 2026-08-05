@@ -330,6 +330,29 @@ export const DICT: Record<string, string> = {
   "Weekly": "Semanal",
   "$4.99 / week": "$4,99 / semana",
   "Cancel anytime in Settings.": "Cancele a qualquer momento nos Ajustes.",
+  "EvenMe Annual": "EvenMe Anual",
+  "EvenMe Weekly": "EvenMe Semanal",
+  "Subscription length: 1 year. Billed once per year.":
+    "Duração da assinatura: 1 ano. Cobrança uma vez por ano.",
+  "Subscription length: 1 week. Billed every week.":
+    "Duração da assinatura: 1 semana. Cobrança toda semana.",
+  "Auto-renews until canceled. Cancel anytime in Settings.":
+    "Renova automaticamente até você cancelar. Cancele quando quiser nos Ajustes.",
+  "Email (optional) — to access your subscription on other devices":
+    "E-mail (opcional) — para acessar sua assinatura em outros dispositivos",
+  "You can subscribe without giving an email.":
+    "Você pode assinar sem informar um e-mail.",
+  "Delete Account": "Excluir conta",
+  "Delete your account?": "Excluir sua conta?",
+  "This permanently deletes your account and all data we store about you.":
+    "Isso exclui permanentemente sua conta e todos os dados que guardamos sobre você.",
+  "Are you sure? This will permanently delete your account and data. Your email, saved check-ins and subscription records will be removed and this can't be undone.":
+    "Tem certeza? Isso excluirá permanentemente sua conta e seus dados. Seu e-mail, check-ins salvos e registros de assinatura serão removidos e não será possível desfazer.",
+  "Yes, delete my account": "Sim, excluir minha conta",
+  "Keep my account": "Manter minha conta",
+  "We couldn't delete your account. Please try again.":
+    "Não conseguimos excluir sua conta. Tente novamente.",
+
   "Loading plans…": "Carregando os planos…",
   "Please wait…": "Um momento…",
   "Restore purchases": "Restaurar compras",
