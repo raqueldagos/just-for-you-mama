@@ -128,7 +128,7 @@ export function IapPaywall() {
       if (status.active) {
         const clean = (email.trim().toLowerCase() || store.get(KEYS.email) || "").trim();
         if (clean.includes("@")) store.set(KEYS.email, clean);
-        await saveAndUnlock(status, clean || "unknown@evenme.online");
+        await saveAndUnlock(status, clean);
       } else {
         setNotice(t("We couldn't find an active purchase on this Apple ID."));
       }
