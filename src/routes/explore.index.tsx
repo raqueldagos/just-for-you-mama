@@ -108,6 +108,47 @@ function Explore() {
   );
 }
 
+function ToolGroupSection({ group, tools }: { group: ToolGroup; tools: ToolKey[] }) {
+  const t = useT();
+  const [round, setRound] = useState(0);
+  const shown =
+    tools.length <= 3
+      ? tools
+      : Array.from({ length: 3 }, (_, i) => tools[((round * 3) % tools.length + i) % tools.length]);
+  return (
+    <div>
+      <h3 className="text-sm uppercase tracking-widest text-muted-foreground">
+        {t(GROUP_META[group].label)}
+      </h3>
+      <p className="text-xs text-muted-foreground">{t(GROUP_META[group].blurb)}</p>
+      <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
+        {shown.map((k) => {
+          const tm = TOOL_META[k];
+          return (
+            <Link
+              key={k}
+              to="/tool/$key"
+              params={{ key: k }}
+              className="rounded-2xl border border-border bg-card p-4 transition hover:border-primary animate-fade-in"
+            >
+              <div className="font-medium text-card-foreground">{t(tm.title)}</div>
+              <div className="text-xs text-muted-foreground">{t(tm.blurb)}</div>
+            </Link>
+          );
+        })}
+      </div>
+      {tools.length > 3 && (
+        <button
+          onClick={() => setRound((r) => r + 1)}
+          className="mt-2 text-xs text-muted-foreground underline"
+        >
+          {t("Show me three more")}
+        </button>
+      )}
+    </div>
+  );
+}
+
 export function ToolReasonCard({ toolKey }: { toolKey: ToolKey }) {
   const t = useT();
   const tm = TOOL_META[toolKey];
