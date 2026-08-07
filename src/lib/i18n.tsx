@@ -1192,7 +1192,7 @@ export const DICT: Record<string, string> = {
   "One small thing in the next hour that belongs to you and nobody else.":
     "Uma coisinha na próxima hora que pertence a você e a mais ninguém.",
   "The roles have been loud today. This is a minute of being a person underneath them.":
-    "Os papéis estaram altos hoje. Este é um minuto de ser a pessoa debaixo deles.",
+    "Os papéis estiveram altos hoje. Este é um minuto de ser a pessoa debaixo deles.",
   "Nothing to do or finish. Just one calm word to keep for the rest of today.":
     "Nada para fazer ou terminar. Só uma palavra calma para guardar hoje.",
 
