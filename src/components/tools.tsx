@@ -1179,6 +1179,12 @@ export function toolForItemCta(cta: string | undefined): ToolKey | null {
   if (c.includes("permission")) return "permission";
   if (c.includes("win")) return "wins";
   if (c.includes("name")) return "name-it";
+  if (c.includes("mental-load")) return "mental-load";
+  if (c.includes("body check")) return "mother-body";
+  if (c.includes("reclamation")) return "reclaim";
+  if (c.includes("one-breath")) return "one-breath";
+  if (c.includes("at home")) return "ground-home";
+  if (c.includes("carry one word")) return "carry-word";
   if (c.includes("decide") || c.includes("help me")) return "need";
   return null;
 }
