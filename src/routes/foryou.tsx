@@ -159,6 +159,12 @@ function ForYou() {
                 <p className="text-2xl font-serif leading-snug text-foreground">
                   {t(current.text)}
                 </p>
+                <button
+                  onClick={() => openToolGuarded("carry-word")}
+                  className="mt-6 text-sm text-muted-foreground underline"
+                >
+                  {t("Carry one word with you")}
+                </button>
               </div>
             )}
           </div>
