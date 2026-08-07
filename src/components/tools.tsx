@@ -1045,7 +1045,15 @@ export type ToolKey =
   | "warm-drink"
   | "one-thing"
   | "text-someone"
-  | "tomorrow-kindness";
+  | "tomorrow-kindness"
+  | "mental-load"
+  | "mother-body"
+  | "permission-phrases"
+  | "one-breath"
+  | "ground-home"
+  | "reclaim"
+  | "still-here"
+  | "carry-word";
 
 export const TOOL_META: Record<ToolKey, { title: string; blurb: string }> = {
   "breath-60": { title: "60-second breathing", blurb: "One minute. Longer out than in." },
@@ -1073,6 +1081,14 @@ export const TOOL_META: Record<ToolKey, { title: string; blurb: string }> = {
   "one-thing": { title: "The one thing rule", blurb: "Pick the next thing. Everything else waits." },
   "text-someone": { title: "Text a safe person", blurb: "Words already written for you." },
   "tomorrow-kindness": { title: "Tomorrow's one kindness", blurb: "Choose something small for tomorrow-you." },
+  "mental-load": { title: "Mental-load dump", blurb: "Ninety seconds. Name what isn't yours to carry." },
+  "mother-body": { title: "Where the tired lives", blurb: "Jaw, shoulders, lower back, hands." },
+  "permission-phrases": { title: "Permission phrases", blurb: "One line at a time. Nothing to do." },
+  "one-breath": { title: "One-breath reset", blurb: "Twenty seconds between demands." },
+  "ground-home": { title: "5-4-3-2-1 at home", blurb: "Ground with what's actually around you." },
+  reclaim: { title: "Tiny reclamation", blurb: "One small thing that's just for you." },
+  "still-here": { title: "Still here", blurb: "A person underneath the roles." },
+  "carry-word": { title: "Carry one word", blurb: "Pick a calm word for the rest of today." },
 };
 
 
@@ -1128,6 +1144,22 @@ export function ToolRenderer({ tool }: { tool: ToolKey }) {
       return <TextSomeoneTool />;
     case "tomorrow-kindness":
       return <TomorrowKindnessTool />;
+    case "mental-load":
+      return <MentalLoadTool />;
+    case "mother-body":
+      return <MotherBodyCheckTool />;
+    case "permission-phrases":
+      return <PermissionPhrasesTool />;
+    case "one-breath":
+      return <OneBreathTool />;
+    case "ground-home":
+      return <GroundHomeTool />;
+    case "reclaim":
+      return <TinyReclamationTool />;
+    case "still-here":
+      return <StillHereTool />;
+    case "carry-word":
+      return <CarryWordTool />;
   }
 }
 
