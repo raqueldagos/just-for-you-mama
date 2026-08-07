@@ -91,33 +91,11 @@ function Explore() {
           {showAll && (
             <div className="mt-4 space-y-8 animate-fade-in">
               {toolsByGroup().map(({ group, tools }) => (
-                <div key={group}>
-                  <h3 className="text-sm uppercase tracking-widest text-muted-foreground">
-                    {t(GROUP_META[group as ToolGroup].label)}
-                  </h3>
-                  <p className="text-xs text-muted-foreground">
-                    {t(GROUP_META[group as ToolGroup].blurb)}
-                  </p>
-                  <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
-                    {tools.map((k) => {
-                      const tm = TOOL_META[k];
-                      return (
-                        <Link
-                          key={k}
-                          to="/tool/$key"
-                          params={{ key: k }}
-                          className="rounded-2xl border border-border bg-card p-4 transition hover:border-primary"
-                        >
-                          <div className="font-medium text-card-foreground">{t(tm.title)}</div>
-                          <div className="text-xs text-muted-foreground">{t(tm.blurb)}</div>
-                        </Link>
-                      );
-                    })}
-                  </div>
-                </div>
+                <ToolGroupSection key={group} group={group as ToolGroup} tools={tools} />
               ))}
             </div>
           )}
+
         </div>
 
         <div className="mt-10 text-center">
