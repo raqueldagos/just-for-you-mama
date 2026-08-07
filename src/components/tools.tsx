@@ -776,7 +776,250 @@ export function TomorrowKindnessTool() {
   );
 }
 
+// -------- Motherhood-focused tools --------
+const MENTAL_LOAD_KEY = "evenme:mentalload";
+export function MentalLoadTool() {
+  const [rows, setRows] = useState<string[]>(["", "", ""]);
+  const [saved, setSaved] = useState(false);
+  useEffect(() => {
+    try {
+      const raw = window.localStorage.getItem(MENTAL_LOAD_KEY);
+      if (raw) {
+        setRows(JSON.parse(raw) as string[]);
+        setSaved(true);
+      }
+    } catch {
+      // ignore
+    }
+  }, []);
+  return (
+    <div className="py-2">
+      <p className="text-lg text-foreground">
+        Name three things currently living in your head that aren't yours to carry right now.
+      </p>
+      <p className="mt-2 text-sm text-muted-foreground">
+        Just name them. You don't have to solve them.
+      </p>
+      <div className="mt-4 flex flex-col gap-2">
+        {rows.map((r, n) => (
+          <input
+            key={n}
+            value={r}
+            onChange={(e) => {
+              const next = [...rows];
+              next[n] = e.target.value;
+              setRows(next);
+              setSaved(false);
+            }}
+            placeholder={["Something someone else's", "Something not for today", "Something already handled"][n]}
+            className="w-full rounded-2xl border border-border bg-background px-5 py-4 outline-none focus:ring-2 focus:ring-ring"
+          />
+        ))}
+      </div>
+      <button
+        onClick={() => {
+          window.localStorage.setItem(MENTAL_LOAD_KEY, JSON.stringify(rows));
+          setSaved(true);
+          haptic();
+        }}
+        className="mt-4 w-full rounded-2xl bg-primary py-4 font-medium text-primary-foreground hover:opacity-90"
+      >
+        Set them down
+      </button>
+      {saved && (
+        <p className="mt-3 text-sm text-muted-foreground">
+          They're out of your head and on the page. That's the whole job.
+        </p>
+      )}
+    </div>
+  );
+}
+
+export function MotherBodyCheckTool() {
+  return (
+    <ScriptTool
+      steps={[
+        "Where is the tired living in your body today? Start with your jaw.",
+        "Shoulders — the shelf you've been carrying everything on. Drop them.",
+        "Lower back. The place that holds every lift, every carry.",
+        "If it feels okay: soften your pelvic floor. No effort, just permission.",
+        "Hands. They've been doing things all day. Open them.",
+      ]}
+      done="Nothing to fix. You just noticed where the invisible work went."
+    />
+  );
+}
+
+const PERMISSION_PHRASES = [
+  "I can be a good mother and still need a minute.",
+  "My nervous system matters too.",
+  "This feeling doesn't make me a bad mom.",
+  "I don't have to earn rest.",
+  "I'm allowed to be a person in this house.",
+  "Loving them doesn't mean disappearing.",
+  "I can want quiet without wanting away.",
+  "I'm allowed to be tired without explaining it.",
+];
+export function PermissionPhrasesTool() {
+  const [i, setI] = useState(() => Math.floor(Math.random() * PERMISSION_PHRASES.length));
+  return (
+    <div className="py-6 text-center">
+      <p className="text-2xl font-serif leading-snug text-foreground">
+        {PERMISSION_PHRASES[i % PERMISSION_PHRASES.length]}
+      </p>
+      <p className="mt-4 text-sm text-muted-foreground">One at a time. Say it if you want to.</p>
+      <button
+        onClick={() => {
+          haptic();
+          setI((v) => v + 1);
+        }}
+        className="mt-6 rounded-2xl border border-border px-6 py-3 text-foreground hover:bg-muted"
+      >
+        Another phrase
+      </button>
+    </div>
+  );
+}
+
+export function OneBreathTool() {
+  return (
+    <CountdownPrompt
+      seconds={20}
+      prompt="One long exhale. The 20-second reset between demands."
+      done="That's it. Back into the room."
+    />
+  );
+}
+
+export function GroundHomeTool() {
+  return (
+    <ScriptTool
+      steps={[
+        "Five things you can see in this room. Actually count them.",
+        "Four textures you could touch from where you are.",
+        "Three sounds in the house right now — even the annoying ones.",
+        "Two things you can smell, or two breaths if nothing's there.",
+        "One thing that's genuinely fine right now.",
+      ]}
+      done="You're back in the room you're actually standing in."
+    />
+  );
+}
+
+const RECLAIM_KEY = "evenme:reclaim";
+const RECLAIM_OPTIONS = [
+  "Thirty seconds of silence with the door shut",
+  "A glass of water, drunk slowly",
+  "Sitting down while I finish this drink",
+  "One song, all the way through",
+  "Stepping outside for one breath",
+  "Washing my face like it's for me",
+  "Two minutes of not being needed",
+];
+export function TinyReclamationTool() {
+  const [picked, setPicked] = useState<string | null>(null);
+  useEffect(() => {
+    try {
+      setPicked(window.localStorage.getItem(RECLAIM_KEY));
+    } catch {
+      // ignore
+    }
+  }, []);
+  return (
+    <div className="py-2">
+      <p className="text-lg text-foreground">
+        What is one small thing that is just for you in the next hour?
+      </p>
+      <div className="mt-4 flex flex-col gap-2">
+        {RECLAIM_OPTIONS.map((o) => (
+          <button
+            key={o}
+            onClick={() => {
+              window.localStorage.setItem(RECLAIM_KEY, o);
+              setPicked(o);
+              haptic();
+            }}
+            className={`rounded-2xl border px-5 py-4 text-left transition ${
+              picked === o
+                ? "border-primary bg-primary/10 text-foreground"
+                : "border-border bg-background text-foreground hover:bg-muted"
+            }`}
+          >
+            {o}
+          </button>
+        ))}
+      </div>
+      {picked && <p className="mt-4 text-sm text-muted-foreground">It counts. Even that small.</p>}
+    </div>
+  );
+}
+
+export function StillHereTool() {
+  return (
+    <ScriptTool
+      steps={[
+        "Say it quietly, or just read it: I am still a person underneath the roles.",
+        "Think of one thing you liked before any of this. Just the thing, no plan.",
+        "Notice: that person didn't leave. She's just been busy.",
+      ]}
+      done="Still here. That was the whole point."
+    />
+  );
+}
+
+const CARRY_WORDS = [
+  "Enough",
+  "Slower",
+  "Softer",
+  "Steady",
+  "Later",
+  "Kind",
+  "Here",
+  "Breathe",
+];
+const CARRY_KEY = "evenme:carryword";
+export function CarryWordTool() {
+  const [picked, setPicked] = useState<string | null>(null);
+  useEffect(() => {
+    try {
+      setPicked(window.localStorage.getItem(CARRY_KEY));
+    } catch {
+      // ignore
+    }
+  }, []);
+  return (
+    <div className="py-2 text-center">
+      <p className="text-lg text-foreground">Carry one word with you.</p>
+      <div className="mt-5 flex flex-wrap justify-center gap-2">
+        {CARRY_WORDS.map((w) => (
+          <button
+            key={w}
+            onClick={() => {
+              window.localStorage.setItem(CARRY_KEY, w);
+              setPicked(w);
+              haptic();
+            }}
+            className={`rounded-full border px-5 py-3 transition ${
+              picked === w
+                ? "border-primary bg-primary/10 text-foreground"
+                : "border-border bg-background text-foreground hover:bg-muted"
+            }`}
+          >
+            {w}
+          </button>
+        ))}
+      </div>
+      {picked && (
+        <p className="mt-5 text-sm text-muted-foreground">
+          Take it with you. Nothing else to do.
+        </p>
+      )}
+    </div>
+  );
+}
+
 // -------- Registry (tool key -> renderer + title) --------
+
 export type ToolKey =
   | "breath-60"
   | "breath-90"
