@@ -247,7 +247,36 @@ export const ITEMS: Item[] = [
   mk("kindness", "You have already survived every worst day so far.", ["low", "anxious", "overwhelmed"]),
   mk("kindness", "You don't have to be exceptional to be worth loving.", ["low", "lonely", "guilty"]),
   mk("kindness", "You are the one your kid pictures when they picture 'safe.' That's not nothing.", ["tired", "guilty", "lonely"]),
+
+  // ---------- MOTHERHOOD: the invisible load ----------
+  mk("permission", "I can be a good mother and still need a minute.", ["guilty", "overwhelmed", "tired"]),
+  mk("permission", "My nervous system matters too.", ["anxious", "overwhelmed", "tired"]),
+  mk("permission", "This feeling doesn't make me a bad mom.", ["guilty", "angry", "low"]),
+  mk("permission", "I don't have to earn rest.", ["tired", "guilty", "overwhelmed"]),
+  mk("permission", "I'm allowed to be interrupted and still come back to myself.", ["overwhelmed", "numb"]),
+  mk("permission", "I can love this life and still miss the person I was in it.", ["lonely", "low", "numb"]),
+  mk("reflection", "The load nobody sees is still a load. Appointments, textures, who needs what at 4pm — that's work.", ["tired", "overwhelmed"]),
+  mk("reflection", "You are the one holding the whole map in your head. Of course you're tired by evening.", ["tired", "overwhelmed", "numb"]),
+  mk("reflection", "Some of what's in your head right now isn't yours to carry tonight. You're allowed to set it down without solving it.", ["overwhelmed", "anxious", "guilty"]),
+  mk("reflection", "Motherhood changed who you are. Grieving part of that isn't ingratitude.", ["lonely", "low", "numb", "guilty"]),
+  mk("reflection", "You get interrupted mid-sentence, mid-thought, mid-need. That's not a focus problem. That's the job.", ["overwhelmed", "anxious", "angry"]),
+  mk("reflection", "Being the calm one all day doesn't mean you were calm. It means you did it anyway.", ["tired", "angry", "numb"]),
+  mk("reflection", "You are still a person underneath the roles. She didn't leave. She's just been busy.", ["lonely", "numb", "low"]),
+  mk("oneliner", "You showed up for yourself for 90 seconds. That's not nothing.", ["tired", "low", "neutral", "content"]),
+  mk("oneliner", "The mother is also someone's whole person.", ["lonely", "numb", "low"]),
+  mk("oneliner", "Nobody claps for the invisible parts. They still count.", ["tired", "guilty", "lonely"]),
+  mk("advice", "Name three things living in your head that aren't yours to carry right now. Don't solve them. Just name them.", ["overwhelmed", "anxious", "tired"], "Mental-load dump"),
+  mk("advice", "Ask where the tired is living in your body today — jaw, shoulders, lower back, hands.", ["tired", "numb", "overwhelmed"], "Body check"),
+  mk("advice", "Pick one small thing in the next hour that's just for you. Thirty seconds of silence counts.", ["tired", "lonely", "low"], "Tiny reclamation"),
+  mk("advice", "The bathroom, the car, the kitchen sink — a reset doesn't need a nice room.", ["overwhelmed", "tired"]),
+  mk("advice", "If a child is nearby, do it anyway. Quiet and one long exhale is enough.", ["anxious", "overwhelmed"]),
+  mk("action", "One long exhale. The 20-second reset between demands.", ["anxious", "overwhelmed", "angry", "tired"], "One-breath reset"),
+  mk("action", "Ground with what's actually around you: five things in this room…", ["anxious", "overwhelmed", "numb"], "Ground me at home"),
+  mk("action", "Carry one calm word with you for the rest of today.", ["neutral", "content", "tired", "grateful"], "Carry one word"),
+  mk("kindness", "You have been someone's whole world today. You're allowed to be your own for a minute.", ["tired", "lonely", "guilty"]),
+  mk("kindness", "Nobody handed you a manual for this kid. You've been writing it as you go.", ["guilty", "tired", "overwhelmed"]),
 ];
+
 
 // ---- Selection helpers ----
 

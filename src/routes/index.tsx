@@ -96,6 +96,13 @@ function Onboarding() {
             >
               {t("Okay")}
             </button>
+            <p className="text-center text-sm text-muted-foreground">
+              {t("Already using Even Me?")}{" "}
+              <Link to="/signin" className="underline hover:text-foreground">
+                {t("Sign in")}
+              </Link>
+            </p>
+
           </div>
         )}
 

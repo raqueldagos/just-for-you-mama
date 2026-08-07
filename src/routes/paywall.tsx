@@ -119,11 +119,12 @@ function Paywall() {
           {t("← Not now")}
         </Link>
         <h1 className="mt-4 text-3xl font-serif text-foreground">
-          {t("Keep showing up for you.")}
+          {t("Keep becoming the best version of yourself.")}
         </h1>
         <p className="mt-2 text-muted-foreground">
-          {t("Your free tip is used. Pick what works.")}
+          {t("Full access to all tools, unlimited advices, unlimited exercises.")}
         </p>
+        <p className="mt-1 text-muted-foreground">{t("Pay weekly or annually.")}</p>
 
         <div className="mt-6">
           <label className="block text-sm text-muted-foreground mb-2">

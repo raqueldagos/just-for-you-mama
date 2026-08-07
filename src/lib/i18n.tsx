@@ -1137,5 +1137,113 @@ export const DICT: Record<string, string> = {
   "Terms of Use": "Termos de Uso",
   "Privacy Policy": "Política de Privacidade",
   "and": "e",
+  // Sign in + paywall copy (new)
+  "Keep becoming the best version of yourself.": "Continue se tornando a melhor versão de você mesma.",
+  "Full access to all tools, unlimited advices, unlimited exercises.": "Acesso completo a todas as ferramentas, conselhos ilimitados, exercícios ilimitados.",
+  "Pay weekly or annually.": "Pague semanalmente ou anualmente.",
+  "Already using Even Me?": "Já usa o Even Me?",
+  "Sign in": "Entrar",
+  "Welcome back.": "Bem-vinda de volta.",
+  "Enter the email you used before and we'll bring your access back.":
+    "Digite o e-mail que você usou antes e traremos seu acesso de volta.",
+  "Please enter the email you used before.": "Digite o e-mail que você usou antes.",
+  "We remembered your email, but we couldn't find an active subscription for it.":
+    "Guardamos seu e-mail, mas não encontramos uma assinatura ativa para ele.",
+  "We saved your email on this device. You can continue.":
+    "Salvamos seu e-mail neste dispositivo. Você pode continuar.",
+  "Continue to my check-in": "Ir para o meu check-in",
+  "Subscribe instead": "Prefiro assinar",
+
+  // Three-at-a-time
+  "Three at a time. That's on purpose.": "Três de cada vez. Isso é de propósito.",
+  "Show me three more": "Mostre outras três",
+  "Carry one word with you": "Leve uma palavra com você",
+
+  // New motherhood tools
+  "Mental-load dump": "Descarregar a carga mental",
+  "Ninety seconds. Name what isn't yours to carry.":
+    "Noventa segundos. Diga o que não é seu para carregar.",
+  "Where the tired lives": "Onde mora o cansaço",
+  "Jaw, shoulders, lower back, hands.": "Mandíbula, ombros, lombar, mãos.",
+  "Permission phrases": "Frases de permissão",
+  "One line at a time. Nothing to do.": "Uma frase por vez. Nada a fazer.",
+  "One-breath reset": "Reinício de uma respiração",
+  "Twenty seconds between demands.": "Vinte segundos entre as demandas.",
+  "5-4-3-2-1 at home": "5-4-3-2-1 em casa",
+  "Ground with what's actually around you.": "Se ancore no que está realmente ao seu redor.",
+  "Tiny reclamation": "Pequena retomada",
+  "One small thing that's just for you.": "Uma coisinha que é só sua.",
+  "Still here": "Ainda aqui",
+  "A person underneath the roles.": "Uma pessoa debaixo dos papéis.",
+  "Carry one word": "Leve uma palavra",
+  "Pick a calm word for the rest of today.": "Escolha uma palavra calma para o resto do dia.",
+
+  // New tool reasons
+  "Your head is holding things that aren't yours to carry tonight. Naming three of them is enough.":
+    "Sua cabeça guarda coisas que não são suas para carregar hoje à noite. Nomear três já basta.",
+  "The work you did today doesn't show up anywhere except your body. This just asks where it went.":
+    "O trabalho que você fez hoje só aparece no seu corpo. Isso só pergunta onde ele ficou.",
+  "One line at a time, for the part of you that keeps asking whether this is allowed.":
+    "Uma frase por vez, para a parte de você que sempre pergunta se isso é permitido.",
+  "Twenty seconds, standing where you are. It fits between one demand and the next.":
+    "Vinte segundos, onde você está. Cabe entre uma demanda e a próxima.",
+  "You don't have to go anywhere. Ground using the room you're already standing in.":
+    "Você não precisa ir a lugar nenhum. Se ancore no lugar onde você já está.",
+  "One small thing in the next hour that belongs to you and nobody else.":
+    "Uma coisinha na próxima hora que pertence a você e a mais ninguém.",
+  "The roles have been loud today. This is a minute of being a person underneath them.":
+    "Os papéis estiveram altos hoje. Este é um minuto de ser a pessoa debaixo deles.",
+  "Nothing to do or finish. Just one calm word to keep for the rest of today.":
+    "Nada para fazer ou terminar. Só uma palavra calma para guardar hoje.",
+
+  // Motherhood phrases
+  "I can be a good mother and still need a minute.":
+    "Eu posso ser uma boa mãe e ainda precisar de um minuto.",
+  "My nervous system matters too.": "Meu sistema nervoso também importa.",
+  "This feeling doesn't make me a bad mom.": "Este sentimento não me faz uma mãe ruim.",
+  "I don't have to earn rest.": "Eu não preciso merecer o descanso.",
+  "I'm allowed to be interrupted and still come back to myself.":
+    "Eu posso ser interrompida e ainda voltar para mim.",
+  "I can love this life and still miss the person I was in it.":
+    "Eu posso amar esta vida e ainda sentir falta da pessoa que eu era nela.",
+  "You showed up for yourself for 90 seconds. That's not nothing.":
+    "Você apareceu por você mesma por 90 segundos. Isso não é pouco.",
+  "The mother is also someone's whole person.": "A mãe também é uma pessoa inteira.",
+  "Nobody claps for the invisible parts. They still count.":
+    "Ninguém aplaude as partes invisíveis. Elas contam do mesmo jeito.",
+  "You are still a person underneath the roles. She didn't leave. She's just been busy.":
+    "Você ainda é uma pessoa debaixo dos papéis. Ela não foi embora. Só andou ocupada.",
+  "The load nobody sees is still a load. Appointments, textures, who needs what at 4pm — that's work.":
+    "A carga que ninguém vê ainda é carga. Consultas, texturas, quem precisa do quê às 16h — isso é trabalho.",
+  "You are the one holding the whole map in your head. Of course you're tired by evening.":
+    "É você que guarda o mapa inteiro na cabeça. Claro que você está cansada à noite.",
+  "Some of what's in your head right now isn't yours to carry tonight. You're allowed to set it down without solving it.":
+    "Parte do que está na sua cabeça agora não é sua para carregar hoje. Você pode colocar no chão sem resolver.",
+  "Motherhood changed who you are. Grieving part of that isn't ingratitude.":
+    "A maternidade mudou quem você é. Sentir luto por isso não é ingratidão.",
+  "You get interrupted mid-sentence, mid-thought, mid-need. That's not a focus problem. That's the job.":
+    "Você é interrompida no meio da frase, do pensamento, da necessidade. Não é falta de foco. É o trabalho.",
+  "Being the calm one all day doesn't mean you were calm. It means you did it anyway.":
+    "Ser a calma o dia todo não quer dizer que você estava calma. Quer dizer que você fez isso mesmo assim.",
+  "You have been someone's whole world today. You're allowed to be your own for a minute.":
+    "Você foi o mundo inteiro de alguém hoje. Você pode ser o seu por um minuto.",
+  "Nobody handed you a manual for this kid. You've been writing it as you go.":
+    "Ninguém te deu um manual para esta criança. Você vem escrevendo ele no caminho.",
+  "The bathroom, the car, the kitchen sink — a reset doesn't need a nice room.":
+    "O banheiro, o carro, a pia da cozinha — um reinício não precisa de um lugar bonito.",
+  "If a child is nearby, do it anyway. Quiet and one long exhale is enough.":
+    "Se tem uma criança por perto, faça de qualquer forma. Silêncio e uma expiração longa bastam.",
+  "Name three things living in your head that aren't yours to carry right now. Don't solve them. Just name them.":
+    "Diga três coisas que moram na sua cabeça e não são suas para carregar agora. Não resolva. Só nomeie.",
+  "Ask where the tired is living in your body today — jaw, shoulders, lower back, hands.":
+    "Pergunte onde o cansaço mora no seu corpo hoje — mandíbula, ombros, lombar, mãos.",
+  "Pick one small thing in the next hour that's just for you. Thirty seconds of silence counts.":
+    "Escolha uma coisinha na próxima hora que seja só sua. Trinta segundos de silêncio contam.",
+  "One long exhale. The 20-second reset between demands.":
+    "Uma expiração longa. O reinício de 20 segundos entre as demandas.",
+  "Ground with what's actually around you: five things in this room…":
+    "Se ancore no que está ao seu redor: cinco coisas nesta sala…",
+  "Carry one calm word with you for the rest of today.":
+    "Leve uma palavra calma com você pelo resto do dia.",
 };
 

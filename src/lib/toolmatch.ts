@@ -174,7 +174,57 @@ export const TOOL_MATCH: Record<ToolKey, Match> = {
     energies: ["low", "steady", "bright"],
     reason: "Today's nearly done. Leave one small kindness out for tomorrow-you.",
   },
+
+  "mental-load": {
+    group: "unstuck",
+    moods: ["overwhelmed", "anxious", "tired", "guilty"],
+    energies: ["empty", "low", "steady"],
+    reason: "Your head is holding things that aren't yours to carry tonight. Naming three of them is enough.",
+  },
+  "mother-body": {
+    group: "calm",
+    moods: ["tired", "overwhelmed", "numb", "angry"],
+    energies: ["empty", "low", "steady"],
+    reason: "The work you did today doesn't show up anywhere except your body. This just asks where it went.",
+  },
+  "permission-phrases": {
+    group: "connect",
+    moods: ["guilty", "tired", "overwhelmed", "low"],
+    energies: ["empty", "low", "steady", "bright"],
+    reason: "One line at a time, for the part of you that keeps asking whether this is allowed.",
+  },
+  "one-breath": {
+    group: "calm",
+    moods: ["anxious", "overwhelmed", "angry", "tired"],
+    energies: ["empty", "low", "steady", "bright"],
+    reason: "Twenty seconds, standing where you are. It fits between one demand and the next.",
+  },
+  "ground-home": {
+    group: "calm",
+    moods: ["anxious", "overwhelmed", "numb"],
+    energies: ["empty", "low", "steady"],
+    reason: "You don't have to go anywhere. Ground using the room you're already standing in.",
+  },
+  reclaim: {
+    group: "restore",
+    moods: ["tired", "lonely", "numb", "low", "overwhelmed"],
+    energies: ["empty", "low", "steady"],
+    reason: "One small thing in the next hour that belongs to you and nobody else.",
+  },
+  "still-here": {
+    group: "connect",
+    moods: ["lonely", "numb", "low", "tired"],
+    energies: ["empty", "low", "steady"],
+    reason: "The roles have been loud today. This is a minute of being a person underneath them.",
+  },
+  "carry-word": {
+    group: "restore",
+    moods: ["neutral", "content", "tired", "anxious", "grateful"],
+    energies: ["empty", "low", "steady", "bright"],
+    reason: "Nothing to do or finish. Just one calm word to keep for the rest of today.",
+  },
 };
+
 
 export const ALL_TOOLS = Object.keys(TOOL_MATCH) as ToolKey[];
 
@@ -244,10 +294,12 @@ const OPENERS: Record<Energy, string> = {
 };
 
 const CLOSERS = [
+  "You showed up for yourself for 90 seconds. That's not nothing.",
   "That's enough for today. Come back tomorrow if you want to.",
   "You showed up for yourself. That counted.",
   "Nothing else to do now. Put the phone down.",
 ];
+
 
 export function buildSession(
   mood: Mood,
