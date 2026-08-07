@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as SigninRouteImport } from './routes/signin'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as ResourcesRouteImport } from './routes/resources'
 import { Route as PrivacyRouteImport } from './routes/privacy'
@@ -36,6 +37,11 @@ const TermsRoute = TermsRouteImport.update({
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SigninRoute = SigninRouteImport.update({
+  id: '/signin',
+  path: '/signin',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SettingsRoute = SettingsRouteImport.update({
@@ -131,6 +137,7 @@ export interface FileRoutesByFullPath {
   '/privacy': typeof PrivacyRoute
   '/resources': typeof ResourcesRoute
   '/settings': typeof SettingsRoute
+  '/signin': typeof SigninRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
   '/explore/$cat': typeof ExploreCatRoute
@@ -151,6 +158,7 @@ export interface FileRoutesByTo {
   '/privacy': typeof PrivacyRoute
   '/resources': typeof ResourcesRoute
   '/settings': typeof SettingsRoute
+  '/signin': typeof SigninRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
   '/explore/$cat': typeof ExploreCatRoute
@@ -172,6 +180,7 @@ export interface FileRoutesById {
   '/privacy': typeof PrivacyRoute
   '/resources': typeof ResourcesRoute
   '/settings': typeof SettingsRoute
+  '/signin': typeof SigninRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
   '/explore/$cat': typeof ExploreCatRoute
@@ -194,6 +203,7 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/resources'
     | '/settings'
+    | '/signin'
     | '/sitemap.xml'
     | '/terms'
     | '/explore/$cat'
@@ -214,6 +224,7 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/resources'
     | '/settings'
+    | '/signin'
     | '/sitemap.xml'
     | '/terms'
     | '/explore/$cat'
@@ -234,6 +245,7 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/resources'
     | '/settings'
+    | '/signin'
     | '/sitemap.xml'
     | '/terms'
     | '/explore/$cat'
@@ -255,6 +267,7 @@ export interface RootRouteChildren {
   PrivacyRoute: typeof PrivacyRoute
   ResourcesRoute: typeof ResourcesRoute
   SettingsRoute: typeof SettingsRoute
+  SigninRoute: typeof SigninRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TermsRoute: typeof TermsRoute
   ExploreCatRoute: typeof ExploreCatRoute
@@ -280,6 +293,13 @@ declare module '@tanstack/react-router' {
       path: '/sitemap.xml'
       fullPath: '/sitemap.xml'
       preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/signin': {
+      id: '/signin'
+      path: '/signin'
+      fullPath: '/signin'
+      preLoaderRoute: typeof SigninRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/settings': {
@@ -407,6 +427,7 @@ const rootRouteChildren: RootRouteChildren = {
   PrivacyRoute: PrivacyRoute,
   ResourcesRoute: ResourcesRoute,
   SettingsRoute: SettingsRoute,
+  SigninRoute: SigninRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   TermsRoute: TermsRoute,
   ExploreCatRoute: ExploreCatRoute,
