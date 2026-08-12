@@ -10,7 +10,7 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "A gentle 90-second daily check-in for mothers of neurodivergent kids. Not about your child — about you. Warm, non-clinical, no tracking of your kid.",
+          "A gentle 90-second daily check-in for all mothers. Not about your child — about you. Warm, non-clinical, no tracking of your kid.",
       },
       { property: "og:title", content: "Even Me — A 90-second check-in, for you" },
       {

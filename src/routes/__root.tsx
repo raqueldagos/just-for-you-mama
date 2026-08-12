@@ -83,7 +83,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "Even Me" },
-      { name: "description", content: "A 90-second daily check-in for mothers of neurodivergent kids. For you, not your child." },
+      { name: "description", content: "A 90-second daily check-in for all mothers. For you, not your child." },
       { property: "og:title", content: "Even Me" },
       { property: "og:description", content: "A 90-second daily check-in — for the mother, not the child." },
       { property: "og:type", content: "website" },

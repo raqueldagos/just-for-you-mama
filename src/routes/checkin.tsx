@@ -22,7 +22,7 @@ export const Route = createFileRoute("/checkin")({
       {
         name: "description",
         content:
-          "A gentle 90-second daily check-in for mothers of neurodivergent kids. Pick a mood, an energy level, and get something small for you.",
+          "A gentle 90-second daily check-in for all mothers. Pick a mood, an energy level, and get something small for you.",
       },
       { property: "og:title", content: "Today's check-in — Even Me" },
       {
