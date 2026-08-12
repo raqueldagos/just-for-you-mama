@@ -16,7 +16,7 @@ export const Route = createFileRoute("/")({
       {
         property: "og:description",
         content:
-          "A 90-second daily emotional check-in for mothers of neurodivergent kids — for the mother, not the child.",
+          "A 90-second daily emotional check-in for all mothers — for the mother, not the child.",
       },
       { property: "og:url", content: "https://evenme.online/" },
       { property: "og:type", content: "website" },
