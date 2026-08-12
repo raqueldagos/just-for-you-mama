@@ -19,7 +19,7 @@ export const Route = createFileRoute("/paywall")({
       {
         name: "description",
         content:
-          "Subscribe to keep showing up for you. $4.99 per week or $79 per year — a small daily companion for mothers of neurodivergent kids. Cancel anytime.",
+          "Subscribe to keep showing up for you. $4.99 per week or $79 per year — a small daily companion for all mothers. Cancel anytime.",
       },
       { property: "og:title", content: "Even Me — subscribe" },
       {

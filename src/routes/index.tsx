@@ -10,13 +10,13 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "A gentle 90-second daily check-in for mothers of neurodivergent kids. Not about your child — about you. Warm, non-clinical, no tracking of your kid.",
+          "A gentle 90-second daily check-in for all mothers. Not about your child — about you. Warm, non-clinical, no tracking of your kid.",
       },
       { property: "og:title", content: "Even Me — A 90-second check-in, for you" },
       {
         property: "og:description",
         content:
-          "A 90-second daily emotional check-in for mothers of neurodivergent kids — for the mother, not the child.",
+          "A 90-second daily emotional check-in for all mothers — for the mother, not the child.",
       },
       { property: "og:url", content: "https://evenme.online/" },
       { property: "og:type", content: "website" },
