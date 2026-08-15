@@ -79,9 +79,18 @@ function Onboarding() {
 
         {step === 1 && (
           <div className="space-y-6">
-            <div className="flex justify-center">
+            <div className="flex flex-col items-center gap-2">
               <img src="/favicon.svg" alt="Even Me" className="h-20 w-20 rounded-2xl" />
+              <a
+                href="https://thrivr.online"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="rounded-full border border-thrivr-line px-3 py-1 text-[11px] text-thrivr-tan transition-colors hover:text-thrivr-mute"
+              >
+                {t("Part of the Thrivr family")}
+              </a>
             </div>
+
             <h1 className="text-3xl font-serif leading-tight text-foreground text-center">
               {t("You're not here to log your kid.")}
               <br />
