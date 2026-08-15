@@ -314,6 +314,26 @@ function Settings() {
           </div>
         </section>
 
+        <section className="mt-10">
+          <h2 className="text-sm uppercase tracking-widest text-muted-foreground">
+            {t("Also from Thrivr")}
+          </h2>
+          <div className="mt-4 flex flex-col gap-2 text-sm">
+            <a href="https://thrivr.online" target="_blank" rel="noopener noreferrer" className="text-muted-foreground underline hover:text-foreground">
+              Thrivr
+            </a>
+            <a href="https://thrivrcompass.online" target="_blank" rel="noopener noreferrer" className="text-muted-foreground underline hover:text-foreground">
+              Thrivr Compass
+            </a>
+            <a href="https://storiahub.online" target="_blank" rel="noopener noreferrer" className="text-muted-foreground underline hover:text-foreground">
+              StoriaHub
+            </a>
+            <a href="#" className="text-muted-foreground underline hover:text-foreground">
+              Woment
+            </a>
+          </div>
+        </section>
+
         <footer className="mt-16 flex flex-col items-center gap-3 text-center">
           <Link to="/resources" className="text-xs text-muted-foreground underline">
             {t("See crisis support resources")}
@@ -322,6 +342,7 @@ function Settings() {
             {t("Privacy Policy")}
           </Link>
         </footer>
+
       </div>
 
       {showCancelConfirm && (

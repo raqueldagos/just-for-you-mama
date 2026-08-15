@@ -1136,6 +1136,9 @@ export const DICT: Record<string, string> = {
   "By subscribing, you agree to our": "Ao assinar, você concorda com nossos",
   "Terms of Use": "Termos de Uso",
   "Privacy Policy": "Política de Privacidade",
+  "Part of the Thrivr family": "Parte da família Thrivr",
+  "Also from Thrivr": "Também da Thrivr",
+
   "and": "e",
   // Sign in + paywall copy (new)
   "Keep becoming the best version of yourself.": "Continue se tornando a melhor versão de você mesma.",
