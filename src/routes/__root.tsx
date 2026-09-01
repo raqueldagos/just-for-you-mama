@@ -88,6 +88,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:description", content: "A 90-second daily check-in — for the mother, not the child." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
+      {
+        name: "google-site-verification",
+        content: "IExoOCb1-2rm4Ob-nIozyKUmQbZXUq70XkcLsdc3Ufs",
+      },
+
     ],
     links: [
       {
