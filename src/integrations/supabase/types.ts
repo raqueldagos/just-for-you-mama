@@ -14,6 +14,71 @@ export type Database = {
   }
   public: {
     Tables: {
+      checkins: {
+        Row: {
+          created_at: string
+          email: string | null
+          feeling_key: string
+          id: string
+          optional_note: string | null
+          profile_id: string | null
+          prompt_key: string | null
+          quest_done: boolean
+          quest_key: string | null
+          slip_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          feeling_key: string
+          id?: string
+          optional_note?: string | null
+          profile_id?: string | null
+          prompt_key?: string | null
+          quest_done?: boolean
+          quest_key?: string | null
+          slip_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          feeling_key?: string
+          id?: string
+          optional_note?: string | null
+          profile_id?: string | null
+          prompt_key?: string | null
+          quest_done?: boolean
+          quest_key?: string | null
+          slip_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "checkins_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      feeling_cheers: {
+        Row: {
+          cheer_count: number
+          feeling_key: string
+          updated_at: string
+        }
+        Insert: {
+          cheer_count?: number
+          feeling_key: string
+          updated_at?: string
+        }
+        Update: {
+          cheer_count?: number
+          feeling_key?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       leads: {
         Row: {
           check_in_count: number
@@ -50,6 +115,72 @@ export type Database = {
           source?: string
           subscribed?: boolean
           updated_at?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          checkins_count: number
+          created_at: string
+          display_name: string | null
+          email: string | null
+          id: string
+          last_checkin_at: string | null
+          minutes_kept: number
+          onboarding_done: boolean
+          plant_stage: number
+          reminder_enabled: boolean
+          reminder_label: string
+          updated_at: string
+        }
+        Insert: {
+          checkins_count?: number
+          created_at?: string
+          display_name?: string | null
+          email?: string | null
+          id?: string
+          last_checkin_at?: string | null
+          minutes_kept?: number
+          onboarding_done?: boolean
+          plant_stage?: number
+          reminder_enabled?: boolean
+          reminder_label?: string
+          updated_at?: string
+        }
+        Update: {
+          checkins_count?: number
+          created_at?: string
+          display_name?: string | null
+          email?: string | null
+          id?: string
+          last_checkin_at?: string | null
+          minutes_kept?: number
+          onboarding_done?: boolean
+          plant_stage?: number
+          reminder_enabled?: boolean
+          reminder_label?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      slips_unlocked: {
+        Row: {
+          email: string
+          id: string
+          slip_id: string
+          unlocked_at: string
+        }
+        Insert: {
+          email: string
+          id?: string
+          slip_id: string
+          unlocked_at?: string
+        }
+        Update: {
+          email?: string
+          id?: string
+          slip_id?: string
+          unlocked_at?: string
         }
         Relationships: []
       }
@@ -103,7 +234,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      bump_cheer: { Args: { _feeling_key: string }; Returns: number }
     }
     Enums: {
       [_ in never]: never
