@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TermsRouteImport } from './routes/terms'
+import { Route as SlipsRouteImport } from './routes/slips'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SigninRouteImport } from './routes/signin'
 import { Route as SettingsRouteImport } from './routes/settings'
@@ -33,6 +34,11 @@ import { Route as ApiPublicPaymentsWebhookRouteImport } from './routes/api/publi
 const TermsRoute = TermsRouteImport.update({
   id: '/terms',
   path: '/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SlipsRoute = SlipsRouteImport.update({
+  id: '/slips',
+  path: '/slips',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
@@ -146,6 +152,7 @@ export interface FileRoutesByFullPath {
   '/settings': typeof SettingsRoute
   '/signin': typeof SigninRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/slips': typeof SlipsRoute
   '/terms': typeof TermsRoute
   '/explore/$cat': typeof ExploreCatRoute
   '/metoo/$tile': typeof MetooTileRoute
@@ -168,6 +175,7 @@ export interface FileRoutesByTo {
   '/settings': typeof SettingsRoute
   '/signin': typeof SigninRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/slips': typeof SlipsRoute
   '/terms': typeof TermsRoute
   '/explore/$cat': typeof ExploreCatRoute
   '/metoo/$tile': typeof MetooTileRoute
@@ -191,6 +199,7 @@ export interface FileRoutesById {
   '/settings': typeof SettingsRoute
   '/signin': typeof SigninRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/slips': typeof SlipsRoute
   '/terms': typeof TermsRoute
   '/explore/$cat': typeof ExploreCatRoute
   '/metoo/$tile': typeof MetooTileRoute
@@ -215,6 +224,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/signin'
     | '/sitemap.xml'
+    | '/slips'
     | '/terms'
     | '/explore/$cat'
     | '/metoo/$tile'
@@ -237,6 +247,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/signin'
     | '/sitemap.xml'
+    | '/slips'
     | '/terms'
     | '/explore/$cat'
     | '/metoo/$tile'
@@ -259,6 +270,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/signin'
     | '/sitemap.xml'
+    | '/slips'
     | '/terms'
     | '/explore/$cat'
     | '/metoo/$tile'
@@ -282,6 +294,7 @@ export interface RootRouteChildren {
   SettingsRoute: typeof SettingsRoute
   SigninRoute: typeof SigninRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  SlipsRoute: typeof SlipsRoute
   TermsRoute: typeof TermsRoute
   ExploreCatRoute: typeof ExploreCatRoute
   MetooTileRoute: typeof MetooTileRoute
@@ -299,6 +312,13 @@ declare module '@tanstack/react-router' {
       path: '/terms'
       fullPath: '/terms'
       preLoaderRoute: typeof TermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/slips': {
+      id: '/slips'
+      path: '/slips'
+      fullPath: '/slips'
+      preLoaderRoute: typeof SlipsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/sitemap.xml': {
@@ -450,6 +470,7 @@ const rootRouteChildren: RootRouteChildren = {
   SettingsRoute: SettingsRoute,
   SigninRoute: SigninRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  SlipsRoute: SlipsRoute,
   TermsRoute: TermsRoute,
   ExploreCatRoute: ExploreCatRoute,
   MetooTileRoute: MetooTileRoute,
