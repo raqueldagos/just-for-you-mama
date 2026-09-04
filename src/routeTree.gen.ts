@@ -16,6 +16,7 @@ import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as ResourcesRouteImport } from './routes/resources'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as PaywallRouteImport } from './routes/paywall'
+import { Route as HomeRouteImport } from './routes/home'
 import { Route as HistoryRouteImport } from './routes/history'
 import { Route as ForyouRouteImport } from './routes/foryou'
 import { Route as CheckoutReturnRouteImport } from './routes/checkout-return'
@@ -62,6 +63,11 @@ const PrivacyRoute = PrivacyRouteImport.update({
 const PaywallRoute = PaywallRouteImport.update({
   id: '/paywall',
   path: '/paywall',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HomeRoute = HomeRouteImport.update({
+  id: '/home',
+  path: '/home',
   getParentRoute: () => rootRouteImport,
 } as any)
 const HistoryRoute = HistoryRouteImport.update({
@@ -133,6 +139,7 @@ export interface FileRoutesByFullPath {
   '/checkout-return': typeof CheckoutReturnRoute
   '/foryou': typeof ForyouRoute
   '/history': typeof HistoryRoute
+  '/home': typeof HomeRoute
   '/paywall': typeof PaywallRoute
   '/privacy': typeof PrivacyRoute
   '/resources': typeof ResourcesRoute
@@ -154,6 +161,7 @@ export interface FileRoutesByTo {
   '/checkout-return': typeof CheckoutReturnRoute
   '/foryou': typeof ForyouRoute
   '/history': typeof HistoryRoute
+  '/home': typeof HomeRoute
   '/paywall': typeof PaywallRoute
   '/privacy': typeof PrivacyRoute
   '/resources': typeof ResourcesRoute
@@ -176,6 +184,7 @@ export interface FileRoutesById {
   '/checkout-return': typeof CheckoutReturnRoute
   '/foryou': typeof ForyouRoute
   '/history': typeof HistoryRoute
+  '/home': typeof HomeRoute
   '/paywall': typeof PaywallRoute
   '/privacy': typeof PrivacyRoute
   '/resources': typeof ResourcesRoute
@@ -199,6 +208,7 @@ export interface FileRouteTypes {
     | '/checkout-return'
     | '/foryou'
     | '/history'
+    | '/home'
     | '/paywall'
     | '/privacy'
     | '/resources'
@@ -220,6 +230,7 @@ export interface FileRouteTypes {
     | '/checkout-return'
     | '/foryou'
     | '/history'
+    | '/home'
     | '/paywall'
     | '/privacy'
     | '/resources'
@@ -241,6 +252,7 @@ export interface FileRouteTypes {
     | '/checkout-return'
     | '/foryou'
     | '/history'
+    | '/home'
     | '/paywall'
     | '/privacy'
     | '/resources'
@@ -263,6 +275,7 @@ export interface RootRouteChildren {
   CheckoutReturnRoute: typeof CheckoutReturnRoute
   ForyouRoute: typeof ForyouRoute
   HistoryRoute: typeof HistoryRoute
+  HomeRoute: typeof HomeRoute
   PaywallRoute: typeof PaywallRoute
   PrivacyRoute: typeof PrivacyRoute
   ResourcesRoute: typeof ResourcesRoute
@@ -328,6 +341,13 @@ declare module '@tanstack/react-router' {
       path: '/paywall'
       fullPath: '/paywall'
       preLoaderRoute: typeof PaywallRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/home': {
+      id: '/home'
+      path: '/home'
+      fullPath: '/home'
+      preLoaderRoute: typeof HomeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/history': {
@@ -423,6 +443,7 @@ const rootRouteChildren: RootRouteChildren = {
   CheckoutReturnRoute: CheckoutReturnRoute,
   ForyouRoute: ForyouRoute,
   HistoryRoute: HistoryRoute,
+  HomeRoute: HomeRoute,
   PaywallRoute: PaywallRoute,
   PrivacyRoute: PrivacyRoute,
   ResourcesRoute: ResourcesRoute,
