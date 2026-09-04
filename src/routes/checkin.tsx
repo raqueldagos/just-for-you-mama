@@ -1,301 +1,334 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { KEYS, store, addMoodCheckin } from "@/lib/evenme";
 import {
-  KEYS,
-  store,
-  hasAccess,
-  freeUsesLeft,
-  setSubscribed,
-  isPremium,
-  addMoodCheckin,
-} from "@/lib/evenme";
-import { MOOD_META, ENERGY_META, type Mood, type Energy } from "@/lib/foryou";
-import { checkSubscription } from "@/utils/payments.functions";
+  FEELINGS,
+  FEELING_BASELINE,
+  type FeelingKey,
+  promptForToday,
+  questForToday,
+  drawSlip,
+  keepSlip,
+  saveLocalCheckin,
+  checkinsCount,
+  minutesThisMonth,
+  windowStage,
+  feelingLabel,
+  setOnboardingDone,
+  setReminderEnabled,
+  reminderLabel,
+  a2hsSeen,
+  setA2hsSeen,
+  quietNoteDue,
+  type Slip,
+} from "@/lib/companion";
+import { recordCheckin, cheerFeeling } from "@/utils/companion.functions";
 import { captureLead } from "@/utils/leads.functions";
-import { getStripeEnvironment } from "@/lib/stripe";
+import { WindowScene } from "@/components/WindowScene";
+import { AddToHomeSheet } from "@/components/AddToHomeSheet";
 import { useT } from "@/lib/i18n";
 
 export const Route = createFileRoute("/checkin")({
   head: () => ({
     meta: [
-      { title: "Today's check-in — Even Me" },
+      { title: "Your 90 seconds — Even Me" },
       {
         name: "description",
         content:
-          "A gentle 90-second daily check-in for all mothers. Pick a mood, an energy level, and get something small for you.",
+          "One prompt, one feeling, one permission slip. Ninety seconds for you, then you close it. No charts, no scores, nothing about your child.",
       },
-      { property: "og:title", content: "Today's check-in — Even Me" },
+      { property: "og:title", content: "Your 90 seconds — Even Me" },
       {
         property: "og:description",
-        content: "A gentle 90-second daily check-in — for you, not your child.",
+        content: "One prompt, one feeling, one permission slip. Ninety seconds for you.",
       },
       { property: "og:url", content: "https://evenme.online/checkin" },
       { property: "og:type", content: "website" },
     ],
     links: [{ rel: "canonical", href: "https://evenme.online/checkin" }],
   }),
-  component: Checkin,
+  component: CheckIn,
 });
 
-const MOODS: Mood[] = [
-  "tired", "overwhelmed", "anxious", "low",
-  "neutral", "content", "energized", "grateful",
-  "angry", "lonely", "guilty", "numb",
-];
-const ENERGIES: Energy[] = ["empty", "low", "steady", "bright"];
+type Step = 1 | 2 | 3 | 4;
 
-function Checkin() {
-  const navigate = useNavigate();
+function CheckIn() {
   const t = useT();
-  const [name, setName] = useState<string | null>(null);
-  const [access, setAccess] = useState(true);
-  const [usesLeft, setUsesLeft] = useState(1);
-  const [step, setStep] = useState<0 | 1 | 2 | 3>(0);
-  const [mood, setMood] = useState<Mood | null>(null);
-  const [energy, setEnergy] = useState<Energy | null>(null);
+  const navigate = useNavigate();
+  const prompt = useMemo(() => promptForToday(), []);
+  const quest = useMemo(() => questForToday(), []);
+
+  const [step, setStep] = useState<Step>(1);
+  const [feeling, setFeeling] = useState<FeelingKey | null>(null);
   const [note, setNote] = useState("");
-  const [email, setEmail] = useState<string>(() => store.get(KEYS.email) ?? "");
-  const [emailError, setEmailError] = useState<string | null>(null);
+  const [slip, setSlip] = useState<Slip | null>(null);
+  const [kept, setKept] = useState(false);
+  const [questAnswered, setQuestAnswered] = useState<boolean | null>(null);
+  const [sameCount, setSameCount] = useState<number | null>(null);
+  const [cheered, setCheered] = useState(false);
+  const [showA2HS, setShowA2HS] = useState(false);
+  const [reminderOn, setReminderOn] = useState(false);
+  const [monthMinutes, setMonthMinutes] = useState(0);
+  const [stage, setStage] = useState(0);
 
   useEffect(() => {
-    setName(store.get(KEYS.name));
-    setUsesLeft(freeUsesLeft());
-    const savedEmail = store.get(KEYS.email);
-    let cancelled = false;
-    (async () => {
-      if (savedEmail) {
-        try {
-          const res = await checkSubscription({
-            data: { email: savedEmail, environment: getStripeEnvironment() },
-          });
-          if (cancelled) return;
-          setSubscribed(res.active);
-        } catch {}
-      }
-      if (cancelled) return;
-      const ok = isPremium() || freeUsesLeft() > 0;
-      setAccess(ok);
-      if (!ok) navigate({ to: "/paywall" });
-    })();
-    setAccess(hasAccess());
-    return () => {
-      cancelled = true;
-    };
-  }, [navigate]);
+    setOnboardingDone();
+  }, []);
 
-  const finish = (m: Mood, e: Energy, n: string, mail: string) => {
-    const clean = mail.trim().toLowerCase();
-    store.set(KEYS.email, clean);
-    const savedName = store.get(KEYS.name);
-    captureLead({ data: { email: clean, name: savedName ?? undefined } }).catch(
-      () => {},
-    );
-    addMoodCheckin(m, e, n || undefined);
-    navigate({
-      to: "/foryou",
-      search: { mood: m, energy: e, note: n || undefined },
+  const chooseFeeling = (key: FeelingKey) => {
+    setFeeling(key);
+    setSlip(drawSlip(key, checkinsCount()));
+  };
+
+  const commit = (questDone: boolean) => {
+    if (!feeling || !slip) return;
+    setQuestAnswered(questDone);
+    keepSlip(slip.id);
+    saveLocalCheckin({
+      ts: new Date().toISOString(),
+      promptKey: prompt.key,
+      feeling,
+      note: note.trim() || undefined,
+      slipId: slip.id,
+      questDone,
+      questKey: quest.key,
     });
-  };
+    // keep the older local history in sync so nothing else breaks
+    addMoodCheckin(feeling, undefined, note.trim() || undefined);
 
-  const submitFinal = () => {
-    if (!mood || !energy) return;
-    const clean = email.trim();
-    if (!clean || !clean.includes("@") || clean.length < 5) {
-      setEmailError(t("Please enter a valid email so we can remember you."));
-      return;
+    const count = checkinsCount();
+    setMonthMinutes(minutesThisMonth());
+    setStage(windowStage(count));
+    setSameCount(FEELING_BASELINE[feeling]);
+    setStep(4);
+
+    const email = (store.get(KEYS.email) ?? "").trim().toLowerCase() || null;
+    recordCheckin({
+      data: {
+        email,
+        promptKey: prompt.key,
+        feelingKey: feeling,
+        note: note.trim() || null,
+        slipId: slip.id,
+        questDone,
+        questKey: quest.key,
+        checkinsCount: count,
+        minutesKept: count * 2,
+        plantStage: windowStage(count),
+      },
+    })
+      .then((res) => setSameCount(res.sameFeelingToday))
+      .catch(() => {});
+
+    if (email) {
+      captureLead({ data: { email } }).catch(() => {});
     }
-    setEmailError(null);
-    finish(mood, energy, note, clean);
   };
-
-  if (!access) return null;
 
   return (
-    <div className="min-h-screen px-6 py-10">
-      <div className="mx-auto max-w-2xl">
-        <header className="mb-8">
-          <div>
-            <p className="text-sm text-muted-foreground">
-              {name ? `${t("Hi.").replace(".", "")} ${name}.` : t("Hi.")}
-            </p>
-            <h1 className="mt-1 text-3xl font-serif text-foreground">
-              {step === 0 && t("How are you, right now?")}
-              {step === 1 && t("How much do you have in the tank?")}
-              {step === 2 && t("One word for today?")}
-              {step === 3 && t("Where should we send it?")}
-            </h1>
-          </div>
-        </header>
-
-        <div className="mb-8 flex gap-2">
-          {[0, 1, 2, 3].map((n) => (
+    <main className="min-h-screen px-6 pb-16 pt-[max(2.5rem,env(safe-area-inset-top))]">
+      <div className="mx-auto max-w-md">
+        <div className="mb-8 flex gap-2" aria-hidden="true">
+          {[1, 2, 3, 4].map((n) => (
             <div
               key={n}
-              className={`h-1.5 w-8 rounded-full transition-colors ${
+              className={`h-1.5 flex-1 rounded-full transition-colors ${
                 n <= step ? "bg-primary" : "bg-muted"
               }`}
             />
           ))}
         </div>
 
-        {step === 0 && (
-          <div className="animate-fade-in grid grid-cols-2 sm:grid-cols-3 gap-3">
-            {MOODS.map((m) => {
-              const meta = MOOD_META[m];
-              const active = mood === m;
-              return (
-                <button
-                  key={m}
-                  onClick={() => {
-                    setMood(m);
-                    setTimeout(() => setStep(1), 120);
-                  }}
-                  className={`rounded-2xl border p-4 text-left transition min-h-24 ${
-                    active
-                      ? "border-primary bg-primary/5"
-                      : "border-border bg-card hover:border-primary/60 hover:shadow-sm"
-                  }`}
-                >
-                  <div className="text-2xl">{meta.emoji}</div>
-                  <div className="mt-1 font-medium text-card-foreground">{t(meta.label)}</div>
-                  <div className="text-xs text-muted-foreground">{t(meta.blurb)}</div>
-                </button>
-              );
-            })}
-          </div>
-        )}
-
+        {/* ---------------------------------------------- step 1: the prompt */}
         {step === 1 && (
-          <div className="animate-fade-in space-y-3">
-            {ENERGIES.map((e) => {
-              const meta = ENERGY_META[e];
-              return (
-                <button
-                  key={e}
-                  onClick={() => {
-                    setEnergy(e);
-                    setTimeout(() => setStep(2), 120);
-                  }}
-                  className={`w-full rounded-2xl border bg-card p-5 text-left transition ${
-                    energy === e
-                      ? "border-primary bg-primary/5"
-                      : "border-border hover:border-primary/60"
-                  }`}
-                >
-                  <div className="font-medium text-card-foreground">{t(meta.label)}</div>
-                  <div className="text-sm text-muted-foreground">{t(meta.blurb)}</div>
-                </button>
-              );
-            })}
-          </div>
-        )}
-
-        {step === 2 && (
-          <div className="animate-fade-in space-y-4">
-            <input
-              value={note}
-              onChange={(e) => setNote(e.target.value.slice(0, 24))}
-              placeholder={t("foggy, tender, wired, okay…")}
-              className="w-full rounded-2xl border border-border bg-card px-5 py-4 text-lg outline-none focus:ring-2 focus:ring-ring"
-              autoFocus
-            />
-            <p className="text-xs text-muted-foreground">{t("Optional. One word is plenty.")}</p>
-            <button
-              onClick={() => {
-                if (!mood || !energy) return;
-                const saved = store.get(KEYS.email);
-                if (saved) finish(mood, energy, note, saved);
-                else setStep(3);
-              }}
-              className="w-full rounded-2xl bg-primary py-4 text-primary-foreground text-lg font-medium hover:opacity-90 transition"
-            >
-              {t("Show me something for right now")}
-            </button>
-            <button
-              onClick={() => {
-                if (!mood || !energy) return;
-                const saved = store.get(KEYS.email);
-                if (saved) finish(mood, energy, "", saved);
-                else {
-                  setNote("");
-                  setStep(3);
-                }
-              }}
-              className="w-full rounded-2xl bg-transparent py-2 text-sm text-muted-foreground hover:text-foreground"
-            >
-              {t("Skip the word")}
-            </button>
-          </div>
-        )}
-
-        {step === 3 && (
-          <div className="animate-fade-in space-y-4">
+          <div className="animate-fade-in space-y-8">
+            <h1 className="text-3xl font-serif leading-tight text-foreground">
+              {t(prompt.text)}
+            </h1>
             <p className="text-muted-foreground">
-              {t("Your email — so we can remember you and send your welcome note. No spam.")}
+              {t("Ninety seconds. Then you close it.")}
             </p>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="you@example.com"
-              className="w-full rounded-2xl border border-border bg-card px-5 py-4 text-lg outline-none focus:ring-2 focus:ring-ring"
-              autoFocus
-            />
-            {emailError && (
-              <p className="text-sm text-destructive">{emailError}</p>
-            )}
             <button
-              onClick={submitFinal}
-              className="w-full rounded-2xl bg-primary py-4 text-primary-foreground text-lg font-medium hover:opacity-90 transition"
+              onClick={() => setStep(2)}
+              className="w-full rounded-2xl bg-primary py-5 text-lg font-medium text-primary-foreground transition hover:opacity-90"
             >
-              {t("Show me something for right now")}
+              {t("Okay")}
             </button>
           </div>
         )}
 
-        <div className="mt-10 flex items-center justify-between text-sm">
-          <Link to="/history" className="text-muted-foreground hover:text-foreground">
-            {t("Your streak →")}
-          </Link>
-          <Link to="/explore" className="text-muted-foreground hover:text-foreground">
-            {t("Explore tools & advice →")}
-          </Link>
-        </div>
+        {/* -------------------------------------------- step 2: the feeling */}
+        {step === 2 && (
+          <div className="animate-fade-in space-y-3">
+            <h1 className="mb-6 text-2xl font-serif text-foreground">
+              {t("Pick the one closest to true.")}
+            </h1>
+            {FEELINGS.map((f) => (
+              <button
+                key={f.key}
+                onClick={() => {
+                  chooseFeeling(f.key);
+                  setTimeout(() => setStep(3), 140);
+                }}
+                className={`w-full rounded-2xl border bg-card px-5 py-5 text-left text-lg text-card-foreground transition ${
+                  feeling === f.key
+                    ? "border-primary bg-primary/5"
+                    : "border-border hover:border-primary/60"
+                }`}
+              >
+                {t(f.label)}
+              </button>
+            ))}
 
-        {!isPremium() && usesLeft > 0 && (
-          <p className="mt-4 text-right text-xs text-muted-foreground">
-            {usesLeft} {t("free tip left")}
-          </p>
+            <div className="pt-4">
+              <input
+                value={note}
+                onChange={(e) => setNote(e.target.value.slice(0, 140))}
+                placeholder={t("One line, if you want. You can skip.")}
+                maxLength={140}
+                className="w-full rounded-2xl border border-border bg-card px-5 py-4 text-base outline-none focus:ring-2 focus:ring-ring"
+              />
+            </div>
+          </div>
         )}
 
-        <div className="mt-8 flex flex-col items-center gap-3 text-center">
-          <Link
-            to="/settings"
-            className="inline-flex items-center gap-2 rounded-2xl border border-border px-5 py-3 text-sm text-muted-foreground hover:bg-muted transition"
-            aria-label={t("Settings")}
-          >
-            <SettingsIcon />
-            {t("Settings")}
-          </Link>
-          <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
-            <Link to="/resources" className="underline">
-              {t("See crisis support resources")}
-            </Link>
-            <Link to="/privacy" className="underline">
-              {t("Privacy Policy")}
-            </Link>
+        {/* ------------------------------------ step 3: slip + tiny invite */}
+        {step === 3 && slip && (
+          <div className="animate-fade-in space-y-6">
+            <h1 className="text-sm uppercase tracking-widest text-muted-foreground">
+              {t("A permission slip")}
+            </h1>
+            <div className="rounded-3xl border border-border bg-card p-8">
+              <p className="text-2xl font-serif leading-snug text-card-foreground">
+                {t(slip.text)}
+              </p>
+            </div>
+
+            {!kept ? (
+              <button
+                onClick={() => {
+                  keepSlip(slip.id);
+                  setKept(true);
+                }}
+                className="w-full rounded-2xl bg-primary py-5 text-lg font-medium text-primary-foreground transition hover:opacity-90"
+              >
+                {t("Keep this one")}
+              </button>
+            ) : (
+              <div className="space-y-4 rounded-3xl border border-border p-6">
+                <p className="text-sm text-muted-foreground">{t("If you feel like it:")}</p>
+                <p className="text-lg text-foreground">{t(quest.text)}</p>
+                <div className="flex flex-col gap-3 sm:flex-row">
+                  <button
+                    onClick={() => commit(true)}
+                    className="flex-1 rounded-2xl bg-primary py-4 text-base font-medium text-primary-foreground transition hover:opacity-90"
+                  >
+                    {t("I did this")}
+                  </button>
+                  <button
+                    onClick={() => commit(false)}
+                    className="flex-1 rounded-2xl border border-border py-4 text-base text-muted-foreground transition hover:bg-muted"
+                  >
+                    {t("Not tonight")}
+                  </button>
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  {t("Either answer is fine. Nothing counts against you.")}
+                </p>
+              </div>
+            )}
           </div>
+        )}
+
+        {/* ------------------------------- step 4: belonging + quiet close */}
+        {step === 4 && feeling && (
+          <div className="animate-fade-in space-y-8">
+            <div className="rounded-3xl border border-border bg-card p-6">
+              <p className="text-lg text-card-foreground">
+                {sameCount === null
+                  ? t("Counting the others…")
+                  : `${sameCount.toLocaleString()} ${t("moms checked in as")} \u201c${t(
+                      feelingLabel(feeling),
+                    )}\u201d ${t("today.")}`}
+              </p>
+              <button
+                onClick={() => {
+                  if (cheered) return;
+                  setCheered(true);
+                  cheerFeeling({ data: { feelingKey: feeling } }).catch(() => {});
+                }}
+                className={`mt-4 inline-flex items-center gap-2 rounded-full border px-5 py-2.5 text-sm transition ${
+                  cheered
+                    ? "border-primary text-primary"
+                    : "border-border text-muted-foreground hover:border-primary/60"
+                }`}
+              >
+                <span aria-hidden="true">{cheered ? "\u2665" : "\u2661"}</span>
+                {cheered ? t("Noticed") : t("Same")}
+              </button>
+            </div>
+
+            <div className="space-y-1 text-foreground">
+              <p className="text-xl font-serif">{t("You just kept 2 minutes for you.")}</p>
+              <p className="text-sm text-muted-foreground">
+                {t("Minutes that were yours this month:")} {monthMinutes}
+              </p>
+              {questAnswered && (
+                <p className="text-sm text-muted-foreground">{t("And you took the small one.")}</p>
+              )}
+            </div>
+
+            <div>
+              <WindowScene stage={stage} animate />
+              <p className="mt-2 text-center text-sm text-primary">{t("Your window grew.")}</p>
+            </div>
+
+            <button
+              onClick={() => navigate({ to: quietNoteDue() ? "/note" : "/home" })}
+              className="w-full rounded-2xl bg-primary py-5 text-lg font-medium text-primary-foreground transition hover:opacity-90"
+            >
+              {t("Done")}
+            </button>
+
+            <div className="flex flex-col items-center gap-3 text-center">
+              {!a2hsSeen() && (
+                <button
+                  onClick={() => {
+                    setA2hsSeen();
+                    setShowA2HS(true);
+                  }}
+                  className="text-sm text-muted-foreground underline"
+                >
+                  {t("Add to Home Screen")}
+                </button>
+              )}
+              <button
+                onClick={() => {
+                  setReminderEnabled(true);
+                  setReminderOn(true);
+                }}
+                disabled={reminderOn}
+                className="text-sm text-muted-foreground underline disabled:no-underline disabled:opacity-70"
+              >
+                {reminderOn
+                  ? `${t("Saved —")} ${t(reminderLabel())}`
+                  : t("Turn on a quiet reminder")}
+              </button>
+              <Link to="/slips" className="text-sm text-muted-foreground underline">
+                {t("Your slips")}
+              </Link>
+            </div>
+          </div>
+        )}
+
+        <div className="mt-12 text-center">
+          <Link to="/resources" className="text-xs text-muted-foreground underline">
+            {t("See crisis support resources")}
+          </Link>
         </div>
       </div>
-    </div>
-  );
-}
 
-function SettingsIcon() {
-  return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <circle cx="12" cy="12" r="3" />
-      <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
-    </svg>
+      {showA2HS && <AddToHomeSheet onClose={() => setShowA2HS(false)} />}
+    </main>
   );
 }
